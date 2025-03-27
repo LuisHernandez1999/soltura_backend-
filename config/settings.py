@@ -87,7 +87,11 @@ DATABASES = {
     }
 }
 
-CORS_ALLOW_ALL_ORIGINS = True 
+CORS_ALLOWED_ORIGINS = [
+    "http://192.168.0.53:19000",  # IP do seu dispositivo/localhost com o Expo rodando
+    "http://localhost:19000",      # Caso esteja usando Expo no seu computador
+]
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -106,6 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+ALLOWED_HOSTS = ['192.168.0.53', 'localhost', '127.0.0.1']
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

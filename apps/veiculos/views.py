@@ -58,14 +58,19 @@ def criar_veiculo(request):
         return JsonResponse({'erro': f'Erro interno: {str(e)}'}, status=500)
 
 @require_GET
+
+
+
 def veiculos_lista(_request):
     _ = _request  
     veiculos_ativos = Veiculo.objects.filter(status='Ativo')
     placas_ativas = list(veiculos_ativos.values_list("placa_veiculo", flat=True))
+    
     return JsonResponse(
         {"veiculos_lista_ativos": placas_ativas},
         json_dumps_params={'ensure_ascii': False}
-    )
+    )  
+
 
 @csrf_exempt
 @require_POST

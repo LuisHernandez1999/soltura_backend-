@@ -16,13 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from apps.veiculos import views 
+from apps.veiculos import views as veiculos_views
+from apps.cadastro import views as cadastro_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/veiculos/criar/', views.criar_veiculo, name='criar_veiculo'),
-    path('api/veiculos/editar/<int:veiculo_id>/', views.editar_veiculo, name='editar_veiculo'),
-    path('api/veiculos/lista/', views.veiculos_lista, name='veiculos_lista'),
-    path('api/veiculos/historico/<int:veiculo_id>/', views.historico_manutencao_veiculo, name='historico_manutencao_veiculo'),
+    path('api/veiculos/criar/', veiculos_views.criar_veiculo, name='criar_veiculo'),
+    path('api/veiculos/editar/<int:veiculo_id>/', veiculos_views.editar_veiculo, name='editar_veiculo'),
+    path('api/veiculos/lista/', veiculos_views.veiculos_lista, name='veiculos_lista'),
+    path('api/veiculos/historico/<int:veiculo_id>/', veiculos_views.historico_manutencao_veiculo, name='historico_manutencao_veiculo'),
+    path('api/cadastro/cadastrar_user/', cadastro_views.cadastrar_user, name='cadastrar_user'),
 ]
 
