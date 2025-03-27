@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from apps.veiculos import views as veiculos_views
 from apps.cadastro import views as cadastro_views
+from apps.login import views as login_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,5 +27,6 @@ urlpatterns = [
     path('api/veiculos/lista/', veiculos_views.veiculos_lista, name='veiculos_lista'),
     path('api/veiculos/historico/<int:veiculo_id>/', veiculos_views.historico_manutencao_veiculo, name='historico_manutencao_veiculo'),
     path('api/cadastro/cadastrar_user/', cadastro_views.cadastrar_user, name='cadastrar_user'),
+    path('api/login/', login_views.login, name='login')
 ]
 
