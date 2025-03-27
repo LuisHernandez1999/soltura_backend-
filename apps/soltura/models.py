@@ -1,6 +1,6 @@
 from django.db import models
-from colaboradores.models import Colaborador
-from veiculos.models import Veiculo
+from apps.colaborador.models import Colaborador
+from apps.veiculos.models import Veiculo
 
 class Soltura(models.Model):
     motorista = models.ForeignKey(

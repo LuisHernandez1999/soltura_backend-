@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import Colaboradores
+from .models import Colaborador
 
 class ColaboradorSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Colaboradores
+        model = Colaborador
         fields = ['nome', 'matricula', 'pa', 'turno', 'tipo']
