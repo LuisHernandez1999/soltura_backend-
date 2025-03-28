@@ -16,7 +16,7 @@ def calcular_tempo_manutencao(data_manutencao_str, data_saida_str):
     except Exception as e:
         print(f"Erro ao calcular tempo de manutenção: {str(e)}")
         return 0
-# validacao 
+
 class VeiculoValidator(BaseModel):
     placa: str
     tipo: str
@@ -37,7 +37,7 @@ class VeiculoValidator(BaseModel):
         if value not in tipos_validos:
             raise ValueError("Tipo de veículo não existente.")
         return value
-
+    
 class Veiculo(models.Model):
     TIPOS_VEICULO = [
         ('Basculante', 'Basculante'),
@@ -55,7 +55,7 @@ class Veiculo(models.Model):
 
     prefixo = models.CharField(max_length=10, unique=True)
     tipo = models.CharField(max_length=20, choices=TIPOS_VEICULO)
-    placa_veiculo = models.CharField(max_length=8, validators=[VeiculoValidator.validar_placa])
+    placa_veiculo = models.CharField(max_length=8, validators=[VeiculoValidator.validar_placa],unique=True)
     status = models.CharField(max_length=10, choices=STATUS_VEICULO, default='Ativo', verbose_name="Status do Veículo")
     motivo_inatividade = models.CharField(max_length=20, choices=MOTIVOS_INATIVIDADE, null=True, blank=True, verbose_name="Motivo da Inatividade")
     data_manutencao = models.DateTimeField(null=True, blank=True, verbose_name="Data de Início da Manutenção")
@@ -81,10 +81,10 @@ class Veiculo(models.Model):
 
 class HistoricoManutencao(models.Model):
     veiculo = models.ForeignKey(Veiculo, related_name='manutencao_historico', on_delete=models.CASCADE)
-    data_manutencao = models.DateTimeField(null=True, blank=True, verbose_name="Data de Início da Manutenção")
-    data_saida = models.DateTimeField(null=True, blank=True, verbose_name="Data de Saída da Manutenção")
-    custo_manutencao = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Custo da Manutenção")
-    descricao_manutencao = models.TextField(null=True, blank=True, verbose_name="Descrição da Manutenção")
+    data_manutencao = models.DateTimeField(null=False, blank=False, verbose_name="Data de Início da Manutenção")
+    data_saida = models.DateTimeField(null=False, blank=False, verbose_name="Data de Saída da Manutenção")
+    custo_manutencao = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, verbose_name="Custo da Manutenção")
+    descricao_manutencao = models.TextField(null=False, blank=False, verbose_name="Descrição da Manutenção")
 
     class Meta:
         db_table = 'historico_manutencao'

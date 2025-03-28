@@ -116,7 +116,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-ALLOWED_HOSTS = ['192.168.0.53', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.0.233', 'localhost', '127.0.0.1','0.0.0.0']
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
