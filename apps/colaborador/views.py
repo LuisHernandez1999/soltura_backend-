@@ -16,12 +16,12 @@ def criar_colaborador(request):
     try:
         data = json.loads(request.body)
         nome = data.get("nome", "").strip()
-        matricula = data.get("matricula", "").strip()
+        matricula = str(data.get("matricula", "")).strip()
         funcao = data.get("funcao")  
         turno = data.get("turno")
         status = data.get("status")
         pa = data.get("pa")
-        if not nome or not matricula or funcao not in Colaborador.TIPOS_FUNCAO or turno not in Colaborador.TIPOS_TURNO or status not in Colaborador.TIPOS_STATUS or pa not in Colaborador.TIPOS_PA:
+        if not nome or not matricula or funcao not in TIPO_FUNCAO or turno not in TURNO or status not in STATUS or pa not in TIPOS_PA:
             return JsonResponse({"error": "dados invalidos"}, status=400)
         if Colaborador.objects.filter(matricula=matricula).exists():
             return JsonResponse({"error": "matricula ja cadastrada"}, status=400)
@@ -42,8 +42,8 @@ def criar_colaborador(request):
         return JsonResponse({"error": "erro ao salvar no banco de dados"}, status=500)
 
 @require_GET
-def colaboradores_lista(request):
-    colaboradores = Colaborador.objects.filter(status="Ativo", funcao__in=TIPO_FUNCAO).values("nome", "funcao").distinct()
+def colaboradores_lista_ativos(request):
+    colaboradores = Colaborador.objects.filter(status="Ativo", funcao="Coletor").values("nome", "funcao").distinct()
     colaboradores_info = [{"nome": colab["nome"], "funcao": colab["funcao"]} for colab in colaboradores]
     tipos = {colab["funcao"] for colab in colaboradores}
     return JsonResponse({
@@ -51,10 +51,10 @@ def colaboradores_lista(request):
         "colaboradores_tipo": list(tipos),
     }, json_dumps_params={'ensure_ascii': False})
 
-
 @require_GET
-def colaboradores_lista_motoristas(request):
-    colaboradores = Colaborador.objects.filter(status="Ativo", funcao="Motorista").values("nome", "matricula").distinct()
+def colaboradores_lista_motoristas_ativos(request):
+    colaboradores = Colaborador.objects.filter(status="ATIVO", funcao="Motorista").values("nome", "matricula").distinct()
+    print(colaboradores)  # Verifique quantos colaboradores estão sendo retornados
     colaboradores_info = [{"nome": colab["nome"], "matricula": colab["matricula"]} for colab in colaboradores]
     return JsonResponse({
         "colaboradores_lista": colaboradores_info,
@@ -62,7 +62,7 @@ def colaboradores_lista_motoristas(request):
 
 @require_GET
 def colaboradores_lista_coletores(request):
-    colaboradores = Colaborador.objects.filter(status="Ativo", funcao="Coletor").values("nome", "matricula").distinct()
+    colaboradores = Colaborador.objects.filter(status="ATIVO", funcao="Coletor").values("nome", "matricula").distinct()
     colaboradores_info = [{"nome": colab["nome"], "matricula": colab["matricula"]} for colab in colaboradores]
     return JsonResponse({
         "colaboradores_lista": colaboradores_info,

@@ -61,7 +61,7 @@ def criar_veiculo(request):
 
 
 
-def veiculos_lista(_request):
+def veiculos_lista_ativos(_request):
     _ = _request  
     veiculos_ativos = Veiculo.objects.filter(status='Ativo')
     placas_ativas = list(veiculos_ativos.values_list("placa_veiculo", flat=True))

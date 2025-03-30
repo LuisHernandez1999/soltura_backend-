@@ -83,7 +83,7 @@ class HistoricoManutencao(models.Model):
     veiculo = models.ForeignKey(Veiculo, related_name='manutencao_historico', on_delete=models.CASCADE)
     data_manutencao = models.DateTimeField(null=False, blank=False, verbose_name="Data de Início da Manutenção")
     data_saida = models.DateTimeField(null=False, blank=False, verbose_name="Data de Saída da Manutenção")
-    custo_manutencao = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, verbose_name="Custo da Manutenção")
+    custo_manutencao = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Custo da Manutenção")
     descricao_manutencao = models.TextField(null=False, blank=False, verbose_name="Descrição da Manutenção")
 
     class Meta:

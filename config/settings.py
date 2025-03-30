@@ -21,6 +21,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-9offtn68!713vtcxk$fg!w4_7vw+_^2@q$*yt1(j5cydl=!pet'
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -94,8 +95,9 @@ DATABASES = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "http://192.168.0.53:19000",  # IP do seu dispositivo/localhost com o Expo rodando
-    "http://localhost:19000",      # Caso esteja usando Expo no seu computador
+    "http://192.168.0.53:19000",
+    "http://localhost:19000",
+    "http://192.168.0.53:8000"
 ]
 
 # Password validation
@@ -116,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-ALLOWED_HOSTS = ['192.168.0.233', 'localhost', '127.0.0.1','0.0.0.0']
+ALLOWED_HOSTS = ['192.168.0.233', 'localhost', '127.0.0.1','0.0.0.0','192.168.0.53']
 
 
 # Internationalization
