@@ -7,8 +7,8 @@ import jwt
 import datetime
 from django.conf import settings
 from django.shortcuts import get_object_or_404
+from django.core.cache import cache
 
-# Imprimir a SECRET_KEY para depuração
 SECRET_KEY = settings.SECRET_KEY
 print(f"SECRET_KEY: {SECRET_KEY}")
 
@@ -18,41 +18,39 @@ def login(request):
         return JsonResponse({"erro": "Método não permitido.", "status": "erro"}, status=405)
     
     try:
-        # Processar os dados da requisição
         data = json.loads(request.body)
         celular = data.get("celular")
         senha = data.get("senha")
         
-        # Verificar se celular e senha foram fornecidos
         if not celular or not senha:
             return JsonResponse({"erro": "Celular e senha são obrigatórios.", "status": "erro"}, status=400)
-
-        # Buscar o usuário no banco de dados
+        
         user = get_object_or_404(User_mobile, celular=celular)
-
-        # Verificar a senha
+        
         if not check_password(senha, user.senha):
             return JsonResponse({"erro": "Senha incorreta.", "status": "erro"}, status=401)
-
-        # Gerar o payload para o JWT
+        
         payload = {
             "user_id": user.id,
             "celular": user.celular,
             "iat": datetime.datetime.utcnow(),
             "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
         }
-
-        # Gerar o token JWT
         token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
         
-        # Retornar a resposta com o token JWT
+        user.logado = user.nome
+        numero_logado = celular
+        print(f"Usuário logado: {user.logado}, Celular: {numero_logado}")
+        
+        cache.set(f'user_{celular}', {"nome": user.logado, "celular": numero_logado}, timeout=3600)
+        
         return JsonResponse({
             "mensagem": "Login realizado com sucesso.",
             "status": "sucesso",
             "token": token,
-            "nome": user.nome  # Incluir o nome do usuário na resposta
+            "nome": user.nome 
         }, status=200)
-
+    
     except json.JSONDecodeError:
         return JsonResponse({"erro": "Formato JSON inválido.", "status": "erro"}, status=400)
     

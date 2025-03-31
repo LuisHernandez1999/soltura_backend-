@@ -43,7 +43,7 @@ def criar_colaborador(request):
 
 @require_GET
 def colaboradores_lista_ativos(request):
-    colaboradores = Colaborador.objects.filter(status="Ativo", funcao="Coletor").values("nome", "funcao").distinct()
+    colaboradores = Colaborador.objects.filter(status="ATIVO", funcao="Coletor").values("nome", "funcao").distinct()
     colaboradores_info = [{"nome": colab["nome"], "funcao": colab["funcao"]} for colab in colaboradores]
     tipos = {colab["funcao"] for colab in colaboradores}
     return JsonResponse({
@@ -54,7 +54,7 @@ def colaboradores_lista_ativos(request):
 @require_GET
 def colaboradores_lista_motoristas_ativos(request):
     colaboradores = Colaborador.objects.filter(status="ATIVO", funcao="Motorista").values("nome", "matricula").distinct()
-    print(colaboradores)  # Verifique quantos colaboradores estão sendo retornados
+    print(colaboradores)  
     colaboradores_info = [{"nome": colab["nome"], "matricula": colab["matricula"]} for colab in colaboradores]
     return JsonResponse({
         "colaboradores_lista": colaboradores_info,
@@ -69,7 +69,7 @@ def colaboradores_lista_coletores(request):
     }, json_dumps_params={'ensure_ascii': False})
 
 def contar_colaboradores_por_funcao(funcao):
-    return Colaborador.objects.filter(status="Ativo", funcao=funcao).count()
+    return Colaborador.objects.filter(status="ATIVO", funcao=funcao).count()
 
 @require_GET
 def colaboradores_quantidade_motoristas(request):

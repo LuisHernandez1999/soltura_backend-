@@ -7,14 +7,12 @@ class Soltura(models.Model):
         ('ATIVO', 'Ativo'),
         ('INATIVO', 'Inativo')
     ]  
-
     motorista = models.ForeignKey(
         Colaborador,
         on_delete=models.CASCADE,
         limit_choices_to={'funcao': 'Motorista', 'status': 'ATIVO'},  
         related_name='solturas_motorista'
     )
-    
     coletores = models.ManyToManyField(
         Colaborador,
         limit_choices_to={'funcao': 'Coletor', 'status': 'ATIVO'},  

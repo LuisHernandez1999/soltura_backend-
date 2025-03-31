@@ -6,7 +6,6 @@ from datetime import datetime
 from pydantic import BaseModel, field_validator
 from functools import lru_cache
 
-
 def calcular_tempo_manutencao(data_manutencao_str, data_saida_str):
     try:
         data_manutencao = datetime.strptime(data_manutencao_str, "%Y-%m-%d")
@@ -69,7 +68,7 @@ class Veiculo(models.Model):
     def esta_em_manutencao(self):
         return self.status == 'Inativo' and self.motivo_inatividade == 'Em Manutenção'
 
-    @lru_cache(maxsize=128)  # cacheando para evitar calculos repetidos
+    @lru_cache(maxsize=128) 
     def calcular_tempo_manutencao(self):
         if self.data_manutencao and self.data_saida:
             data_manutencao_aware = make_aware(self.data_manutencao)  
