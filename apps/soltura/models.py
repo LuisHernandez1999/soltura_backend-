@@ -7,6 +7,20 @@ class Soltura(models.Model):
         ('ATIVO', 'Ativo'),
         ('INATIVO', 'Inativo')
     ]  
+
+    TIPO_COLETA_CHOICES = [
+        ('Seletiva', 'Seletiva'),
+        ('Coletiva', 'Coletiva'),
+        ('Cata Treco', 'Cata Treco'),
+        ('Varrição', 'Varrição')
+    ]
+
+    TURNO_CHOICES = [
+        ('Diurno', 'Diurno'),
+        ('Vespertino', 'Vespertino'),
+        ('Noturno', 'Noturno')
+    ]
+
     motorista = models.ForeignKey(
         Colaborador,
         on_delete=models.CASCADE,
@@ -27,7 +41,7 @@ class Soltura(models.Model):
     )
 
     hora_entrega_chave = models.DateTimeField(null=True, blank=True)
-    hora_entrega_saida_frota = models.DateTimeField(null=True, blank=True)
+    hora_saida_frota = models.DateTimeField(null=True, blank=True)
 
     frequencia = models.CharField(
         max_length=50,
@@ -35,9 +49,11 @@ class Soltura(models.Model):
         default='Diária'
     )
     setores = models.CharField(max_length=55)  
-    celular = models.CharField(max_length=20, blank=True, null=True)
-    lider = models.CharField(max_length=55, blank=True, null=True)
+    celular = models.CharField(max_length=20)  
+    lider = models.CharField(max_length=55)  
     status = models.CharField(max_length=7, choices=STATUS_CHOICES, default='ATIVO')
+    tipo_coleta = models.CharField(max_length=10, choices=TIPO_COLETA_CHOICES) 
+    turno = models.CharField(max_length=10, choices=TURNO_CHOICES)
 
     def __str__(self):
         return f"Soltura - {self.motorista.nome} ({self.veiculo.placa_veiculo})"

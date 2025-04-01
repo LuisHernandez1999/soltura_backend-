@@ -5,7 +5,7 @@ from django.db import IntegrityError
 import json
 from .models import Colaborador
 
-TURNO = ["Matutino", "Vespertino", "Noturno"]
+TURNO = ['Diurno', 'Noturno', 'Vespertino']
 TIPO_FUNCAO = ["Motorista", "Coletor", "Operador"]
 TIPOS_PA = ["PA1", "PA2", "PA3", "PA4"]
 STATUS = ["ATIVO", "INATIVO"]
