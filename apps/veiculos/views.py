@@ -5,6 +5,8 @@ from django.views.decorators.http import require_GET, require_POST
 from django.core.exceptions import ValidationError
 from django.forms.models import model_to_dict
 from django.db.models import Exists, OuterRef
+from django.core.cache import cache
+from django.db.models import Q
 import json
 from .models import Veiculo, HistoricoManutencao, calcular_tempo_manutencao, VeiculoValidator
 
@@ -15,22 +17,29 @@ def criar_veiculo(request):
         data = json.loads(request.body)
     except json.JSONDecodeError:
         return JsonResponse({'erro': 'JSON inválido'}, status=400)
+
     campos_obrigatorios = {'prefixo', 'tipo', 'placa_veiculo'}
     if not campos_obrigatorios.issubset(data):
         return JsonResponse({'erro': 'Campos obrigatórios ausentes.'}, status=400)
+
     try:
         VeiculoValidator.validar_placa(data['placa_veiculo'])
         VeiculoValidator.validar_tipo(data['tipo'])
     except ValidationError as e:
         return JsonResponse({'erro': str(e)}, status=400)
-    if Veiculo.objects.filter(prefixo=data['prefixo']).exists() or Veiculo.objects.filter(placa_veiculo=data['placa_veiculo']).exists():
+    if Veiculo.objects.filter(Q(prefixo=data['prefixo']) | Q(placa_veiculo=data['placa_veiculo'])).exists():
         return JsonResponse({'erro': 'Veículo já cadastrado.'}, status=409)
-
     dias_manutencao = calcular_tempo_manutencao(data.get('data_manutencao'), data.get('data_saida')) or 0
     custo_manutencao = float(data.get('custo_manutencao', 0)) * dias_manutencao if dias_manutencao > 0 else 0
-    
+
     novo_veiculo = Veiculo.objects.create(
-        **{key: data.get(key) for key in ['prefixo', 'tipo', 'placa_veiculo', 'status', 'motivo_inatividade', 'data_manutencao', 'data_saida']},
+        prefixo=data['prefixo'],
+        tipo=data['tipo'],
+        placa_veiculo=data['placa_veiculo'],
+        status=data.get('status'),
+        motivo_inatividade=data.get('motivo_inatividade'),
+        data_manutencao=data.get('data_manutencao'),
+        data_saida=data.get('data_saida'),
         custo_manutencao=custo_manutencao
     )
 
@@ -38,8 +47,13 @@ def criar_veiculo(request):
 
 @require_GET
 def veiculos_lista_ativos(_request):
-    placas_ativas = Veiculo.objects.filter(status='Ativo').values_list("placa_veiculo", flat=True)
-    return JsonResponse({"veiculos_lista_ativos": list(placas_ativas)}, json_dumps_params={'ensure_ascii': False})
+    cache_key = "veiculos_lista_ativos"
+    placas_ativas = cache.get_or_set(
+        cache_key,
+        lambda: list(Veiculo.objects.filter(status='Ativo').values_list("placa_veiculo", flat=True)),
+        timeout=3600  
+    )
+    return JsonResponse({"veiculos_lista_ativos": placas_ativas})
 
 @csrf_exempt
 @require_POST

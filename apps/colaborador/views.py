@@ -41,24 +41,16 @@ def criar_colaborador(request):
     except IntegrityError:
         return JsonResponse({"error": "erro ao salvar no banco de dados"}, status=500)
 
-@require_GET
-def colaboradores_lista_ativos(request):
-    colaboradores = Colaborador.objects.filter(status="ATIVO", funcao="Coletor").values("nome", "funcao").distinct()
-    colaboradores_info = [{"nome": colab["nome"], "funcao": colab["funcao"]} for colab in colaboradores]
-    tipos = {colab["funcao"] for colab in colaboradores}
-    return JsonResponse({
-        "colaboradores_lista": colaboradores_info,
-        "colaboradores_tipo": list(tipos),
-    }, json_dumps_params={'ensure_ascii': False})
 
 @require_GET
 def colaboradores_lista_motoristas_ativos(request):
-    colaboradores = Colaborador.objects.filter(status="ATIVO", funcao="Motorista").values("nome", "matricula").distinct()
-    print(colaboradores)  
-    colaboradores_info = [{"nome": colab["nome"], "matricula": colab["matricula"]} for colab in colaboradores]
-    return JsonResponse({
-        "colaboradores_lista": colaboradores_info,
-    }, json_dumps_params={'ensure_ascii': False})
+    colaboradores = Colaborador.objects.filter(status="ATIVO", funcao="Motorista") \
+        .values_list("nome", "matricula", named=True)
+    
+    return JsonResponse(
+        {"colaboradores_lista": [{"nome": colab.nome, "matricula": colab.matricula} for colab in colaboradores]}
+    )
+
 
 @require_GET
 def colaboradores_lista_coletores(request):
@@ -73,24 +65,23 @@ def contar_colaboradores_por_funcao(funcao):
 
 @require_GET
 def colaboradores_quantidade_motoristas(request):
-    quantidade_motoristas = contar_colaboradores_por_funcao("Motorista")
-    return JsonResponse({
-        "quantidade_motoristas": quantidade_motoristas
-    }, json_dumps_params={'ensure_ascii': False})
+    quantidade_motoristas = Colaborador.objects.filter(status="ATIVO", funcao="Motorista").count()
+    return JsonResponse({"quantidade_motoristas": quantidade_motoristas})
 
 @require_GET
 def colaboradores_quantidade_coletores(request):
     quantidade_coletores = contar_colaboradores_por_funcao("Coletor")
-    return JsonResponse({
-        "quantidade_coletores": quantidade_coletores
-    }, json_dumps_params={'ensure_ascii': False})
+    return JsonResponse({"quantidade_coletores": quantidade_coletores})
 
 @require_GET
 def colaboradores_lista_inativos(request):
-    colaboradores = Colaborador.objects.filter(status="INATIVO", tipo__in=TIPO_FUNCAO).values_list("nome", "tipo").distinct()
-    nomes = [colab[0] for colab in colaboradores]  
-    tipos = {colab[1] for colab in colaboradores}  
+    colaboradores = Colaborador.objects.filter(status="INATIVO", tipo__in=TIPO_FUNCAO) \
+        .values_list("nome", "tipo").distinct()
+
+    nomes = [colab[0] for colab in colaboradores]
+    tipos = list({colab[1] for colab in colaboradores})  
+
     return JsonResponse({
         "colaboradores_lista": nomes,
-        "colaboradores_tipo": list(tipos),
-    }, json_dumps_params={'ensure_ascii': False})
+        "colaboradores_tipo": tipos,
+    })

@@ -26,7 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/veiculos/criar/', veiculos_views.criar_veiculo, name='criar_veiculo'),
     path('api/colaboradores/criar_colaborador/', colaborador_views.criar_colaborador, name='criar_colaborador'),
-    path('api/colaboradores/colaboradores_lista_ativos/', colaborador_views.colaboradores_lista_ativos, name='colaboradores_lista'),
+    path('api/colaboradores/colaboradores_lista_ativos/', colaborador_views.colaboradores_lista_coletores, name='colaboradores_lista'),
     path('api/colaboradores/colaboradores_lista_motoristas_ativos/', colaborador_views.colaboradores_lista_motoristas_ativos, name='colaboradores_lista_motoristas'),
     path('api/colaboradores/colaboradores_lista_coletores_ativos/', colaborador_views.colaboradores_lista_coletores, name='colaboradores_lista_coletores'),
     path('api/colaboradores/colaboradores_quantidade_motoristas/', colaborador_views.colaboradores_quantidade_motoristas, name='colaboradores_quantidade_motoristas'),

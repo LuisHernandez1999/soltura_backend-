@@ -98,7 +98,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.0.53:19000",
     "http://localhost:19000",
     "http://192.168.0.53:8000",
-    "http://192.168.0.76:8000"
+    "http://192.168.0.76:8000",
+    "http://192.168.0.112:8000"
 ]
 
 # Password validation
@@ -119,7 +120,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-ALLOWED_HOSTS = ['192.168.0.233', 'localhost', '127.0.0.1','0.0.0.0','192.168.0.53','192.168.0.76']
+ALLOWED_HOSTS = ['192.168.0.233', 'localhost', '127.0.0.1','0.0.0.0','192.168.0.53','192.168.0.76',"192.168.0.112"]
 
 
 # Internationalization
