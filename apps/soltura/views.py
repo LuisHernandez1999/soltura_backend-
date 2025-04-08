@@ -36,8 +36,6 @@ def cadastrar_soltura(request):
         
         if not required_fields.issubset(data):
             return JsonResponse({'error': 'Campos obrigatórios faltando'}, status=400)
-
-        # Buscar motorista e veículo com `select_related()` para evitar múltiplas queries
         motorista = Colaborador.objects.filter(
             nome=data['motorista'], funcao="Motorista", status="ATIVO"
         ).select_related().first()
@@ -63,7 +61,7 @@ def cadastrar_soltura(request):
             for formato in formatos:
                 try:
                     dt = datetime.strptime(valor, formato)
-                    return timezone.make_aware(dt, timezone.get_default_timezone())  # Adiciona timezone
+                    return timezone.make_aware(dt, timezone.get_default_timezone())  
                 except ValueError:
                     continue  
 
@@ -72,7 +70,6 @@ def cadastrar_soltura(request):
         hora_entrega_chave = converter_para_data_hora(data['hora_entrega_chave'])
         hora_saida_frota = converter_para_data_hora(data['hora_saida_frota'])
 
-        # Criar a soltura
         soltura = Soltura.objects.create(
             motorista=motorista, 
             veiculo=veiculo, 
@@ -112,23 +109,46 @@ def cadastrar_soltura(request):
 
 
 logger = logging.getLogger(__name__)
+
 @csrf_exempt
-@csrf_exempt
-def visualizar_solturas(request):
-    if request.method == 'GET':  
-        try:
-            cache_key = "solturas_cache"
-            solturas = cache.get_or_set(cache_key, lambda: list(
-                Soltura.objects.select_related('motorista', 'veiculo')
-                .values('id', 'motorista__nome', 'veiculo__placa', 'frequencia', 'setor',
-                        'hora_entrega_chave', 'hora_saida_frota', 'tipo_coleta', 'turno')
-            ), timeout=3600)
+def exibir_solturas_registradas(request):
+    if request.method != 'GET':
+        return JsonResponse({'error': 'Método não permitido'}, status=405)
 
-            return JsonResponse(solturas, safe=False)
+    try:
+        placa = request.GET.get('placa_veiculo')  
 
-        except Exception as e:
-            logger.error(f"Erro ao buscar solturas: {e}")
-            return JsonResponse({'error': 'Erro interno'}, status=500)
+        solturas = (
+            Soltura.objects
+            .select_related('motorista', 'veiculo')
+            .prefetch_related('coletores')
+            .order_by('-hora_saida_frota')  
+        )
 
-    return JsonResponse({'error': 'Método não permitido'}, status=405)
+        if placa:
+            solturas = solturas.filter(veiculo__placa_veiculo=placa)
+
+        resultados = []
+
+        for soltura in solturas:
+            resultados.append({
+                "motorista": soltura.motorista.nome,
+                "matricula_motorista": soltura.motorista.matricula,
+                "coletores": [coletor.nome for coletor in soltura.coletores.all()],
+                "placa_veiculo": soltura.veiculo.placa_veiculo,
+                "frequencia": soltura.frequencia,
+                "setores": soltura.setores,
+                "celular": soltura.celular,
+                "lider": soltura.lider,
+                "hora_entrega_chave": soltura.hora_entrega_chave.strftime('%Y-%m-%d %H:%M:%S') if soltura.hora_entrega_chave else None,
+                "hora_saida_frota": soltura.hora_saida_frota.strftime('%Y-%m-%d %H:%M:%S') if soltura.hora_saida_frota else None,
+                "tipo_coleta": soltura.tipo_coleta,
+                "turno": soltura.turno
+            })
+
+        return JsonResponse(resultados, safe=False, status=200)
+
+    except Exception as e:
+        logger.error(f"Erro ao buscar solturas: {e}")
+        return JsonResponse({'error': 'Erro ao buscar solturas'}, status=500)
            

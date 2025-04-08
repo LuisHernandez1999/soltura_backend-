@@ -37,6 +37,7 @@ urlpatterns = [
     path('api/veiculos/historico/<int:veiculo_id>/', veiculos_views.historico_manutencao_veiculo, name='historico_manutencao_veiculo'),
     path('api/cadastro/cadastrar_user/', cadastro_views.cadastrar_user, name='cadastrar_user'),
     path('api/soltura/criar/', soltura_views.cadastrar_soltura, name='cadastrar_soltura'),
+    path('api/soltura/ver_solturas_dia/', soltura_views.exibir_solturas_registradas, name='visualizar_soltura'),
     path('api/login/', login_views.login, name='login')
     
 ]
