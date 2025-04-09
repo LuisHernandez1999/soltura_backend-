@@ -87,7 +87,7 @@ def cadastrar_soltura(request):
         return JsonResponse({
             "motorista": motorista.nome,
             "matricula_motorista": motorista.matricula,
-            "coletores": [coletor.nome for coletor in coletores],  # Correção aqui
+            "coletores": [coletor.nome for coletor in coletores],  
             "placa_veiculo": veiculo.placa_veiculo,
             "frequencia": soltura.frequencia,
             "setores": soltura.setores,
