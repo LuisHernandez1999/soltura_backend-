@@ -7,6 +7,18 @@ class Soltura(models.Model):
         ('ATIVO', 'Ativo'),
         ('INATIVO', 'Inativo')
     ]  
+    
+    TIPO_SERVICO = [("Seletiva","Seletiva"),
+                    ("Coleta","Coleta"),
+                    ("Remoção", "Remoção"),
+                    ("Varrição","Varrição")
+                ]
+    
+    TIPO_EQUIPE= [("Equipe1(Matutino)","Equipe1(Matutino)"),
+                  ("Equipe2(Vespertino)","Equipe2(Vespertino)"),
+                  ("Equipe3(Noturno)","Equipe3(Noturno)")]
+    
+
 
     TIPO_COLETA_CHOICES = [
         ('Seletiva', 'Seletiva'),
@@ -32,17 +44,14 @@ class Soltura(models.Model):
         limit_choices_to={'funcao': 'Coletor', 'status': 'ATIVO'},  
         related_name='solturas_coletor'
     )
-
     veiculo = models.ForeignKey(
         Veiculo,
         on_delete=models.CASCADE,
         limit_choices_to={'status': 'ATIVO'},  
         related_name='solturas'
     )
-
     hora_entrega_chave = models.DateTimeField(null=True, blank=True)
     hora_saida_frota = models.DateTimeField(null=True, blank=True)
-
     frequencia = models.CharField(
         max_length=50,
         choices=[('Diária', 'Diária'), ('Semanal', 'Semanal'), ('Mensal', 'Mensal')],
@@ -53,7 +62,70 @@ class Soltura(models.Model):
     lider = models.CharField(max_length=55)  
     status = models.CharField(max_length=7, choices=STATUS_CHOICES, default='ATIVO')
     tipo_coleta = models.CharField(max_length=10, choices=TIPO_COLETA_CHOICES) 
+    tipo_servico= models.CharField(max_length=10, choices=TIPO_SERVICO,null=False,
+    blank=False,default='Seletiva') 
     turno = models.CharField(max_length=10, choices=TURNO_CHOICES)
-
+    tipo_equipe = models.CharField(max_length=20, choices=TURNO_CHOICES,null=False,
+        blank=False,default='Equipe1(Matutino)')
+    
     def __str__(self):
         return f"Soltura - {self.motorista.nome} ({self.veiculo.placa_veiculo})"
+
+    
+
+    def rota_remocao(self):
+        if self.tipo_servico == 'Remoção':
+            return None
+
+    def rota_coleta(self):
+        if self.tipo_servico == 'Coleta':
+            frequencias_validas_rotas1 = ['Segunda', 'Quarta', 'Sexta']
+            frequencias_validas_rotas2 = ['Terça', 'Quinta', 'Sábado']
+
+            if self.turno == 'Diurno' and self.frequencia in frequencias_validas_rotas1:
+                if self.garagem == 'PA1':
+                    return ['AD12', 'AD13', 'AD14', 'AD15', 'AD16', 'AD17', 'AD18', 'AD19', 'AD20', 'AD21', 'AD22', 'AD23', 'AD24', 'DD11']
+                elif self.garagem == 'PA2':
+                    return ['AD12', 'AD13', 'AD14', 'AD15', 'AD16', 'AD17', 'AD18', 'AD19', 'AD20', 'AD21', 'AD22']
+                elif self.garagem == 'PA3':
+                    return ['AD13', 'AD14', 'AD15', 'AD16', 'AD17', 'AD18', 'AD19', 'AD20', 'AD21', 'AD22', 'AD23', 'AD24']
+                elif self.garagem == 'PA4':
+                    return ['AD12', 'AD13', 'AD14', 'AD15', 'AD16', 'AD17', 'AD18', 'AD19', 'AD20', 'AD21', 'AD22', 'AD24']
+
+            if self.turno == 'Diurno' and self.frequencia in frequencias_validas_rotas2:
+                if self.garagem == 'PA1':
+                    return ['AD12', 'AD13', 'AD14', 'AD15', 'AD16', 'AD17', 'AD18', 'AD19', 'AD20', 'AD21', 'AD22', 'AD23', 'AD24', 'DD11','BD12','BD13','BD14','BD15','BD16','BD17','BD19','BD21']
+                elif self.garagem == 'PA2':
+                    return ['AD12', 'AD13', 'AD14', 'AD15', 'AD16', 'AD17', 'AD18', 'AD19', 'AD20', 'AD21', 'AD22', 'AD24','BD12','BD13','BD14','BD15','BD16','BD17','BD18','BD19','BD20','BD21','BD22']
+                elif self.garagem == 'PA3':
+                    return ['AD13', 'AD14', 'AD15', 'AD16', 'AD17', 'AD18', 'AD19', 'AD20', 'AD21', 'AD22', 'AD23', 'AD24','BD13','BD14','BD16','BD17','BD18','BD19','BD20','BD21','BD22','BD23','BD24']
+                elif self.garagem == 'PA4':
+                    return ['AD13', 'AD14', 'AD15', 'AD16', 'AD17', 'AD18', 'AD19', 'AD20', 'AD21', 'AD22', 'AD24','BD12','BD13','BD14','BD15','BD16','BD17','BD18','BD19','BD20','BD21','BD22']
+
+            elif self.turno == 'Noturno' and self.frequencia in frequencias_validas_rotas1:
+                if self.garagem == 'PA1':
+                    return ['AN09', 'AN10', 'DN01', 'DN02', 'DN03', 'DN04', 'DN05', 'DN06', 'DN07', 'DN08', 'AN20','BN20']
+                elif self.garagem == 'PA2':
+                    return ['AN07', 'AN08', 'AN09', 'AN10', 'AN11', 'DN01', 'DN02', 'DN03', 'DN04', 'DN05', 'DN06']
+                elif self.garagem == 'PA3':
+                    return ['DN01', 'DN02', 'DN03', 'DN04', 'DN05', 'DN06', 'DN07', 'DN08', 'DN09', 'DN10', 'DN11', 'DN12', 'AN15']
+                elif self.garagem == 'PA4':
+                    return ['AN07', 'AN08', 'AN09', 'AN10', 'AN11', 'DN01', 'DN02', 'DN03', 'DN04', 'DN05', 'DN06']
+
+            elif self.turno == 'Noturno' and self.frequencia in frequencias_validas_rotas2:
+                if self.garagem == 'PA1':
+                    return ['BN09', 'BN10', 'DN01', 'DN02', 'DN03', 'DN04', 'DN05', 'DN06', 'DN07', 'DN08', 'BN20']
+                elif self.garagem == 'PA2':
+                    return ['BN07', 'BN08', 'BN09', 'BN10', 'BN11', 'DN01', 'DN02', 'DN03', 'DN04', 'DN05', 'DN06']
+                elif self.garagem == 'PA3':
+                    return ['DN01', 'DN02', 'DN03', 'DN04', 'DN05', 'DN06', 'DN07', 'DN08', 'DN09', 'DN10', 'DN11', 'DN12', 'BN15']
+                elif self.garagem == 'PA4':
+                    return ['BN07', 'BN08', 'BN09', 'BN10', 'BN11', 'DN01', 'DN02', 'DN03', 'DN04', 'DN05', 'DN06']
+        return []
+    
+def rota_varricao(self):
+    if self.tipo_servico == 'Varrição':
+        self.setores = None
+        self.coletores = None  # Limpa todos os coletores associados
+        return []
+    return []

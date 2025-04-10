@@ -21,6 +21,16 @@ class SolturaSerializer(serializers.ModelSerializer):
             'lider', 'status'
         ]
 
+    def validate(self, data):
+        tipo_servico = data.get('tipo_servico')
+        coletores = data.get('coletores', [])
+
+        if tipo_servico == 'Varrição' and coletores:
+            raise serializers.ValidationError("Varrição não deve ter coletores.")
+        if tipo_servico != 'Varrição' and not coletores:
+            raise serializers.ValidationError("É necessário informar coletores, exceto para Varrição.")
+        return data
+
     def create(self, validated_data):
         motorista_nome = validated_data['motorista_nome']
         coletor_nome = validated_data['coletor_nome']
