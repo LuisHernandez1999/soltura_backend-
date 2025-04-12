@@ -90,6 +90,7 @@ def cadastrar_soltura(request):
             hora_saida_frota=hora_saida_frota,
             turno=data['turno'],
             tipo_servico=data['tipo_servico'],
+            rota=data['rota']
         )
 
         if coletores:
@@ -99,14 +100,15 @@ def cadastrar_soltura(request):
             "motorista": motorista.nome,
             "matricula_motorista": motorista.matricula,
             "coletores": [coletor.nome for coletor in coletores],
-            "placa_veiculo": veiculo.placa_veiculo,
+            "placa_veiculo": veiculo.prefixo,
             "frequencia": soltura.frequencia,
             "setores": soltura.setores,
             "celular": soltura.celular,
             "lider": soltura.lider,
             "hora_entrega_chave": hora_entrega_chave.strftime('%Y-%m-%d %H:%M:%S'),
             "hora_saida_frota": hora_saida_frota.strftime('%Y-%m-%d %H:%M:%S'),
-            "turno": soltura.turno,
+            "turno":soltura.turno,
+            "rota":soltura.rota,
             "tipo_servico": soltura.tipo_servico,
         }, status=201)
 
@@ -145,15 +147,17 @@ def exibir_solturas_registradas(request):
                 "motorista": soltura.motorista.nome,
                 "matricula_motorista": soltura.motorista.matricula,
                 "coletores": [coletor.nome for coletor in soltura.coletores.all()],
-                "placa_veiculo": soltura.veiculo.placa_veiculo,
+                "prefixo": soltura.veiculo.prefixo,
                 "frequencia": soltura.frequencia,
                 "setores": soltura.setores,
                 "celular": soltura.celular,
                 "lider": soltura.lider,
-                "hora_entrega_chave": soltura.hora_entrega_chave.strftime('%Y-%m-%d %H:%M:%S') if soltura.hora_entrega_chave else None,
-                "hora_saida_frota": soltura.hora_saida_frota.strftime('%Y-%m-%d %H:%M:%S') if soltura.hora_saida_frota else None,
+                "hora_entrega_chave": soltura.hora_entrega_chave.strftime('%H:%M:%S') if soltura.hora_entrega_chave else None,
+                "hora_saida_frota": soltura.hora_saida_frota.strftime('%H:%M:%S') if soltura.hora_saida_frota else None,
                 "tipo_servico": soltura.tipo_servico,
-                "turno": soltura.turno
+                "turno": soltura.turno,
+                "rota": soltura.rota,
+
             })
 
         return JsonResponse(resultados, safe=False, status=200)

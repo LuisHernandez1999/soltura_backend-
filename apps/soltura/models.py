@@ -1,6 +1,7 @@
 from django.db import models
 from apps.colaborador.models import Colaborador
 from apps.veiculos.models import Veiculo
+from django.core.exceptions import ValidationError
 
 class Soltura(models.Model):
     STATUS_CHOICES = [
@@ -28,7 +29,7 @@ class Soltura(models.Model):
     ]
 
     TURNO_CHOICES = [
-        ('Diurno', 'Diurno'),
+        ('Matutino', 'Matutino'),
         ('Vespertino', 'Vespertino'),
         ('Noturno', 'Noturno')
     ]
@@ -57,6 +58,10 @@ class Soltura(models.Model):
         choices=[('Diária', 'Diária'), ('Semanal', 'Semanal'), ('Mensal', 'Mensal')],
         default='Diária'
     )
+    
+    rota=models.CharField(max_length=10,null=False,blank=False, default='PA1')
+    garagem = models.CharField(max_length=10,null=False,
+        blank=False,default='Equipe1(Matutino)')
     setores = models.CharField(max_length=55)  
     celular = models.CharField(max_length=20)  
     lider = models.CharField(max_length=55)  
@@ -65,14 +70,18 @@ class Soltura(models.Model):
     tipo_servico= models.CharField(max_length=10, choices=TIPO_SERVICO,null=False,
     blank=False,default='Seletiva') 
     turno = models.CharField(max_length=10, choices=TURNO_CHOICES)
-    tipo_equipe = models.CharField(max_length=20, choices=TURNO_CHOICES,null=False,
+    tipo_equipe = models.CharField(max_length=20, choices=TIPO_EQUIPE,null=False,
         blank=False,default='Equipe1(Matutino)')
     
-    def __str__(self):
-        return f"Soltura - {self.motorista.nome} ({self.veiculo.placa_veiculo})"
+    def clean(self):
+        if self.veiculo.status != 'ATIVO':
+            raise ValidationError("O veículo associado deve ser ativo para cadastrar a soltura.")
 
     
+    def __str__(self):
+        return f"Soltura - {self.motorista.nome} ({self.veiculo.prefixo})"
 
+     
     def rota_remocao(self):
         if self.tipo_servico == 'Remoção':
             return None
@@ -82,7 +91,7 @@ class Soltura(models.Model):
             frequencias_validas_rotas1 = ['Segunda', 'Quarta', 'Sexta']
             frequencias_validas_rotas2 = ['Terça', 'Quinta', 'Sábado']
 
-            if self.turno == 'Diurno' and self.frequencia in frequencias_validas_rotas1:
+            if self.turno == 'Matutino' and self.frequencia in frequencias_validas_rotas1:
                 if self.garagem == 'PA1':
                     return ['AD12', 'AD13', 'AD14', 'AD15', 'AD16', 'AD17', 'AD18', 'AD19', 'AD20', 'AD21', 'AD22', 'AD23', 'AD24', 'DD11']
                 elif self.garagem == 'PA2':
@@ -92,7 +101,7 @@ class Soltura(models.Model):
                 elif self.garagem == 'PA4':
                     return ['AD12', 'AD13', 'AD14', 'AD15', 'AD16', 'AD17', 'AD18', 'AD19', 'AD20', 'AD21', 'AD22', 'AD24']
 
-            if self.turno == 'Diurno' and self.frequencia in frequencias_validas_rotas2:
+            if self.turno == 'Matutino' and self.frequencia in frequencias_validas_rotas2:
                 if self.garagem == 'PA1':
                     return ['AD12', 'AD13', 'AD14', 'AD15', 'AD16', 'AD17', 'AD18', 'AD19', 'AD20', 'AD21', 'AD22', 'AD23', 'AD24', 'DD11','BD12','BD13','BD14','BD15','BD16','BD17','BD19','BD21']
                 elif self.garagem == 'PA2':
