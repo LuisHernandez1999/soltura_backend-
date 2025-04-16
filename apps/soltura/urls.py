@@ -8,5 +8,6 @@ urlpatterns = [
     path('exibir_total_de_remocoes_hoje/',views.exibir_total_de_remocao_soltas_no_dia,name='exibir_total_de_remocoes_hoje'),
     path('detalhes_de_todas_remocoes_hoje/',views.detalhes_remocoes_hoje,name="exibir_total_de_remocoes_hoje"),
     path('detalhes_de_todas_remocoes/',views.detalhes_de_todas_remocoes,name='detalhes_de_todas_remocoes'),
-    path('remocao_por_mes/',views.remocao_por_mes, name='remocao_por_mes')
+    path('remocao_por_mes/',views.media_mensal_de_solturas, name='remocao_por_mes'),
+    
 ]

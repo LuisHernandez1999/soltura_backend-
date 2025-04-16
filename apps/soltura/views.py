@@ -23,6 +23,7 @@ import traceback
 import calendar
 from django.db.models.functions import TruncMonth
 from django.db.models import Count
+from django.db.models.functions import ExtractMonth
 
 logger = logging.getLogger(__name__)
 @csrf_exempt
@@ -311,32 +312,28 @@ def detalhes_remocoes_hoje(request):
 
 
 @csrf_exempt
-def remocao_por_mes(request):
+def media_mensal_de_solturas(request):
     if request.method != 'GET':
-        return JsonResponse({'error': 'o metodo deve ser GET'}, status=405)
-
+        return JsonResponse({'error': 'aqui deve ser GET'}, status=405)
     try:
         ano_atual = datetime.now().year
         dados = (
-            Soltura.objects.filter(tipo_servico__iexact='Remoção', data__year=ano_atual)
-            .annotate(mes=TruncMonth('data'))
+            Soltura.objects
+            .filter(data__year=ano_atual)
+            .annotate(mes=ExtractMonth('data'))
             .values('mes')
             .annotate(total=Count('id'))
-            .order_by('mes')
         )
-
-       
-        meses_ano = {datetime(ano_atual, i, 1).strftime('%b/%Y'): 0 for i in range(1, 13)}
-
-
+        totais_por_mes = {mes: 0 for mes in range(1, 13)}
         for entrada in dados:
-            mes_formatado = entrada['mes'].strftime('%b/%Y')
-            meses_ano[mes_formatado] = entrada['total']
+            totais_por_mes[entrada['mes']] = entrada['total']
 
-        return JsonResponse({'remocoes_por_mes': meses_ano}, status=200)
+        media = sum(totais_por_mes.values()) / 12
+
+        return JsonResponse({'media_mensal_de_solturas': round(media, 2)}, status=200)
 
     except Exception as e:
-        return JsonResponse({'error': f'erro ao buscar remocoes: {str(e)}'}, status=500)
+        return JsonResponse({'error': f'erro ao calcular media de solturas: {str(e)}'}, status=500)
 
 
 
