@@ -21,7 +21,7 @@ def criar_veiculo(request):
 
     campos_obrigatorios = {'prefixo', 'tipo', 'placa_veiculo'}
     if not campos_obrigatorios.issubset(data):
-       print("❌ Dados recebidos (parciais ou errados):", data)
+       print(" Dados recebidos (parciais ou errados):", data)
        print(f"❗ Campos obrigatórios ausentes. Esperados: {campos_obrigatorios}")
        return JsonResponse({'erro': f'Campos obrigatórios ausentes. Esperados: {campos_obrigatorios}'}, status=400)
 

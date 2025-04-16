@@ -75,7 +75,7 @@ class Soltura(models.Model):
     turno = models.CharField(max_length=10, choices=TURNO_CHOICES)
     tipo_equipe = models.CharField(max_length=20, choices=TIPO_EQUIPE,null=False,
         blank=False,default='Equipe1(Matutino)')
-    data = models.DateField(null=False, blank=False, default=date(2002, 1, 1))
+    data = models.DateField(null=False, blank=False, default=date(2025, 1, 1))
     hora_chegada =models.TimeField(null=True, blank=False,default=time(14, 14))
     
     def clean(self):
