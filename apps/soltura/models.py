@@ -76,7 +76,7 @@ class Soltura(models.Model):
     tipo_equipe = models.CharField(max_length=20, choices=TIPO_EQUIPE,null=False,
         blank=False,default='Equipe1(Matutino)')
     data = models.DateField(null=False, blank=False, default=date(2002, 1, 1))
-    hora_chegada =models.TimeField(null=False, blank=False,default=time(14, 14))
+    hora_chegada =models.TimeField(null=True, blank=False,default=time(14, 14))
     
     def clean(self):
         if self.veiculo.status != 'ATIVO':

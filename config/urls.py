@@ -44,6 +44,7 @@ urlpatterns = [
     path('api/veiculos/conatagem_romcao_inativos/',veiculos_views.contagem_remocao_inativos, name='conatagem_romcao_inativos'),
     path('api/veiculos/total_frota_remocao/',veiculos_views.contagem_total_remocao,name='total_frota_remocao/'),
     path('api/soltura/detalhes_de_todas_remocoes/',soltura_views.detalhes_de_todas_remocoes,name='detalhes_de_todas_remocoes'),
-    path('api/soltura/detalhes_de_todas_remocoes_hoje/',soltura_views.detalhes_remocoes_hoje,name='detalhes_de_todas_remocoes_hoje')
+    path('api/soltura/detalhes_de_todas_remocoes_hoje/',soltura_views.detalhes_remocoes_hoje,name='detalhes_de_todas_remocoes_hoje'),
+    path('api/login/', login_views.login, name='login')
 ]
 

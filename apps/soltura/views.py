@@ -44,11 +44,14 @@ def cadastrar_soltura(request):
             return JsonResponse({'error': 'Campos obrigatórios faltando'}, status=400)
 
         motorista = Colaborador.objects.filter(
-            nome=data['motorista'], funcao="Motorista", status="ATIVO"
+            nome=data['motorista'], funcao="Motorista",
+             status__in=["ATIVO", "Ativo"]
         ).first()
 
+        prefixo = data.get('veiculo') or data.get('prefixo')
         veiculo = Veiculo.objects.filter(
-            placa_veiculo=data['veiculo'], status="Ativo"
+        prefixo=prefixo, 
+        status__in=["ATIVO", "Ativo"]
         ).first()
 
         if not motorista or not veiculo:
@@ -78,7 +81,8 @@ def cadastrar_soltura(request):
 
         hora_entrega_chave = converter_para_data_hora(data['hora_entrega_chave'])
         hora_saida_frota = converter_para_data_hora(data['hora_saida_frota'])
-        hora_chegada = converter_para_data_hora(data['hora_chegada'])
+        hora_chegada_raw = data.get('hora_chegada')  # Tenta pegar o valor de hora_chegada
+        hora_chegada = converter_para_data_hora(hora_chegada_raw) if hora_chegada_raw else None
 
         soltura = Soltura.objects.create(
             motorista=motorista,
