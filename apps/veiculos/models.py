@@ -52,6 +52,18 @@ class Veiculo(models.Model):
         ('Em Garagem', 'Em Garagem'),
     ]
 
+    TIPO_SERVICO_VEICULO = [
+        ('Remoção', 'Remoção'),
+        ('Seletiva', 'Seletiva'),
+        ('Testes','Teste')
+    ]
+
+   
+    PREFIXOS_REMOVER = ['CB-',
+                        'CC-']
+
+
+
     prefixo = models.CharField(max_length=10, unique=True)
     tipo = models.CharField(max_length=20, choices=TIPOS_VEICULO)
     placa_veiculo = models.CharField(max_length=8, validators=[VeiculoValidator.validar_placa],unique=True)
@@ -59,7 +71,35 @@ class Veiculo(models.Model):
     motivo_inatividade = models.CharField(max_length=20, choices=MOTIVOS_INATIVIDADE, null=True, blank=True, verbose_name="Motivo da Inatividade")
     data_manutencao = models.DateTimeField(null=True, blank=True, verbose_name="Data de Início da Manutenção")
     data_saida = models.DateTimeField(null=True, blank=True, verbose_name="Data de Saída da Manutenção")
-    custo_manutencao = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Custo da Manutenção")
+    custo_manutencao = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, verbose_name="Custo da Manutenção",default='0.00')
+    tipo_servico_veiculo = models.CharField(
+        max_length=20,
+        choices=TIPO_SERVICO_VEICULO,
+        blank=False,
+        null=False,
+        default= 'Teste'
+    )
+    tipo_servico_usuario = models.CharField(
+        max_length=20,
+        choices=TIPO_SERVICO_VEICULO,
+        blank=True,
+        null=True,
+        verbose_name="Tipo de Serviço Selecionado pelo Usuário"
+    )
+    
+    def save(self, *args, **kwargs):
+        if self.prefixo.startswith('CB-'):
+            if self.tipo_servico_usuario:
+                self.tipo_servico_veiculo = self.tipo_servico_usuario
+            else:
+                self.tipo_servico_veiculo = 'Remoção'  
+        elif self.prefixo.startswith('CC-'):
+            if self.tipo_servico_usuario:
+                self.tipo_servico_veiculo = self.tipo_servico_usuario
+            else:
+                self.tipo_servico_veiculo = 'Seletiva'  
+
+        super().save(*args, **kwargs)
 
     class Meta:
         db_table = 'veiculo'

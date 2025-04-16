@@ -2,6 +2,8 @@ from django.db import models
 from apps.colaborador.models import Colaborador
 from apps.veiculos.models import Veiculo
 from django.core.exceptions import ValidationError
+from datetime import date,time
+import datetime
 
 class Soltura(models.Model):
     STATUS_CHOICES = [
@@ -23,9 +25,10 @@ class Soltura(models.Model):
 
     TIPO_COLETA_CHOICES = [
         ('Seletiva', 'Seletiva'),
-        ('Coletiva', 'Coletiva'),
+        ('Coleta', 'Coleta'),
         ('Cata Treco', 'Cata Treco'),
-        ('Varrição', 'Varrição')
+        ('Varrição', 'Varrição'),
+
     ]
 
     TURNO_CHOICES = [
@@ -51,15 +54,15 @@ class Soltura(models.Model):
         limit_choices_to={'status': 'ATIVO'},  
         related_name='solturas'
     )
-    hora_entrega_chave = models.DateTimeField(null=True, blank=True)
-    hora_saida_frota = models.DateTimeField(null=True, blank=True)
+    hora_entrega_chave = models.TimeField(null=False, blank=False,default= time(8, 0))
+    hora_saida_frota = models.TimeField(null=False, blank=False,  default=  time(8, 10))
     frequencia = models.CharField(
         max_length=50,
         choices=[('Diária', 'Diária'), ('Semanal', 'Semanal'), ('Mensal', 'Mensal')],
         default='Diária'
     )
     
-    rota=models.CharField(max_length=10,null=False,blank=False, default='PA1')
+    rota=models.CharField(max_length=10,null=True,blank=False, default='PA1')
     garagem = models.CharField(max_length=10,null=False,
         blank=False,default='Equipe1(Matutino)')
     setores = models.CharField(max_length=55)  
@@ -72,6 +75,8 @@ class Soltura(models.Model):
     turno = models.CharField(max_length=10, choices=TURNO_CHOICES)
     tipo_equipe = models.CharField(max_length=20, choices=TIPO_EQUIPE,null=False,
         blank=False,default='Equipe1(Matutino)')
+    data = models.DateField(null=False, blank=False, default=date(2002, 1, 1))
+    hora_chegada =models.TimeField(null=False, blank=False,default=time(14, 14))
     
     def clean(self):
         if self.veiculo.status != 'ATIVO':

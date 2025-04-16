@@ -9,6 +9,7 @@ from django.core.cache import cache
 from django.db.models import Q
 import json
 from .models import Veiculo, HistoricoManutencao, calcular_tempo_manutencao, VeiculoValidator
+from django.db.models import Count
 
 @csrf_exempt
 @require_POST
@@ -20,7 +21,9 @@ def criar_veiculo(request):
 
     campos_obrigatorios = {'prefixo', 'tipo', 'placa_veiculo'}
     if not campos_obrigatorios.issubset(data):
-        return JsonResponse({'erro': 'Campos obrigatórios ausentes.'}, status=400)
+       print("❌ Dados recebidos (parciais ou errados):", data)
+       print(f"❗ Campos obrigatórios ausentes. Esperados: {campos_obrigatorios}")
+       return JsonResponse({'erro': f'Campos obrigatórios ausentes. Esperados: {campos_obrigatorios}'}, status=400)
 
     try:
         VeiculoValidator.validar_placa(data['placa_veiculo'])
@@ -40,20 +43,20 @@ def criar_veiculo(request):
         motivo_inatividade=data.get('motivo_inatividade'),
         data_manutencao=data.get('data_manutencao'),
         data_saida=data.get('data_saida'),
-        custo_manutencao=custo_manutencao
+        custo_manutencao=custo_manutencao,
+        tipo_servico_usuario = data.get('tipo_servico_usuario')
     )
 
     return JsonResponse({'mensagem': 'Veículo criado com sucesso.', 'veiculo': model_to_dict(novo_veiculo)}, status=201)
-
 @require_GET
-def veiculos_lista_ativos(_request):
+def veiculos_lista_ativos(request):
     cache_key = "veiculos_lista_ativos"
-    placas_ativas = cache.get_or_set(
+    veiculos_ativos = cache.get_or_set(
         cache_key,
-        lambda: list(Veiculo.objects.filter(status='Ativo').values_list("placa_veiculo", flat=True)),
+        lambda: list(Veiculo.objects.filter(status='Ativo').values("prefixo", "placa_veiculo")),
         timeout=3600  
     )
-    return JsonResponse({"veiculos_lista_ativos": placas_ativas})
+    return JsonResponse({"veiculos_lista_ativos": veiculos_ativos})
 
 @csrf_exempt
 @require_POST
@@ -87,3 +90,27 @@ def historico_manutencao_veiculo(_, veiculo_id):
         'data_manutencao', 'data_saida', 'custo_manutencao', 'descricao_manutencao'
     )
     return JsonResponse({'historico_manutencao': list(historico)}, json_dumps_params={'ensure_ascii': False})
+
+def contagem_remocao_ativos(request):
+    if request.method == 'GET':
+        count_remocao_ativos = Veiculo.objects.filter(tipo_servico_veiculo='Remoção', status='Ativo').only('id').count()
+        return JsonResponse({'count_remocao_ativos': count_remocao_ativos})
+    return JsonResponse({'error': 'metodo nao permitido'}, status=405)
+
+def contagem_remocao_inativos(request):
+    if request.method == 'GET':
+        count_remocao_inativos = Veiculo.objects.filter(tipo_servico_veiculo='Remoção', status='Inativo').only('id').count()
+
+        return JsonResponse({'count_remocao_inativos': count_remocao_inativos})
+    return JsonResponse({'error': 'metodo nao permitido'}, status=405)       
+
+
+def contagem_total_remocao(request):
+    if request.method == 'GET':
+        count_remocao_ativos = Veiculo.objects.filter(tipo_servico_veiculo='Remoção', status='Ativo').only('id').count()
+        count_remocao_inativos = Veiculo.objects.filter(tipo_servico_veiculo='Remoção', status='Inativo').only('id').count()
+        total_remocao = count_remocao_ativos + count_remocao_inativos
+
+        return JsonResponse({'total_remocao': total_remocao})
+    
+    return JsonResponse({'error': 'Método não permitido'}, status=405)
