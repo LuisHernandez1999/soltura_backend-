@@ -9,5 +9,9 @@ urlpatterns = [
     path('detalhes_de_todas_remocoes_hoje/',views.detalhes_remocoes_hoje,name="exibir_total_de_remocoes_hoje"),
     path('detalhes_de_todas_remocoes/',views.detalhes_de_todas_remocoes,name='detalhes_de_todas_remocoes'),
     path('remocao_por_mes/',views.media_mensal_de_solturas, name='remocao_por_mes'),
+    path('solturas_de_remocao_por_mes',views.remocoe_por_mes,name='solturas_de_remocao_por_mes'),
+    path('solturas/<int:soltura_id>/editar/', views.editar_soltura, name='editar_soltura'),
+    path('soltura/quantidade_soltura_equipes/',views.quantidade_soltura_equipes,name='quantidade_soltura_equipes')
+
     
 ]

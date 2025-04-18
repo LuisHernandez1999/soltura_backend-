@@ -21,7 +21,10 @@ class Soltura(models.Model):
                   ("Equipe2(Vespertino)","Equipe2(Vespertino)"),
                   ("Equipe3(Noturno)","Equipe3(Noturno)")]
     
-
+    PAS = [('PA1','PA1'),
+          ('PA2','PA2'), 
+          ('PA3','PA3'),
+          ('PA4','PA4')]
 
     TIPO_COLETA_CHOICES = [
         ('Seletiva', 'Seletiva'),
@@ -62,9 +65,12 @@ class Soltura(models.Model):
         default='Diária'
     )
     
-    rota=models.CharField(max_length=10,null=True,blank=False, default='PA1')
-    garagem = models.CharField(max_length=10,null=False,
-        blank=False,default='Equipe1(Matutino)')
+    STATUS_DA_FROTA = [('Em Andamento','Em Andamento'),
+                        ('Finalizada','Finalizada')]
+
+    rota=models.CharField(max_length=10,null=True,blank=False,default='AND1')
+    garagem = models.CharField(max_length=10,null=False,choices=PAS,
+        blank=False,default=' PA1')
     setores = models.CharField(max_length=55)  
     celular = models.CharField(max_length=20)  
     lider = models.CharField(max_length=55)  
@@ -77,6 +83,7 @@ class Soltura(models.Model):
         blank=False,default='Equipe1(Matutino)')
     data = models.DateField(null=False, blank=False, default=date(2025, 1, 1))
     hora_chegada =models.TimeField(null=True, blank=False,default=time(14, 14))
+    status_frota =models.CharField(max_length=14,null=True,choices=STATUS_DA_FROTA,blank=False,default='Finalizado')
     
     def clean(self):
         if self.veiculo.status != 'ATIVO':

@@ -37,7 +37,7 @@ urlpatterns = [
     path('api/veiculos/historico/<int:veiculo_id>/', veiculos_views.historico_manutencao_veiculo, name='historico_manutencao_veiculo'),
     path('api/cadastro/cadastrar_user/', cadastro_views.cadastrar_user, name='cadastrar_user'),
     path('api/soltura/criar/', soltura_views.cadastrar_soltura, name='cadastrar_soltura'),
-    path('api/soltura/ver_solturas_dia/', soltura_views.exibir_solturas_registradas, name='visualizar_soltura'),
+    path('api/soltura/ver_solturas/', soltura_views.exibir_solturas_registradas, name='visualizar_soltura'),
     path('api/soltura/exibir_total_de_remocoes_no_dia/', soltura_views.exibir_total_de_remocao_soltas_no_dia, name='exibir_total_de_remocao_soltas_no_dia'),
     path('api/soltura/exibir_total_de_remocao_soltas/',soltura_views.exibir_total_de_remocao_feitas,name='exibir_total_de_remocao_feitas'),
     path('api/veiculos/contagem_remocao_ativos/',veiculos_views.contagem_remocao_ativos, name='contagem_remocao_ativos'),
@@ -46,6 +46,9 @@ urlpatterns = [
     path('api/soltura/detalhes_de_todas_remocoes/',soltura_views.detalhes_de_todas_remocoes,name='detalhes_de_todas_remocoes'),
     path('api/soltura/detalhes_de_todas_remocoes_hoje/',soltura_views.detalhes_remocoes_hoje,name='detalhes_de_todas_remocoes_hoje'),
     path('api/login/', login_views.login, name='login'),
-    path('api/soltura/remocao_por_mes/',soltura_views.remocao_por_mes,name='remocao_por_mes')
+    path('api/soltura/remocao_por_mes/',soltura_views.media_mensal_de_solturas,name='remocao_por_mes'),
+    path('api/soltura/solturas_de_remocao_por_mes/',soltura_views.remocoe_por_mes,name='solturas_de_remocao_por_mes'),
+    path('api/solturas/<int:soltura_id>/editar/', soltura_views.editar_soltura, name='editar_soltura'),
+    path('api/quantidade_soltura_equipes/',soltura_views.quantidade_soltura_equipes_dia,name='/quantidade_soltura_equipes/')
 ]
 
