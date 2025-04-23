@@ -89,7 +89,7 @@ def cadastrar_soltura(request):
             for formato in formatos:
                 try:
                     dt = datetime.strptime(valor, formato)
-                    if dt.year < 2025:
+                    if dt.year < 2024:
                         raise ValueError(f"data anterior a 2025 nao vai ze: {valor}")
                     if formato in ['%H:%M', '%H:%M:%S']:
                         raise ValueError(f"formato de hora errado sem data completa: {valor}")
@@ -568,4 +568,20 @@ def quantidade_soltura_equipes_dia(request):
         return JsonResponse({'dados': list(resultado)}, status=200)
     except Exception as e:
         return JsonResponse({'error': f' deu erro ao contar solturas por equipe, olha a filtragem e vallores como ta na model : {str(e)}'}, status=500)
-       
+
+# @csrf_exempt
+# def distruibuicao_por_status(request):
+#     if request.method != 'GET':
+#         return JsonResponse({'error':'metodo nao permitido deve ser GET'}, status=405)
+#     try:
+#         hoje = localdate()
+#         quantidade_em_andamento = Soltura.object.filter.status('Em andamento')
+#         quantidade_finalizado= Soltura.object.filter.status('Finalizado')
+#         resultado =(
+#             Soltura.objects
+#             .filter(data=hoje, tipo_servico='Remoção')
+#             .values('status')
+#         )
+#     return JsonResponse(quantidade_em_andamento,quantidade_finalizado,resultado)
+# except:
+      
