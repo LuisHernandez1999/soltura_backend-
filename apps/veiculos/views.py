@@ -53,7 +53,7 @@ def veiculos_lista_ativos(request):
     cache_key = "veiculos_lista_ativos"
     veiculos_ativos = cache.get_or_set(
         cache_key,
-        lambda: list(Veiculo.objects.filter(status='Ativo').values("prefixo", "placa_veiculo")),
+        lambda: list(Veiculo.objects.filter(status='Ativo').values("prefixo")),
         timeout=3600  
     )
     return JsonResponse({"veiculos_lista_ativos": veiculos_ativos})
