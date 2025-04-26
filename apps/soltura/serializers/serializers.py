@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Soltura
+from ..models.models import Soltura
 from apps.colaborador.models import Colaborador
 from apps.veiculos.models import Veiculo
 
