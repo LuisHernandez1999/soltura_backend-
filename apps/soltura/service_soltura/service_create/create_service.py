@@ -8,22 +8,13 @@ from apps.veiculos.models import Veiculo
 logger = logging.getLogger(__name__)
 
 def converter_para_data_hora(valor):
-    formatos = [
-        '%H:%M', '%H:%M:%S', '%d/%m/%Y %H:%M',
-        '%d/%m/%Y %H:%M:%S', '%Y-%m-%d %H:%M', '%Y-%m-%d %H:%M:%S',
-        '%Y-%m-%dT%H:%M:%SZ',
-    ]
-    for formato in formatos:
-        try:
-            dt = datetime.strptime(valor, formato)
-            if dt.year < 2024:
-                raise ValueError(f"data anterior a 2025 nao vai ze: {valor}")
-            if formato in ['%H:%M', '%H:%M:%S']:
-                raise ValueError(f"formato de hora errado sem data completa: {valor}")
-            return timezone.make_aware(dt, timezone.get_default_timezone())
-        except ValueError:
-            continue
-    raise ValueError(f"formato de data/hora erradas ou data anterior a 2025: {valor}")
+    if valor is None:
+        raise ValueError("O valor de hora não pode ser None.")
+    if not isinstance(valor, str):
+        raise ValueError("O valor de hora deve ser uma string.")
+    
+    formato = "%Y-%m-%d %H:%M:%S"  # Ajuste o formato conforme necessário
+    return datetime.strptime(valor, formato)
 
 
 def cadastrar_soltura_service(data):
