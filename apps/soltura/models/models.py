@@ -67,6 +67,9 @@ class Soltura(models.Model):
     
     STATUS_DA_FROTA = [('Em Andamento','Em Andamento'),
                         ('Finalizada','Finalizada')]
+    TIPO_VEICULO=[('Baú','Baú'),
+                  ('Baculante','Basculante'),
+                  ('Seletolix','Seletolix')]
 
     rota=models.CharField(max_length=10,null=True,blank=False,default='AND1')
     garagem = models.CharField(max_length=10,null=False,choices=PAS,
@@ -84,7 +87,7 @@ class Soltura(models.Model):
     data = models.DateField(null=False, blank=False, default=date(2025, 1, 1))
     hora_chegada =models.TimeField(null=True, blank=False,default=time(14, 14))
     status_frota =models.CharField(max_length=14,null=True,choices=STATUS_DA_FROTA,blank=False,default='Finalizado')
-    
+    tipo_veiculo_selecionado= models.CharField(max_length=14,null=True,choices=TIPO_VEICULO,blank=False,default='Basculante')
     def clean(self):
         if self.veiculo.status != 'ATIVO':
             raise ValidationError("O veículo associado deve ser ativo para cadastrar a soltura.")
