@@ -1,4 +1,3 @@
-# services/soltura_service.py
 from django.db.models import Count
 from ...models.models import Soltura
 from django.utils.timezone import localdate
@@ -8,11 +7,11 @@ logger = logging.getLogger(__name__)
 
 def distribuicao_status_por_data(tipo_servico='Remoção'):
     try:
-        hoje = localdate.today()
+        hoje = localdate.today()  # Pega a data de hoje, sem hora
         logger.info("Buscando distribuição de status para o tipo de serviço: %s, data: %s", tipo_servico, hoje)
 
-        # Query para contar as solturas por status
-        status_count = Soltura.objects.filter(data_soltura=hoje, tipo_servico=tipo_servico) \
+        # Se o campo 'data_soltura' for um DateTimeField, use __date para comparar somente a data
+        status_count = Soltura.objects.filter(data_soltura__date=hoje, tipo_servico=tipo_servico) \
             .values('status') \
             .annotate(qtd=Count('id'))
         

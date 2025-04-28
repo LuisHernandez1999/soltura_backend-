@@ -25,7 +25,9 @@ from apps.soltura.views.cards_views.cards import exibir_total_de_remocao_feitas,
 from apps.soltura.views.table_view.table import exibir_solturas_registradas
 from apps.soltura.views.grafic_views.grafic import media_mensal_de_solturas, remocoe_por_mes
 from apps.soltura.views.update_view.upadate import editar_soltura
-from apps.soltura.views.pa_pie_views.pa_pie import quantidade_soltura_equipes_dia
+from apps.soltura.views.pa_pie_views.views_pa_pie import distribuicao_diaria_por_pa
+from apps.soltura.views.pa_pie_views.views_pa_pie import distribuicao_diaria_por_pa_view
+from apps.soltura.views.type_truck_views.views_type_truck import tipos_veiculos_soltos_no_dia_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -52,6 +54,9 @@ urlpatterns = [
     path('api/soltura/remocao_por_mes/', media_mensal_de_solturas,name='remocao_por_mes'),
     path('api/soltura/solturas_de_remocao_por_mes/',remocoe_por_mes,name='solturas_de_remocao_por_mes'),
     path('api/solturas/<int:soltura_id>/editar/', editar_soltura, name='editar_soltura'),
-    path('api/quantidade_soltura_equipes/', quantidade_soltura_equipes_dia,name='/quantidade_soltura_equipes/')
+    path('api/solturas/quantidade_soltura_equipes/',distribuicao_diaria_por_pa,name='/quantidade_soltura_equipes/'),
+    path('api/soltura/distribuicao_pa/', distribuicao_diaria_por_pa_view, name='distribuicao_pa'),
+    path('api/soltura/distribuicao_diaria_por_pa/',distribuicao_diaria_por_pa,name='distribuicao_diaria_por_pa' ),
+    path('api/soltura/tipos_veiculos_soltos_no_dia/',tipos_veiculos_soltos_no_dia_view, name='tipos_veiculos_soltos_no_dia')
 ]
 

@@ -9,6 +9,8 @@ from soltura.views.cards_views.cards import (
 from soltura.views.table_view.table import exibir_solturas_registradas
 from soltura.views.update_view.upadate import editar_soltura
 from soltura.views.status_pie_views.status_pie import distribuicao_por_status
+from soltura.views.pa_pie_views.views_pa_pie import distribuicao_diaria_por_pa
+from soltura.views.type_truck_views.views_type_truck import tipos_veiculos_soltos_no_dia
 
 
 urlpatterns = [
@@ -19,5 +21,7 @@ urlpatterns = [
     path('remocao_por_mes/', media_mensal_de_solturas, name='remocao_por_mes'),
     path('solturas_de_remocao_por_mes/', remocoe_por_mes, name='solturas_de_remocao_por_mes'),
     path('solturas/<int:soltura_id>/editar/', editar_soltura, name='editar_soltura'),
-    path('soltura/quantidade_soltura_equipes/', distribuicao_por_status, name='quantidade_soltura_equipes'),
+    path('soltura/distribuicao_status/', distribuicao_por_status, name='distribuicao_status'),
+    path('soltura/distribuicao_diaria_por_pa/',distribuicao_diaria_por_pa , name ='distribuicao_diaria_por_pa'),
+    path('soltura/tipos_veiculos_soltos_no_dia/',tipos_veiculos_soltos_no_dia, name='tipos_veiculos_soltos_no_dia')
 ]
