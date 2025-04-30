@@ -13,7 +13,7 @@ from apps.colaborador.models import Colaborador
 
 @csrf_exempt
 def editar_soltura(request, soltura_id):
-    if request.method != 'POST':
+    if request.method != 'PUT':
         return JsonResponse({'error': 'metodo nao permitido'}, status=405)
 
     try:

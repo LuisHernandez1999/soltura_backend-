@@ -30,6 +30,8 @@ from apps.soltura.views.pa_pie_views.views_pa_pie import distribuicao_diaria_por
 from apps.soltura.views.type_truck_views.views_type_truck import tipos_veiculos_soltos_no_dia_view
 from apps.soltura.views.pa_pie_views.pa_pie import quantidade_soltura_equipes_dia
 from apps.soltura.views.status_pie_views.status_pie import distribuicao_por_status
+from apps.soltura.views.update_view.upadate import editar_soltura
+from apps.soltura.views.solturabyid_views.views_solturabyid import buscar_soltura_por_id
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -61,7 +63,7 @@ urlpatterns = [
     path('api/soltura/distribuicao_diaria_por_pa/',distribuicao_diaria_por_pa,name='distribuicao_diaria_por_pa' ),
     path('api/soltura/tipos_veiculos_soltos_no_dia/',tipos_veiculos_soltos_no_dia_view, name='tipos_veiculos_soltos_no_dia'),
     path('api/soltura/tipos_equipes_soltas/',quantidade_soltura_equipes_dia, name='quantidade_soltura_equipes_dia'),
-    path('api/soltura/ distribuicao_por_status/', distribuicao_por_status,name=' distribuicao_por_status')
-
+    path('api/soltura/ distribuicao_por_status/', distribuicao_por_status,name=' distribuicao_por_status'),
+    path('api/soltura/<int:soltura_id>/editar/',editar_soltura, name='editar_soltura'),
 ]
 

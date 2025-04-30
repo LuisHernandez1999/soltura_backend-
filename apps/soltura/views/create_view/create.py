@@ -154,7 +154,7 @@ def cadastrar_soltura(request):
         logger.error(f"Erro de validação: {str(e)}")
         return JsonResponse({'error': str(e)}, status=400)
     except Exception as e:
-        logger.exception("Erro inesperado ao cadastrar soltura")
+        logger.exception("erro inesperado ao cadastrar soltura")
         return JsonResponse({'error': 'Erro interno no servidor'}, status=500)
 
     except json.JSONDecodeError:
