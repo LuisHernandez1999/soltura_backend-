@@ -92,7 +92,8 @@ def cadastrar_soltura_service(data):
         tipo_servico=data['tipo_servico'],
         rota=data.get('rota') or None,
         status_frota=data.get('status_frota'),
-        tipo_veiculo_selecionado=data('tipo_veiculo_selecionado')
+        tipo_veiculo_selecionado=data('tipo_veiculo_selecionado'),
+        bairro=data.get('bairro')
     )
 
     if coletores:

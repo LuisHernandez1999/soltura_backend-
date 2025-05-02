@@ -40,7 +40,10 @@ def exibir_solturas_registradas(request):
                 "tipo_servico": soltura.tipo_servico,
                 "turno": soltura.turno,
                 "rota": soltura.rota,
-                "status_frota": soltura.status_frota
+                "status_frota": soltura.status_frota,
+                "tipo_veiculo_selecionado":soltura.tipo_veiculo_selecionado,
+                "bairro":soltura.bairro
+
 
             })
         return JsonResponse(resultados, safe=False, status=200)

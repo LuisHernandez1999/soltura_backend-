@@ -28,7 +28,7 @@ def converter_para_data_hora(valor):
 
 def editar_soltura(soltura_id, data):
     tipo_servico = data.get('tipo_servico', '').lower()
-    required_fields = {'motorista', 'veiculo', 'frequencia', 'setor', 'hora_entrega_chave', 'hora_saida_frota', 'turno', 'tipo_servico'}
+    required_fields = {'motorista', 'veiculo', 'frequencia', 'hora_entrega_chave', 'hora_saida_frota', 'turno', 'tipo_servico'}
 
     if tipo_servico != 'varrição':
         required_fields.add('coletores')
@@ -89,6 +89,7 @@ def editar_soltura(soltura_id, data):
     soltura.data = data.get('data')
     soltura.status_frota = data.get('status_frota')
     soltura.tipo_veiculo_selecionado=data('')
+    soltura.bairro=data.get('bairro')
 
     if coletores:
         soltura.coletores.set(coletores)

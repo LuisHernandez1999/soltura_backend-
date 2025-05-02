@@ -16,7 +16,7 @@ def exibir_total_de_remocao_soltas_no_dia(request):
         total_remocoes_hoje = Soltura.objects.filter(
             tipo_servico__iexact='Remoção',
             data=hoje
-        ).values('motorista', 'veiculo').distinct().count()
+        ).values('motorista', 'veiculo').count()
 
         logger.info(f"total de remocoes feitas hoje ({hoje}): {total_remocoes_hoje}")
         return JsonResponse({'total_remocoes': total_remocoes_hoje}, status=200)

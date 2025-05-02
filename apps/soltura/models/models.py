@@ -88,6 +88,7 @@ class Soltura(models.Model):
     hora_chegada =models.TimeField(null=True, blank=False,default=time(14, 14))
     status_frota =models.CharField(max_length=14,null=True,choices=STATUS_DA_FROTA,blank=False,default='Finalizado')
     tipo_veiculo_selecionado= models.CharField(max_length=14,null=True,choices=TIPO_VEICULO,blank=False,default='Basculante')
+    bairro = models.CharField(max_length=100,null=True,blank=False,default='Guanabara')
     def clean(self):
         if self.veiculo.status != 'ATIVO':
             raise ValidationError("O veículo associado deve ser ativo para cadastrar a soltura.")
