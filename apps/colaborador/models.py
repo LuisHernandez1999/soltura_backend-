@@ -1,6 +1,7 @@
 from django.db import models
 
 
+
 class Colaborador(models.Model):
     TIPOS_FUNCAO = ['Motorista', 'Operador', 'Coletor']
     TIPOS_TURNO = ['Diurno', 'Noturno', 'Vespertino']
