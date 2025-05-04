@@ -41,8 +41,9 @@ class Averiguacao(models.Model):
 
     averiguador =models.CharField(max_length=15)
     
-    
-    class Meta:
+
+
+class Meta:
         indexes = [
             models.Index(fields=['data', 'tipo_servico']),
             models.Index(fields=['averiguador', 'data']),
