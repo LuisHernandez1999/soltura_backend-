@@ -34,13 +34,19 @@ class Averiguacao(models.Model):
     imagem1 = models.ImageField(upload_to='averiguacoes/')
     imagem2 = models.ImageField(upload_to='averiguacoes/', blank=True, null=True)
     imagem3 = models.ImageField(upload_to='averiguacoes/', blank=True, null=True)
+    imagem4 = models.ImageField(upload_to='averiguacoes/')
+    imagem5 = models.ImageField(upload_to='averiguacoes/', blank=True, null=True)
+    imagem6 = models.ImageField(upload_to='averiguacoes/', blank=True, null=True)
+    imagem7 = models.ImageField(upload_to='averiguacoes/', blank=True, null=True)
 
-    averiguador = models.ForeignKey(
-        Colaborador, on_delete=models.CASCADE,
-        limit_choices_to=Q(funcao__in=['Motorista', 'Coletor']) & Q(status='ATIVO')
-    )
+    averiguador =models.CharField(max_length=15)
+    
+    
     class Meta:
         indexes = [
             models.Index(fields=['data', 'tipo_servico']),
             models.Index(fields=['averiguador', 'data']),
         ]
+
+
+
