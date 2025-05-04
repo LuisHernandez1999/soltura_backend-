@@ -6,22 +6,27 @@ from django.core.exceptions import ObjectDoesNotExist
 @transaction.atomic
 def atualizar_averiguacao_service(averiguacao_id, data, arquivos):
     try:
-       averiguacao = Averiguacao.objects.only('id').get(id=averiguacao_id)
+        averiguacao = Averiguacao.objects.get(id=averiguacao_id)
     except Averiguacao.DoesNotExist:
-        raise ValueError('averiguacao nao encontrada')
+        raise ValueError('Averiguação não encontrada')
+
     try:
-        rota = Soltura.objects.get(id=data['rota_averiguada'], rota=True)
+        rota_obj = Soltura.objects.get(id=data['rota'], rota=True)
     except Soltura.DoesNotExist:
-        raise ValueError('rota nao encontrada')
-    averiguacao.tipo_servico = data['tipo_servico']
-    averiguacao.pa_da_averiguacao = data['pa_da_averiguacao']
-    averiguacao.data = data['data']
+        raise ValueError('Rota não encontrada')
+
+    # Atualiza os campos de acordo com a model
+    averiguacao.tipo_servico = rota_obj.tipo_servico
+    averiguacao.garagem = rota_obj.garagem
+    averiguacao.data = rota_obj.data
     averiguacao.hora_averiguacao = data['hora_averiguacao']
-    averiguacao.rota_averiguada = rota
+    averiguacao.rota = rota_obj.rota  # rota é CharField
     averiguacao.averiguador = data['averiguador']
-    imagens = ['imagem1', 'imagem2', 'imagem3', 'imagem4', 'imagem5', 'imagem6', 'imagem7']
-    for imagem in imagens:
+
+    # Atualiza imagens se fornecidas
+    for imagem in ['imagem1', 'imagem2', 'imagem3', 'imagem4', 'imagem5', 'imagem6', 'imagem7']:
         if imagem in arquivos:
             setattr(averiguacao, imagem, arquivos[imagem])
+
     averiguacao.save()
     return averiguacao

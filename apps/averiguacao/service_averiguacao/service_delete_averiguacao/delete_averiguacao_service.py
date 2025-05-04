@@ -7,7 +7,7 @@ def delete_averiguacao_service(averiguacao_id):
     try:
         averiguacao = Averiguacao.objects.get(id=averiguacao_id)
     except Averiguacao.DoesNotExist:
-        raise ValueError('Averiguação não encontrada')
+        raise ValueError('averiguação não encontrada')
 
     averiguacao.delete()
     return averiguacao

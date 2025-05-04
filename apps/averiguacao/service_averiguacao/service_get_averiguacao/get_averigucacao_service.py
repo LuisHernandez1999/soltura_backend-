@@ -7,7 +7,7 @@ def get_averiguacao_service(averiguacao_id):
     try:
         averiguacao = Averiguacao.objects.only(
             'id', 'data', 'hora_averiguacao', 'imagem1', 'imagem2', 'imagem3',
-            'imagem4', 'imagem5', 'imagem6', 'imagem7', 'averiguador', 'rota_averiguacao'
+            'imagem4', 'imagem5', 'imagem6', 'imagem7', 'averiguador', 'rota'
         ).get(id=averiguacao_id)
     except ObjectDoesNotExist:
         raise ValueError('Averiguação não encontrada')
@@ -15,13 +15,13 @@ def get_averiguacao_service(averiguacao_id):
     response = {
         'id': averiguacao.id,
         'data': averiguacao.data,
-        'hora': averiguacao.hora_averiguacao,
+        'hora': averiguacao.hora,
         'imagens': [
             getattr(averiguacao, f'imagem{i}').url
             for i in range(1, 8)
             if getattr(averiguacao, f'imagem{i}')
         ],
         'averiguador': str(averiguacao.averiguador),
-        'rota': str(averiguacao.rota_averiguacao)
+        'rota': str(averiguacao.rota)
     }
     return response
