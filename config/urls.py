@@ -15,7 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf import settings
 from django.urls import path
+from django.conf.urls.static import static
 from apps.veiculos import views as veiculos_views
 from apps.cadastro import views as cadastro_views
 from apps.login import views as login_views
@@ -32,7 +34,10 @@ from apps.soltura.views.pa_pie_views.pa_pie import quantidade_soltura_equipes_di
 from apps.soltura.views.status_pie_views.status_pie import distribuicao_por_status
 from apps.soltura.views.update_view.upadate import editar_soltura
 from apps.soltura.views.solturabyid_views.views_solturabyid import buscar_soltura_por_id
-
+from apps.averiguacao.views_averiguacao.averiguacao_create_views.create_views import criar_averiguacao
+from apps.averiguacao.views_averiguacao.update_averiguacao_views.update_averiguacao_views import update_averiguacao
+from apps.averiguacao.views_averiguacao.get_averiguacao_views.get_averiguacao_views import get_averiguacao
+from apps.averiguacao.views_averiguacao.delete_averiguacao_views.averiguacao_delete_views import delete_averiguacao
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/veiculos/criar/', veiculos_views.criar_veiculo, name='criar_veiculo'),
@@ -65,5 +70,11 @@ urlpatterns = [
     path('api/soltura/tipos_equipes_soltas/',quantidade_soltura_equipes_dia, name='quantidade_soltura_equipes_dia'),
     path('api/soltura/ distribuicao_por_status/', distribuicao_por_status,name=' distribuicao_por_status'),
     path('api/soltura/<int:soltura_id>/editar/',editar_soltura, name='editar_soltura'),
+    path('api/averiguacao/create/', criar_averiguacao, name='create_averiguacao'),
+    path('api/averiguacao/<int:averiguacao_id>/update/', update_averiguacao, name='update_averiguacao'),
+    path('api/averiguacao/<int:averiguacao_id>/get/', get_averiguacao, name='get_averiguacao'),
+    path('api/averiguacao/<int:averiguacao_id>/delete/', delete_averiguacao, name='delete_averiguacao'),
 ]
 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

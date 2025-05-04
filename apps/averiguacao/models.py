@@ -1,8 +1,4 @@
 from django.db import models
-from apps.colaborador.models import Colaborador
-from apps.soltura.models.models import Soltura
-from django.core.exceptions import ValidationError
-from django.db.models import Q
 from datetime import date
 
 class Averiguacao(models.Model):
@@ -11,7 +7,12 @@ class Averiguacao(models.Model):
         ('Seletiva', 'Seletiva'),
         ('Varrição', 'Varrição')
     ], default='Remoção')
+    ROTAS_DISPONIVEIS = [
+    ('ABCD001','ABCD001'), 
+    ('IJKL006','IJKL006'), 
+   ( 'QRST011','QRST011') 
     
+]
     pa_da_averiguacao = models.CharField(max_length=7, choices=[
         ('PA1', 'PA1'),
         ('PA2', 'PA2'),
@@ -22,15 +23,7 @@ class Averiguacao(models.Model):
     data = models.DateField(default=date(2025, 1, 1))
     hora_averiguacao = models.TimeField()
 
-    rota_averiguada = models.ForeignKey(
-    Soltura,
-    on_delete=models.CASCADE,
-    blank=True,
-    null=True,
-    limit_choices_to={'rota': True},
-    related_name='averiguacoes_rota'  
-)
-
+    rota_averiguacao = models.CharField(max_length=15, null=False, choices=ROTAS_DISPONIVEIS, blank=False)
     imagem1 = models.ImageField(upload_to='averiguacoes/')
     imagem2 = models.ImageField(upload_to='averiguacoes/', blank=True, null=True)
     imagem3 = models.ImageField(upload_to='averiguacoes/', blank=True, null=True)
