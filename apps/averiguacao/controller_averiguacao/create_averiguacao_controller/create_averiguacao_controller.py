@@ -7,18 +7,18 @@ from apps.averiguacao.service_averiguacao.service_create_averiguacao.create_aver
 @require_POST
 def criar_averiguacao_controller(request):
     try:
-        logging.info("📥 Requisição recebida no controller de averiguação.")
-        logging.info(f"🔑 request.POST keys: {list(request.POST.keys())}")
-        logging.info(f"📂 request.FILES keys: {list(request.FILES.keys())}")
+        logging.info(" Requisição recebida no controller de averiguação.")
+        logging.info(f" request.POST keys: {list(request.POST.keys())}")
+        logging.info(f" request.FILES keys: {list(request.FILES.keys())}")
 
         data = request.POST
         arquivos = request.FILES
         for key, file in arquivos.items():
-            logging.info(f"🖼️ Arquivo - {key}: nome={file.name}, tipo={file.content_type}, tamanho={file.size} bytes")
+            logging.info(f" Arquivo - {key}: nome={file.name}, tipo={file.content_type}, tamanho={file.size} bytes")
 
         averiguacao = criar_averiguacao_service(data, arquivos)
 
-        # Retorno de sucesso
+       
         return JsonResponse({'id': averiguacao.id}, status=201)
 
     except ValueError as ve:

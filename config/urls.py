@@ -72,7 +72,7 @@ urlpatterns = [
     path('api/soltura/<int:soltura_id>/editar/',editar_soltura, name='editar_soltura'),
     path('api/averiguacao/create/', criar_averiguacao, name='create_averiguacao'),
     path('api/averiguacao/<int:averiguacao_id>/update/', update_averiguacao, name='update_averiguacao'),
-    path('api/averiguacao/<int:averiguacao_id>/get/', get_averiguacao, name='get_averiguacao'),
+    path('api/averiguacao/ver_averiguacao/get/', get_averiguacao, name='get_averiguacao'),
     path('api/averiguacao/<int:averiguacao_id>/delete/', delete_averiguacao, name='delete_averiguacao'),
 ]
 

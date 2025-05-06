@@ -1,27 +1,28 @@
 from django.db import transaction
-from django.core.exceptions import ObjectDoesNotExist
 from apps.averiguacao.models import Averiguacao
 
 @transaction.atomic
-def get_averiguacao_service(averiguacao_id):
-    try:
-        averiguacao = Averiguacao.objects.only(
-            'id', 'data', 'hora_averiguacao', 'imagem1', 'imagem2', 'imagem3',
-            'imagem4', 'imagem5', 'imagem6', 'imagem7', 'averiguador', 'rota'
-        ).get(id=averiguacao_id)
-    except ObjectDoesNotExist:
-        raise ValueError('Averiguação não encontrada')
+def get_averiguacao_service():
+    averiguacoes = Averiguacao.objects.only(
+        'id', 'data', 'hora_averiguacao', 'imagem1', 'imagem2', 'imagem3',
+        'imagem4', 'imagem5', 'imagem6', 'imagem7', 'averiguador',
+        'rota', 'garagem', 'tipo_servico' 
+    ).all()
 
-    response = {
-        'id': averiguacao.id,
-        'data': averiguacao.data,
-        'hora': averiguacao.hora,
-        'imagens': [
-            getattr(averiguacao, f'imagem{i}').url
-            for i in range(1, 8)
-            if getattr(averiguacao, f'imagem{i}')
-        ],
-        'averiguador': str(averiguacao.averiguador),
-        'rota': str(averiguacao.rota)
-    }
+    response = []
+    for a in averiguacoes:
+        response.append({
+            'id': a.id,
+            'data': a.data,
+            'hora_averiguacao': a.hora_averiguacao,
+            'imagens': [
+                getattr(a, f'imagem{i}').url
+                for i in range(1, 8)
+                if getattr(a, f'imagem{i}')
+            ],
+            'averiguador': str(a.averiguador),
+            'rota': str(a.rota),
+            'garagem': str(a.garagem),             
+            'tipo_servico': str(a.tipo_servico)     
+        })
     return response
