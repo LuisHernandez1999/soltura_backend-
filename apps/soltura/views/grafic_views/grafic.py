@@ -9,7 +9,7 @@ from django.db.models import Count
 from django.db.models.functions import ExtractMonth
 import calendar
 from django.utils.timezone import make_aware
-
+from django.db.models.functions import ExtractWeekDay
 
 @csrf_exempt
 def media_mensal_de_solturas(request):  ##### media de solturas por mes 
@@ -36,33 +36,35 @@ def media_mensal_de_solturas(request):  ##### media de solturas por mes
         return JsonResponse({'error': f'erro ao calcular media de solturas: {str(e)}'}, status=500)
 
 @csrf_exempt 
-def remocoe_por_mes(request):
+def solturas_por_dia_da_semana(request):
     if request.method != 'GET':
         return JsonResponse({'error': 'aqui deve ser GET'}, status=405)
     try:
         ano_atual = datetime.now().year
-        resultado = {}
 
-        for mes in range(1, 13):
-            inicio_mes = make_aware(datetime(ano_atual, mes, 1))
-            if mes == 12:
-                fim_mes = make_aware(datetime(ano_atual + 1, 1, 1))
-            else:
-                fim_mes = make_aware(datetime(ano_atual, mes + 1, 1))
+        dados = (
+            Soltura.objects
+            .filter(data__year=ano_atual)
+            .annotate(dia_semana=ExtractWeekDay('data'))
+            .values('dia_semana')
+            .annotate(total=Count('id'))
+        )
+        dias_semana = {
+            1: 'Domingo',
+            2: 'Segunda-feira',
+            3: 'Terça-feira',
+            4: 'Quarta-feira',
+            5: 'Quinta-feira',
+            6: 'Sexta-feira',
+            7: 'Sábado',
+        }
 
-            total = Soltura.objects.filter(
-                tipo_servico__iexact='Remoção',
-                data__gte=inicio_mes,
-                data__lt=fim_mes
-            ).count()
+        resultado = {dias_semana[i]: 0 for i in range(1, 8)}
+        for entrada in dados:
+            nome_dia = dias_semana.get(entrada['dia_semana'], 'Desconhecido')
+            resultado[nome_dia] = entrada['total']
 
-            nome_mes = calendar.month_name[mes]
-            resultado[nome_mes] = total
-
-        return JsonResponse({'remocoes_por_mes': resultado}, status=200)
+        return JsonResponse({'solturas_por_dia_da_semana': resultado}, status=200)
 
     except Exception as e:
-        logger.error(f"erro ao buscar remocoes por mes: {e}")
-        return JsonResponse({'error': f'erro ao buscar dados: {str(e)}'}, status=500)
-
-logger = logging.getLogger(__name__)
+        return JsonResponse({'error': f'Erro ao buscar dados: {str(e)}'}, status=500)

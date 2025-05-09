@@ -25,7 +25,7 @@ from apps.colaborador import views as colaborador_views
 from apps.soltura.views.create_view.create import cadastrar_soltura
 from apps.soltura.views.cards_views.cards import exibir_total_de_remocao_feitas, exibir_total_de_remocao_soltas_no_dia
 from apps.soltura.views.table_view.table import exibir_solturas_registradas
-from apps.soltura.views.grafic_views.grafic import media_mensal_de_solturas, remocoe_por_mes
+from apps.soltura.views.grafic_views.grafic import media_mensal_de_solturas, solturas_por_dia_da_semana
 from apps.soltura.views.update_view.upadate import editar_soltura
 from apps.soltura.views.pa_pie_views.views_pa_pie import distribuicao_diaria_por_pa
 from apps.soltura.views.pa_pie_views.views_pa_pie import distribuicao_diaria_por_pa_view
@@ -61,7 +61,7 @@ urlpatterns = [
     path('api/veiculos/total_frota_remocao/',veiculos_views.contagem_total_remocao,name='total_frota_remocao/'),
     path('api/login/', login_views.login, name='login'),
     path('api/soltura/remocao_por_mes/', media_mensal_de_solturas,name='remocao_por_mes'),
-    path('api/soltura/solturas_de_remocao_por_mes/',remocoe_por_mes,name='solturas_de_remocao_por_mes'),
+    path('api/soltura/solturas_de_semana_/',solturas_por_dia_da_semana,name='solturas_de_remocao_por_mes'),
     path('api/solturas/<int:soltura_id>/editar/', editar_soltura, name='editar_soltura'),
     path('api/solturas/quantidade_soltura_equipes/',distribuicao_diaria_por_pa,name='/quantidade_soltura_equipes/'),
     path('api/soltura/distribuicao_pa/', distribuicao_diaria_por_pa_view, name='distribuicao_pa'),
