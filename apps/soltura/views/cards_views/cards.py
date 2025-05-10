@@ -3,6 +3,7 @@ import logging
 from django.views.decorators.csrf import csrf_exempt
 from ...models.models import Soltura
 from django.utils.timezone import now
+from django.utils import timezone
 
 
 @csrf_exempt
@@ -11,7 +12,7 @@ def exibir_total_de_remocao_soltas_no_dia(request):
         return JsonResponse({'error': 'o metodo deve ser GET.'}, status=405)
 
     try:
-        hoje = now().date()
+        hoje = timezone.localdate()
 
         total_remocoes_hoje = Soltura.objects.filter(
             tipo_servico__iexact='Remoção',

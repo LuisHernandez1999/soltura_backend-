@@ -9,10 +9,11 @@ from soltura.views.cards_views.cards import (
 from soltura.views.table_view.table import exibir_solturas_registradas
 from soltura.views.update_view.upadate import editar_soltura
 from soltura.views.status_pie_views.status_pie import distribuicao_por_status
-from soltura.views.pa_pie_views.views_pa_pie import distribuicao_diaria_por_pa
+from soltura.views.pa_pie_views.views_pa_pie import contar_solturas_por_garagem_hoje
 from soltura.views.type_truck_views.views_type_truck import tipos_veiculos_soltos_no_dia
 from soltura.views.update_view.upadate import editar_soltura
 from soltura.views.solturabyid_views.views_solturabyid import buscar_soltura_por_id
+from soltura.views.colaborator_views.views_colaborator import contar_motoristas_e_coletores_hoje
 
 urlpatterns = [
     path('criar/', cadastrar_soltura, name='cadastrar_soltura'),
@@ -23,8 +24,9 @@ urlpatterns = [
     path('solturas_de_remocao_por_mes/', remocoe_por_mes, name='solturas_de_remocao_por_mes'),
     path('soltura/<int:soltura_id>/editar/', editar_soltura, name='editar_soltura'),
     path('soltura/distribuicao_status/', distribuicao_por_status, name='distribuicao_status'),
-    path('soltura/distribuicao_diaria_por_pa/',distribuicao_diaria_por_pa , name ='distribuicao_diaria_por_pa'),
+    path('soltura/distribuicao_diaria_por_pa/',contar_solturas_por_garagem_hoje , name ='distribuicao_diaria_por_pa'),
     path('soltura/tipos_veiculos_soltos_no_dia/',tipos_veiculos_soltos_no_dia, name='tipos_veiculos_soltos_no_dia'),
     path('soltura/<int:soltura_id>/',buscar_soltura_por_id,name='buscar_soltura_por_id'),
+    path('soltura/colaboradores_hoje/',contar_motoristas_e_coletores_hoje,name="contar_motoristas_e_coletores_hoje")
    
 ]

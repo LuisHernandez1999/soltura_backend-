@@ -27,7 +27,7 @@ from apps.soltura.views.cards_views.cards import exibir_total_de_remocao_feitas,
 from apps.soltura.views.table_view.table import exibir_solturas_registradas
 from apps.soltura.views.grafic_views.grafic import media_mensal_de_solturas, solturas_por_dia_da_semana
 from apps.soltura.views.update_view.upadate import editar_soltura
-from apps.soltura.views.pa_pie_views.views_pa_pie import distribuicao_diaria_por_pa
+from apps.soltura.views.pa_pie_views.views_pa_pie import contar_solturas_por_garagem_hoje
 from apps.soltura.views.pa_pie_views.views_pa_pie import distribuicao_diaria_por_pa_view
 from apps.soltura.views.type_truck_views.views_type_truck import tipos_veiculos_soltos_no_dia_view
 from apps.soltura.views.pa_pie_views.pa_pie import quantidade_soltura_equipes_dia
@@ -38,6 +38,7 @@ from apps.averiguacao.views_averiguacao.averiguacao_create_views.create_views im
 from apps.averiguacao.views_averiguacao.update_averiguacao_views.update_averiguacao_views import update_averiguacao
 from apps.averiguacao.views_averiguacao.get_averiguacao_views.get_averiguacao_views import get_averiguacao
 from apps.averiguacao.views_averiguacao.delete_averiguacao_views.averiguacao_delete_views import delete_averiguacao
+from apps.soltura.views.colaborator_views.views_colaborator import contar_motoristas_e_coletores_hoje
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/veiculos/criar/', veiculos_views.criar_veiculo, name='criar_veiculo'),
@@ -63,9 +64,8 @@ urlpatterns = [
     path('api/soltura/remocao_por_mes/', media_mensal_de_solturas,name='remocao_por_mes'),
     path('api/soltura/solturas_de_semana_/',solturas_por_dia_da_semana,name='solturas_de_remocao_por_mes'),
     path('api/solturas/<int:soltura_id>/editar/', editar_soltura, name='editar_soltura'),
-    path('api/solturas/quantidade_soltura_equipes/',distribuicao_diaria_por_pa,name='/quantidade_soltura_equipes/'),
     path('api/soltura/distribuicao_pa/', distribuicao_diaria_por_pa_view, name='distribuicao_pa'),
-    path('api/soltura/distribuicao_diaria_por_pa/',distribuicao_diaria_por_pa,name='distribuicao_diaria_por_pa' ),
+    path('api/soltura/distribuicao_diaria_por_pa/',contar_solturas_por_garagem_hoje,name='distribuicao_diaria_por_pa' ),
     path('api/soltura/tipos_veiculos_soltos_no_dia/',tipos_veiculos_soltos_no_dia_view, name='tipos_veiculos_soltos_no_dia'),
     path('api/soltura/tipos_equipes_soltas/',quantidade_soltura_equipes_dia, name='quantidade_soltura_equipes_dia'),
     path('api/soltura/ distribuicao_por_status/', distribuicao_por_status,name=' distribuicao_por_status'),
@@ -74,6 +74,7 @@ urlpatterns = [
     path('api/averiguacao/<int:averiguacao_id>/update/', update_averiguacao, name='update_averiguacao'),
     path('api/averiguacao/ver_averiguacao/get/', get_averiguacao, name='get_averiguacao'),
     path('api/averiguacao/<int:averiguacao_id>/delete/', delete_averiguacao, name='delete_averiguacao'),
+    path('api/soltura/colaboradores_hoje/',contar_motoristas_e_coletores_hoje,name="contar_motoristas_e_coletores_hoje")
 ]
 
 if settings.DEBUG:

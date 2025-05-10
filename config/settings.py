@@ -136,7 +136,9 @@ ALLOWED_HOSTS = ['192.168.0.233', 'localhost', '127.0.0.1','0.0.0.0','192.168.0.
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'  # ou o fuso horário correto da sua aplicação
+USE_TZ = True 
+
 
 USE_I18N = True
 

@@ -1,32 +1,23 @@
+from django.http import JsonResponse
+from django.utils import timezone
 from django.db.models import Count
-from ...models.models import Soltura
-from django.utils.timezone import now
-import logging
+from apps.soltura.models.models import Soltura
 
-logger = logging.getLogger(__name__)
+def contar_solturas_por_garagem_hoje(request):
+    if request.method != 'GET':
+        return {'error': 'O método deve ser GET.'}  
 
-def distribuicao_diaria_por_pa():
     try:
-        hoje = now().date()
-
-        resultados = (
-            Soltura.objects
-            .filter(data=hoje)
-            .values('garagem')
-            .annotate(total=Count('id'))
-        )
-
-        distribuicao = {res['garagem']: res['total'] for res in resultados}
-
-        logger.info(f"Distribuição diária: {distribuicao}")
-
-        return {
-            'PA1': distribuicao.get('PA1', 0),
-            'PA2': distribuicao.get('PA2', 0),
-            'PA3': distribuicao.get('PA3', 0),
-            'PA4': distribuicao.get('PA4', 0),
-        }
-
+    
+        data_hoje = timezone.localdate()
+        garages = ['PA1', 'PA2', 'PA3', 'PA4']
+        solturas_por_garagem = Soltura.objects.filter(data=data_hoje).values('garagem').annotate(total=Count('garagem')).filter(garagem__in=garages)
+        resultado = {soltura['garagem']: soltura['total'] for soltura in solturas_por_garagem}
+        for garagem in garages:
+            if garagem not in resultado:
+                resultado[garagem] = 0
+        total_solturas_hoje = Soltura.objects.filter(data=data_hoje).count()
+        resultado['total'] = total_solturas_hoje
+        return resultado  
     except Exception as e:
-        logger.error(f"Erro ao buscar distribuição diária por PA: {e}")
-        raise Exception("Erro ao buscar distribuição diária por PA")
+        return {'error': f'Erro ao contar solturas: {str(e)}'}  
