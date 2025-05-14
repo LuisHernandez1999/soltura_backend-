@@ -1,32 +1,24 @@
 from django.db import transaction
 from apps.averiguacao.models import Averiguacao
-from apps.soltura.models.models import Soltura
-from django.core.exceptions import ObjectDoesNotExist
 
 @transaction.atomic
-def atualizar_averiguacao_service(averiguacao_id, data, arquivos):
+def update_averiguacao_service(averiguacao_id, data):
     try:
         averiguacao = Averiguacao.objects.get(id=averiguacao_id)
     except Averiguacao.DoesNotExist:
-        raise ValueError('Averiguação não encontrada')
+        raise ValueError("Averiguação não encontrada.")  
+    campos_editaveis = [
+        'hora_averiguacao', 'tipo_servico', 'hora_inicio', 'hora_encerramento',
+        'quantidade_viagens', 'velocidade_coleta', 'largura_rua', 'altura_fios',
+        'caminhao_usado', 'equipamento_protecao', 'uniforme_completo',
+        'documentacao_veiculo', 'inconformidades', 'acoes_corretivas',
+        'observacoes_operacao', 'quantidade_coletores', 'averiguador',
+        'garagem', 'rota'
+    ]
 
-    try:
-        rota_obj = Soltura.objects.get(id=data['rota'], rota=True)
-    except Soltura.DoesNotExist:
-        raise ValueError('Rota não encontrada')
-
-    # Atualiza os campos de acordo com a model
-    averiguacao.tipo_servico = rota_obj.tipo_servico
-    averiguacao.garagem = rota_obj.garagem
-    averiguacao.data = rota_obj.data
-    averiguacao.hora_averiguacao = data['hora_averiguacao']
-    averiguacao.rota = rota_obj.rota  # rota é CharField
-    averiguacao.averiguador = data['averiguador']
-
-    # Atualiza imagens se fornecidas
-    for imagem in ['imagem1', 'imagem2', 'imagem3', 'imagem4', 'imagem5', 'imagem6', 'imagem7']:
-        if imagem in arquivos:
-            setattr(averiguacao, imagem, arquivos[imagem])
+    for campo in campos_editaveis:
+        if campo in data:
+            setattr(averiguacao, campo, data[campo])
 
     averiguacao.save()
-    return averiguacao
+    return {'success': True, 'message': 'Averiguação atualizada com sucesso.'}

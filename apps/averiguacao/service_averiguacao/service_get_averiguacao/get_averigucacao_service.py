@@ -1,14 +1,19 @@
+import time
 from django.db import transaction
 from apps.averiguacao.models import Averiguacao
 
 @transaction.atomic
 def get_averiguacao_service():
+    start_time = time.time()  # Início da contagem
+
     averiguacoes = Averiguacao.objects.only(
-        'hora_averiguacao', 'tipo_servico' ,'imagem1', 'imagem2', 'imagem3', 'imagem4', 'imagem5', 'imagem6', 'imagem7',
-        'averiguador', 'garagem', 'rota', 'hora_inicio', 'hora_encerramento', 'quantidade_viagens',
-        'velocidade_coleta', 'largura_rua', 'altura_fios', 'caminhao_usado', 'equipamento_protecao',
-        'uniforme_completo', 'documentacao_veiculo', 'inconformidades', 'acoes_corretivas', 'observacoes_operacao'
-    ).all()
+        'hora_averiguacao', 'tipo_servico', 'imagem1', 'imagem2', 'imagem3', 'imagem4',
+        'imagem5', 'imagem6', 'imagem7', 'averiguador', 'garagem', 'rota',
+        'hora_inicio', 'hora_encerramento', 'quantidade_viagens', 'velocidade_coleta',
+        'largura_rua', 'altura_fios', 'caminhao_usado', 'equipamento_protecao',
+        'uniforme_completo', 'documentacao_veiculo', 'inconformidades',
+        'acoes_corretivas', 'observacoes_operacao'
+    ).iterator()
 
     response = []
     for a in averiguacoes:
@@ -19,8 +24,8 @@ def get_averiguacao_service():
         ]
 
         response.append({
-            'tipo_servico':a.tipo_servico,
-            'quantidade_coletores':a.quantidade_coletores,
+            'tipo_servico': a.tipo_servico,
+            'quantidade_coletores': a.quantidade_coletores,
             'id': a.id,
             'hora_averiguacao': a.hora_averiguacao,
             'hora_inicio': a.hora_inicio,
@@ -41,4 +46,8 @@ def get_averiguacao_service():
             'rota': str(a.rota),
             'imagens': imagens,
         })
+
+    end_time = time.time()  # Fim da contagem
+    print(f"Tempo de execução de get_averiguacao_service: {end_time - start_time:.2f} segundos")
+
     return response
