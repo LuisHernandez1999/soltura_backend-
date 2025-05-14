@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import date
+from datetime import timedelta
 from apps.soltura.models.models import Soltura
 from django.utils.timezone import now
 import pytz
@@ -19,21 +19,19 @@ class Averiguacao(models.Model):
         null=True,
         blank=True
     )
-    # Definição dos campos do modelo Averiguacao
-    data = models.DateField(null=True, blank=True)  # Permite que 'data' seja nulo ao ser salvo
+  
+    data = models.DateField(null=True, blank=True)  
     tipo_servico = models.CharField(max_length=50, default='Remoção')
     tipo_coleta = models.CharField(max_length=50, default='Remoção')
     garagem = models.CharField(max_length=50, default='PA1')
     rota = models.CharField(max_length=50, default='AN21')
 
-    # Campo de hora de averiguação com valor default
     hora_averiguacao = models.TimeField(
         null=False,
         blank=False,
         default=get_default_hora_averiguacao
     )
 
-    # Imagens de averiguação
     imagem1 = models.ImageField(upload_to='averiguacoes/')
     imagem2 = models.ImageField(upload_to='averiguacoes/', blank=True, null=True)
     imagem3 = models.ImageField(upload_to='averiguacoes/', blank=True, null=True)
@@ -41,16 +39,66 @@ class Averiguacao(models.Model):
     imagem5 = models.ImageField(upload_to='averiguacoes/', blank=True, null=True)
     imagem6 = models.ImageField(upload_to='averiguacoes/', blank=True, null=True)
     imagem7 = models.ImageField(upload_to='averiguacoes/', blank=True, null=True)
+    quantidade_coletores = models.PositiveIntegerField(default=0)
+    hora_inicio = models.TimeField(default=get_default_hora_averiguacao)
+    hora_encerramento = models.TimeField(default=get_default_hora_averiguacao)
+    
+    # Use DurationField para armazenar duração corretamente
+    hora_extras = models.DurationField(default=timedelta(0))  # valor padrão para timedelta
+    quantidade_viagens = models.PositiveIntegerField(default=0)
+    
+    # Mudei a definição para DurationField também para garantir que armazene timedelta
+    horas_improdutivas = models.DurationField(default=timedelta(0))
 
-    # Campo para o nome do averiguador
+    VELOCIDADE_CHOICES = [
+        ('adequada', 'Adequada'),
+        ('media', 'Média'),
+        ('baixa', 'Baixa'),
+    ]
+    velocidade_coleta = models.CharField(max_length=10, choices=VELOCIDADE_CHOICES, default='adequada')
+
+    largura_rua = models.CharField(
+        max_length=15,
+        choices=[('adequada', 'Adequada'), ('inadequada', 'Inadequada')],
+        default='adequada'
+    )
+    altura_fios = models.CharField(
+        max_length=15,
+        choices=[('adequada', 'Adequada'), ('inadequada', 'Inadequada')],
+        default='adequada'
+    )
+    caminhao_usado = models.CharField(
+        max_length=10,
+        choices=[('trucado', 'Trucado'), ('toco', 'Toco')],
+        default='toco'
+    )
+    coleta_com_puxada = models.BooleanField(default=False)
+    puxada_adequada = models.BooleanField(default=True)
+
+    equipamento_protecao = models.CharField(
+        max_length=20,
+        choices=[('conforme', 'Conforme'), ('nao_conforme', 'Não conforme')],
+        default='conforme'
+    )
+    uniforme_completo = models.CharField(
+        max_length=20,
+        choices=[('conforme', 'Conforme'), ('nao_conforme', 'Não conforme')],
+        default='conforme'
+    )
+    documentacao_veiculo = models.CharField(
+        max_length=20,
+        choices=[('conforme', 'Conforme'), ('nao_conforme', 'Não conforme')],
+        default='conforme'
+    )
+
+    inconformidades = models.TextField(default='', blank=True)
+    acoes_corretivas = models.TextField(default='', blank=True)
+    observacoes_operacao = models.TextField(default='', blank=True)
+
     averiguador = models.CharField(max_length=15)
-    # Observações adicionais
-    observacoes = models.TextField(blank=True, null=True)
-
-    # Método para salvar a averiguação
+    
     def save(self, *args, **kwargs):
         if self.soltura_ref:
-            # Se 'soltura_ref' estiver presente, usa os valores dela se o usuário não preencher os campos
             if not self.data:
                 self.data = self.soltura_ref.data
             if not self.tipo_servico:
@@ -62,7 +110,6 @@ class Averiguacao(models.Model):
             if not self.rota:
                 self.rota = self.soltura_ref.rota
         else:
-            # Se não houver 'soltura_ref', usa valores padrão para os campos não preenchidos
             if not self.data:
                 self.data = timezone.now().date()
             if not self.tipo_servico:
@@ -73,11 +120,8 @@ class Averiguacao(models.Model):
                 self.garagem = 'PA1'
             if not self.rota:
                 self.rota = 'AN21'
-
-        # Chama o método save original para salvar o objeto
         super().save(*args, **kwargs)
-
-    # Definição de índices para melhorar performance das consultas
+    
     class Meta:
         indexes = [
             models.Index(fields=['data', 'tipo_servico']),

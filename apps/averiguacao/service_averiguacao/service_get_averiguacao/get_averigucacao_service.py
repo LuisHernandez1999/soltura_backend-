@@ -4,25 +4,41 @@ from apps.averiguacao.models import Averiguacao
 @transaction.atomic
 def get_averiguacao_service():
     averiguacoes = Averiguacao.objects.only(
-        'id', 'data', 'hora_averiguacao', 'imagem1', 'imagem2', 'imagem3',
-        'imagem4', 'imagem5', 'imagem6', 'imagem7', 'averiguador',
-        'rota', 'garagem', 'tipo_servico' 
+        'hora_averiguacao', 'tipo_servico' ,'imagem1', 'imagem2', 'imagem3', 'imagem4', 'imagem5', 'imagem6', 'imagem7',
+        'averiguador', 'garagem', 'rota', 'hora_inicio', 'hora_encerramento', 'quantidade_viagens',
+        'velocidade_coleta', 'largura_rua', 'altura_fios', 'caminhao_usado', 'equipamento_protecao',
+        'uniforme_completo', 'documentacao_veiculo', 'inconformidades', 'acoes_corretivas', 'observacoes_operacao'
     ).all()
 
     response = []
     for a in averiguacoes:
+        imagens = [
+            getattr(a, f'imagem{i}').url
+            for i in range(1, 8)
+            if getattr(a, f'imagem{i}')
+        ]
+
         response.append({
+            'tipo_servico':a.tipo_servico,
+            'quantidade_coletores':a.quantidade_coletores,
             'id': a.id,
-            'data': a.data,
             'hora_averiguacao': a.hora_averiguacao,
-            'imagens': [
-                getattr(a, f'imagem{i}').url
-                for i in range(1, 8)
-                if getattr(a, f'imagem{i}')
-            ],
+            'hora_inicio': a.hora_inicio,
+            'hora_encerramento': a.hora_encerramento,
+            'quantidade_viagens': a.quantidade_viagens,
+            'velocidade_coleta': a.velocidade_coleta,
+            'largura_rua': a.largura_rua,
+            'altura_fios': a.altura_fios,
+            'caminhao_usado': a.caminhao_usado,
+            'equipamento_protecao': a.equipamento_protecao,
+            'uniforme_completo': a.uniforme_completo,
+            'documentacao_veiculo': a.documentacao_veiculo,
+            'inconformidades': a.inconformidades,
+            'acoes_corretivas': a.acoes_corretivas,
+            'observacoes_operacao': a.observacoes_operacao,
             'averiguador': str(a.averiguador),
+            'garagem': str(a.garagem),
             'rota': str(a.rota),
-            'garagem': str(a.garagem),             
-            'tipo_servico': str(a.tipo_servico)     
+            'imagens': imagens,
         })
     return response
