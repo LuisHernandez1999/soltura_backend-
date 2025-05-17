@@ -39,6 +39,11 @@ from apps.averiguacao.views_averiguacao.update_averiguacao_views.update_averigua
 from apps.averiguacao.views_averiguacao.get_averiguacao_views.get_averiguacao_views import get_averiguacao
 from apps.averiguacao.views_averiguacao.delete_averiguacao_views.averiguacao_delete_views import delete_averiguacao
 from apps.soltura.views.colaborator_views.views_colaborator import contar_motoristas_e_coletores_hoje
+from apps.soltura.views.rsu_tabela_views.views_rsu_tabela import buscar_solturas_rsu
+from apps.soltura.views.rsu_cards_views.views_cards_rsu import contar_rsu_realizadas_hoje
+from apps.soltura.views.coletores_motoristas_views.views_coletores_motorista import quantidade_motorista_coletores_equipe
+from apps.soltura.views.pa_rsu_exit_views.views_pa_rsu_exit import contar_solturas_rsu_por_garagem
+from apps.soltura.views.grafic_rsu_views.views_grafic_rsu import solturas_por_dia_da_semana_rsu
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/veiculos/criar/', veiculos_views.criar_veiculo, name='criar_veiculo'),
@@ -74,7 +79,14 @@ urlpatterns = [
     path('api/averiguacao/<int:averiguacao_id>/update/', update_averiguacao, name='update_averiguacao'),
     path('api/averiguacao/ver_averiguacao/get/', get_averiguacao, name='get_averiguacao'),
     path('api/averiguacao/<int:averiguacao_id>/delete/', delete_averiguacao, name='delete_averiguacao'),
-    path('api/soltura/colaboradores_hoje/',contar_motoristas_e_coletores_hoje,name="contar_motoristas_e_coletores_hoje")
+    path('api/soltura/colaboradores_hoje/',contar_motoristas_e_coletores_hoje,name="contar_motoristas_e_coletores_hoje"),
+    path('api/soltura/buscar_solturas_rsu/',buscar_solturas_rsu,name='buscar_solturas_rsu'),
+    path('api/soltura/conatagem_rsu_hoje/',contar_rsu_realizadas_hoje,name='contar_rsu_realizadas_hoje'),
+    path('api/soltura/ quantidade_motorista_coletores_equipe_rsu/',quantidade_motorista_coletores_equipe,name='quantidade_motorista_coletores_equipe_rsu'),
+    path('api/soltura/ contar_solturas_rsu_por_garagem/', contar_solturas_rsu_por_garagem,name='contar_solturas_rsu_por_garagem'),
+    path('api/soltura/saidas_rsu_dias/',solturas_por_dia_da_semana_rsu,name='solturas_por_dia_da_semana_rsu')
+   
+
 ]
 
 if settings.DEBUG:

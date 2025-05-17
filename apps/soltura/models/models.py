@@ -14,7 +14,8 @@ class Soltura(models.Model):
     TIPO_SERVICO = [("Seletiva","Seletiva"),
                     ("Coleta","Coleta"),
                     ("Remoção", "Remoção"),
-                    ("Varrição","Varrição")
+                    ("Varrição","Varrição"),
+                    ("Rsu","Rsu"),
                 ]
     
     TIPO_EQUIPE= [("Equipe1(Matutino)","Equipe1(Matutino)"),

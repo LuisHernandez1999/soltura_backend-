@@ -44,10 +44,11 @@ def solturas_por_dia_da_semana(request):
 
         dados = (
             Soltura.objects
-            .filter(data__year=ano_atual)
+            .filter(data__year=ano_atual,tipo_servico__iexact='Remoção')
             .annotate(dia_semana=ExtractWeekDay('data'))
             .values('dia_semana')
             .annotate(total=Count('id'))
+            
         )
         dias_semana = {
             1: 'Domingo',

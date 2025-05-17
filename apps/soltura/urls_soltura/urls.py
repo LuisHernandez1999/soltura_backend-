@@ -14,6 +14,11 @@ from soltura.views.type_truck_views.views_type_truck import tipos_veiculos_solto
 from soltura.views.update_view.upadate import editar_soltura
 from soltura.views.solturabyid_views.views_solturabyid import buscar_soltura_por_id
 from soltura.views.colaborator_views.views_colaborator import contar_motoristas_e_coletores_hoje
+from soltura.views.rsu_tabela_views.views_rsu_tabela import buscar_solturas_rsu
+from soltura.views.rsu_cards_views.views_cards_rsu import contar_rsu_realizadas_hoje
+from soltura.views.coletores_motoristas_views.views_coletores_motorista import quantidade_motorista_coletores_equipe
+from soltura.views.pa_rsu_exit_views.views_pa_rsu_exit import contar_solturas_rsu_por_garagem
+from soltura.views.grafic_rsu_views.views_grafic_rsu import solturas_por_dia_da_semana_rsu
 
 urlpatterns = [
     path('criar/', cadastrar_soltura, name='cadastrar_soltura'),
@@ -27,6 +32,13 @@ urlpatterns = [
     path('soltura/distribuicao_diaria_por_pa/',contar_solturas_por_garagem_hoje , name ='distribuicao_diaria_por_pa'),
     path('soltura/tipos_veiculos_soltos_no_dia/',tipos_veiculos_soltos_no_dia, name='tipos_veiculos_soltos_no_dia'),
     path('soltura/<int:soltura_id>/',buscar_soltura_por_id,name='buscar_soltura_por_id'),
-    path('soltura/colaboradores_hoje/',contar_motoristas_e_coletores_hoje,name="contar_motoristas_e_coletores_hoje")
+    path('soltura/colaboradores_hoje/',contar_motoristas_e_coletores_hoje,name="contar_motoristas_e_coletores_hoje"),
+    path('soltura/buscar_solturas_rsu/', buscar_solturas_rsu, name='buscar_solturas_rsu'),
+    path('soltura/contar_rsu-realizadas_hoje/',contar_rsu_realizadas_hoje,name='contar_rsu-realizadas_hoje'),
+    path('soltura/ quantidade_motorista_coletores_equipe_rsu/',quantidade_motorista_coletores_equipe,name='quantidade_motorista_coletores_equipe_rsu'),
+    path('soltura/ contar_solturas_rsu_por_garagem/', contar_solturas_rsu_por_garagem,name=' contar_solturas_rsu_por_garagem'),
+    path('soltura/saidas_rsu_por_dias/',solturas_por_dia_da_semana_rsu,name='solturas_por_dia_da_semana_rsu')
+
+
    
 ]

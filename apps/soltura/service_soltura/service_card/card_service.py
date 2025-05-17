@@ -4,10 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from ...models.models import Soltura
 from django.utils.timezone import now
 
-# Configurando o logger
-logger = logging.getLogger(__name__)
 
-# Serviço para exibir o total de remoções soltas no dia
+logger = logging.getLogger(__name__)
 @csrf_exempt
 def exibir_total_de_remocao_soltas_no_dia(request):
     if request.method != 'GET':
@@ -15,8 +13,6 @@ def exibir_total_de_remocao_soltas_no_dia(request):
 
     try:
         hoje = now().date()
-
-        # Contando o total de remoções feitas hoje, por motorista e veículo, distintas
         total_remocoes_hoje = Soltura.objects.filter(
             tipo_servico__iexact='Remoção',
             data=hoje
@@ -28,8 +24,6 @@ def exibir_total_de_remocao_soltas_no_dia(request):
     except Exception as e:
         logger.error(f"Erro ao buscar remoções: {e}")
         return JsonResponse({'error': f'Erro ao buscar remoções: {str(e)}'}, status=500)
-
-# Serviço para exibir o total de remoções feitas
 @csrf_exempt
 def exibir_total_de_remocao_feitas(request):
     if request.method != 'GET':
