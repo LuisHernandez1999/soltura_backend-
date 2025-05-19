@@ -44,6 +44,12 @@ from apps.soltura.views.rsu_cards_views.views_cards_rsu import contar_rsu_realiz
 from apps.soltura.views.coletores_motoristas_views.views_coletores_motorista import quantidade_motorista_coletores_equipe
 from apps.soltura.views.pa_rsu_exit_views.views_pa_rsu_exit import contar_solturas_rsu_por_garagem
 from apps.soltura.views.grafic_rsu_views.views_grafic_rsu import solturas_por_dia_da_semana_rsu
+from apps.soltura.views.colaboradores_equipe_seletiva_views.views_colaboradores_equipe import contar_coletores_motorista_por_turno
+from apps.soltura.views.seletiva_cards_views.views_seletiva_cards import contar_seletiva_realizadas_hoje
+from apps.soltura.views.seletiva_grafic_views.views_grafic_seletiva import obter_solturas_seletiva_por_dia_da_semana
+from apps.soltura.views.seletiva_pa_views.views_pa_seletiva import contar_solturas_seletiva_por_garagem
+from apps.soltura.views.tabela_seletiva_views.views_tabela_seletiva import retornar_infos_seletiva
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/veiculos/criar/', veiculos_views.criar_veiculo, name='criar_veiculo'),
@@ -65,6 +71,9 @@ urlpatterns = [
     path('api/veiculos/contagem_remocao_ativos/',veiculos_views.contagem_remocao_ativos, name='contagem_remocao_ativos'),
     path('api/veiculos/conatagem_romcao_inativos/',veiculos_views.contagem_remocao_inativos, name='conatagem_romcao_inativos'),
     path('api/veiculos/total_frota_remocao/',veiculos_views.contagem_total_remocao,name='total_frota_remocao/'),
+    path('api/veiculos/total_frota_seletiva/',veiculos_views.contagem_total_seletiva,name='total_frota_seletiva/'),
+    path('api/veiculos/conatagem_seletiva_inativos/',veiculos_views.contagem_seletiva_inativos, name='conatagem_seletiva_inativos'),
+    path('api/veiculos/conatagem_seletiva_ativos/',veiculos_views.contagem_seletiva_ativos, name='conatagem_seletiva_ativos'),
     path('api/login/', login_views.login, name='login'),
     path('api/soltura/remocao_por_mes/', media_mensal_de_solturas,name='remocao_por_mes'),
     path('api/soltura/solturas_de_semana_/',solturas_por_dia_da_semana,name='solturas_de_remocao_por_mes'),
@@ -84,9 +93,12 @@ urlpatterns = [
     path('api/soltura/conatagem_rsu_hoje/',contar_rsu_realizadas_hoje,name='contar_rsu_realizadas_hoje'),
     path('api/soltura/ quantidade_motorista_coletores_equipe_rsu/',quantidade_motorista_coletores_equipe,name='quantidade_motorista_coletores_equipe_rsu'),
     path('api/soltura/ contar_solturas_rsu_por_garagem/', contar_solturas_rsu_por_garagem,name='contar_solturas_rsu_por_garagem'),
-    path('api/soltura/saidas_rsu_dias/',solturas_por_dia_da_semana_rsu,name='solturas_por_dia_da_semana_rsu')
-   
-
+    path('api/soltura/saidas_rsu_dias/',solturas_por_dia_da_semana_rsu,name='solturas_por_dia_da_semana_rsu'),
+    path('api/soltura/seletiva_colaboradores_equipe/',contar_coletores_motorista_por_turno,name='contar_coletores_motorista_por_turno'),
+    path('api/soltura/contar_seletiva_no_dia/',contar_seletiva_realizadas_hoje,name='contar_seletiva_realizadas_hoje'),
+    path('api/soltura/obter_solturas_seletiva_por_dia_da_semana/',obter_solturas_seletiva_por_dia_da_semana,name='obter_solturas_seletiva_por_dia_da_semana'),
+    path('api/soltura/contar_solturas_seletiva_por_garagem/',contar_solturas_seletiva_por_garagem,name='contar_solturas_seletiva_por_garagem'),
+    path('api/soltura/retornar_infos_seletiva/',retornar_infos_seletiva,name='retornar_infos_seletiva'),
 ]
 
 if settings.DEBUG:

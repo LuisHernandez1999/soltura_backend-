@@ -19,6 +19,11 @@ from soltura.views.rsu_cards_views.views_cards_rsu import contar_rsu_realizadas_
 from soltura.views.coletores_motoristas_views.views_coletores_motorista import quantidade_motorista_coletores_equipe
 from soltura.views.pa_rsu_exit_views.views_pa_rsu_exit import contar_solturas_rsu_por_garagem
 from soltura.views.grafic_rsu_views.views_grafic_rsu import solturas_por_dia_da_semana_rsu
+from soltura.views.seletiva_cards_views.views_seletiva_cards import contar_seletiva_realizadas_hoje
+from soltura.views.seletiva_pa_views.views_pa_seletiva import contar_solturas_seletiva_por_garagem
+from soltura.views.seletiva_grafic_views.views_grafic_seletiva import obter_solturas_seletiva_por_dia_da_semana
+from soltura.views.tabela_seletiva_views.views_tabela_seletiva import retornar_infos_seletiva
+from soltura.views.colaboradores_equipe_seletiva_views.views_colaboradores_equipe import contar_coletores_motorista_por_turno
 
 urlpatterns = [
     path('criar/', cadastrar_soltura, name='cadastrar_soltura'),
@@ -37,7 +42,14 @@ urlpatterns = [
     path('soltura/contar_rsu-realizadas_hoje/',contar_rsu_realizadas_hoje,name='contar_rsu-realizadas_hoje'),
     path('soltura/ quantidade_motorista_coletores_equipe_rsu/',quantidade_motorista_coletores_equipe,name='quantidade_motorista_coletores_equipe_rsu'),
     path('soltura/ contar_solturas_rsu_por_garagem/', contar_solturas_rsu_por_garagem,name=' contar_solturas_rsu_por_garagem'),
-    path('soltura/saidas_rsu_por_dias/',solturas_por_dia_da_semana_rsu,name='solturas_por_dia_da_semana_rsu')
+    path('soltura/saidas_rsu_por_dias/',solturas_por_dia_da_semana_rsu,name='solturas_por_dia_da_semana_rsu'),
+    path('soltura/saidas_seletiva_no _dia/',contar_seletiva_realizadas_hoje,name='contar_seletiva_realizadas_hoje'),
+    path('soltura/seletiva_pa_saida/',contar_solturas_seletiva_por_garagem,name='seletiva_pa_saida'),
+    path('soltura/obter_solturas_seletiva_por_dia_da_semana/',obter_solturas_seletiva_por_dia_da_semana,name='obter_solturas_seletiva_por_dia_da_semana'),
+    path('soltura/retornar_infos_seletiva/',retornar_infos_seletiva,name='retornar_infos_seletiva'),
+    path('soltura/colaboradores_turno_seletiva/',contar_coletores_motorista_por_turno,name='contar_coletores_motorista_por_turno')
+
+
 
 
    

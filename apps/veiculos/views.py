@@ -120,22 +120,22 @@ def contagem_total_remocao(request):
 
 def contagem_seletiva_ativos(request):
     if request.method == 'GET':
-        count_remocao_ativos = Veiculo.objects.filter(tipo_servico_veiculo='Seletiva', status='Ativo').only('id').count()
-        return JsonResponse({'count_remocao_ativos': count_remocao_ativos})
+        count_seletiva_ativos = Veiculo.objects.filter(tipo_servico_veiculo='Seletiva', status='Ativo').only('id').count()
+        return JsonResponse({'count_seletiva_ativos': count_seletiva_ativos})
     return JsonResponse({'error': 'metodo nao permitido'}, status=405)
 
 def contagem_seletiva_inativos(request):
     if request.method == 'GET':
-        count_remocao_inativos = Veiculo.objects.filter(tipo_servico_veiculo='Seletiva', status='Inativo').only('id').count()
+        count_seletiva_inativos = Veiculo.objects.filter(tipo_servico_veiculo='Seletiva', status='Inativo').only('id').count()
 
-        return JsonResponse({'count_remocao_inativos': count_remocao_inativos})
+        return JsonResponse({'count_seletiva_inativos': count_seletiva_inativos})
     return JsonResponse({'error': 'metodo nao permitido'}, status=405)       
 
 
 def contagem_total_seletiva(request):
     if request.method == 'GET':
-        count_remocao_ativos = Veiculo.objects.filter(tipo_servico_veiculo='Seletiva', status='Ativo').only('id').count()
-        count_remocao_inativos = Veiculo.objects.filter(tipo_servico_veiculo='Seletiva', status='Inativo').only('id').count()
-        total_remocao = count_remocao_ativos + count_remocao_inativos
-        return JsonResponse({'total_remocao': total_remocao})
+        count_seletiva_ativos = Veiculo.objects.filter(tipo_servico_veiculo='Seletiva', status='Ativo').only('id').count()
+        count_seletiva_inativos = Veiculo.objects.filter(tipo_servico_veiculo='Seletiva', status='Inativo').only('id').count()
+        total_seletiva = count_seletiva_ativos + count_seletiva_inativos
+        return JsonResponse({'total_seletiva': total_seletiva})
     return JsonResponse({'error': 'Método não permitido'}, status=405)

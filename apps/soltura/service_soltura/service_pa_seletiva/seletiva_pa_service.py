@@ -1,30 +1,34 @@
 from django.utils.timezone import localdate
-from django.db.models import Count
+from django.http import JsonResponse
 from apps.soltura.models.models import Soltura
 import logging
 
 logger = logging.getLogger(__name__)
 
-def contar_solturas_seletiva_por_garagem():
+def contar_solturas_seletiva_por_garagem(request):
     try:
         data_hoje = localdate()
         garages = ['PA1', 'PA2', 'PA3', 'PA4']
-        solturas_por_garagem = (
-            Soltura.objects
-            .filter(data=data_hoje, tipo_servico='Seletiva')
-            .values('garagem')
-            .annotate(total=Count('garagem'))
-            .filter(garagem__in=garages)
-        )
-        resultado = {soltura['garagem']: soltura['total'] for soltura in solturas_por_garagem}
-        for garagem in garages:
-            resultado.setdefault(garagem, 0)
-        total_solturas_hoje = Soltura.objects.filter(data=data_hoje, tipo_servico='Rsu').count()
-        resultado['total'] = total_solturas_hoje
+        resultado = {g: 0 for g in garages}
 
-        logger.info("contagem de solturas Rsu por garagem realizada com sucesso: %s", resultado)
-        return resultado
+        # Filtra por data, tipo e somente as garagens PA1 a PA4
+        solturas = Soltura.objects.filter(
+            data=data_hoje,
+            tipo_servico='Seletiva',
+            garagem__in=garages
+        )
+
+        for s in solturas:
+            garagem_formatada = str(s.garagem or '').strip().upper()
+            if garagem_formatada in resultado:
+                resultado[garagem_formatada] += 1
+            else:
+                logger.warning("Garagem ignorada: %s", garagem_formatada)
+
+        resultado['total'] = solturas.count()
+
+        return JsonResponse(resultado)
 
     except Exception as e:
-        logger.exception("erro ao contar solturas por garagem")
-        raise Exception(f"erro ao contar solturas: {str(e)}")
+        logger.exception("Erro ao contar solturas por garagem")
+        return JsonResponse({'error': f'Erro ao contar solturas: {str(e)}'}, status=500)
