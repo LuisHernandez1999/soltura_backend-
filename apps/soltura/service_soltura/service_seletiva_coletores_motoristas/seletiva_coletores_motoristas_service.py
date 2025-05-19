@@ -5,30 +5,29 @@ from datetime import date
 
 logger = logging.getLogger(__name__)
 
-def contar_coletores_motorista_por_turno(request):  # <- Adiciona o 'request' aqui
+def contar_coletores_motorista_por_turno(request):
     try:
         hoje = date.today()
+        resultado = {}
 
-        motorista_coletores_equipe1 = Soltura.objects.filter(
-            tipo_equipe='Equipe1(Matutino)',
-            data=hoje
-        ).values('motorista', 'coletores').count()
-
-        motorista_coletores_equipe2 = Soltura.objects.filter(
-            tipo_equipe='Equipe2(Vespertino)',
-            data=hoje
-        ).values('motorista', 'coletores').count()
-
-        motorista_coletores_equipe3 = Soltura.objects.filter(
-            tipo_equipe='Equipe1(Noturno)',
-            data=hoje
-        ).values('motorista', 'coletores').count()
-
-        resultado = {
-            "Equipe1(Matutino)": motorista_coletores_equipe1,
-            "Equipe2(Vespertino)": motorista_coletores_equipe2,
-            "Equipe1(Noturno)": motorista_coletores_equipe3
+        equipes = {
+            "Equipe1(Matutino)": "Equipe1(Matutino)",
+            "Equipe2(Vespertino)": "Equipe2(Vespertino)",
+            "Equipe3(Noturno)": "Equipe3(Noturno)"
         }
+
+        for nome_equipe, tipo_equipe in equipes.items():
+            solturas = Soltura.objects.filter(tipo_equipe=tipo_equipe, data=hoje)
+            motoristas = solturas.values_list('motorista', flat=True).exclude(motorista__isnull=True)
+            num_motoristas = motoristas.count()
+            num_coletores = 0
+            for soltura in solturas:
+                num_coletores += soltura.coletores.count()
+
+            resultado[nome_equipe] = {
+                "motoristas": num_motoristas,
+                "coletores": num_coletores
+            }
 
         logger.info("Contagem de coletores e motoristas por turno realizada com sucesso: %s", resultado)
         return JsonResponse(resultado)

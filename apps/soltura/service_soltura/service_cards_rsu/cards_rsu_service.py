@@ -1,9 +1,10 @@
+from django.http import JsonResponse
 from django.utils.timezone import localdate
 from ...models.models import Soltura
 import logging
 
 logger = logging.getLogger(__name__)
-def contar_rsu_realizadas_hoje():
+def contar_rsu_realizadas_hoje(request):
     try:
         hoje = localdate()
         total_remocoes_hoje = Soltura.objects.filter(
@@ -12,7 +13,7 @@ def contar_rsu_realizadas_hoje():
         ).values('motorista', 'veiculo').distinct().count()
 
         logger.info(f"total de rsu feitas hoje ({hoje}): {total_remocoes_hoje}")
-        return total_remocoes_hoje
+        return JsonResponse({'total_rsu_hoje': total_remocoes_hoje})  # ✅ retorno explícito em JSON
     except Exception as e:
-        logger.error(f"erro ao buscar remocoes: {e}")
-        raise
+        logger.exception("Erro ao buscar remoções RSU.")
+        return JsonResponse({'error': f'erro: {str(e)}'}, status=500)
