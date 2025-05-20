@@ -10,7 +10,7 @@ def quantidade_motorista_coletores_equipe():
         hoje = localdate()
         logger.info("buscando quantidade de motoristas e coletores por equipe no dia: %s", hoje)
 
-        equipes = ['Equipe1(Matutino)', 'Equipe2(Vespertino)', 'Equipe3(Noturno)']
+        equipes = ['Equipe(Diurno)', 'Equipe(Notunro)']
         resultado = {}
 
         for equipe in equipes:

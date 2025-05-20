@@ -20,7 +20,9 @@ class Soltura(models.Model):
     
     TIPO_EQUIPE= [("Equipe1(Matutino)","Equipe1(Matutino)"),
                   ("Equipe2(Vespertino)","Equipe2(Vespertino)"),
-                  ("Equipe3(Noturno)","Equipe3(Noturno)")]
+                  ("Equipe3(Noturno)","Equipe3(Noturno)"),
+                  ("Euipe(Diurno)","Euipe(Diurno)"),
+                  ("Equipe(Noturno)","Equipe(Noturno)")]
     
     PAS = [('PA1','PA1'),
           ('PA2','PA2'), 
@@ -38,7 +40,8 @@ class Soltura(models.Model):
     TURNO_CHOICES = [
         ('Matutino', 'Matutino'),
         ('Vespertino', 'Vespertino'),
-        ('Noturno', 'Noturno')
+        ('Noturno', 'Noturno'),
+        ('Diurno','Diurno'),
     ]
 
     motorista = models.ForeignKey(

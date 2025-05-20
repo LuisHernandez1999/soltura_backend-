@@ -26,6 +26,19 @@ def cadastrar_soltura_service(data):
     }
     if tipo_servico != 'varrição':
         required_fields.add('coletores')
+    tipo_servico = data.get('tipo_servico', '').lower()
+    tipo_equipe = data.get('tipo_equipe', '')
+    turno = data.get('turno', '')
+    if tipo_servico in ['rsu', 'seletiva']:
+        if tipo_equipe not in ['Equipe(Diurno)', 'Equipe(Noturno)']:
+            raise ValueError("para RSU ou SELETIVA, o tipo de equipe deve ser 'Equipe(Diurno)' ou 'Equipe(Noturno)'")
+        if turno not in ['Diurno', 'Noturno']:
+            raise ValueError("para RSU ou SELETIVA, o turno deve ser 'Diurno' ou 'Noturno'")
+    elif tipo_servico == 'varrição':
+        if tipo_equipe != 'Equipe(Noturno)':
+            raise ValueError("para VARRIÇÃO, o tipo de equipe deve ser 'Equipe(Noturno)'")
+        if turno != 'Noturno':
+            raise ValueError("para VARRIÇÃO, o turno deve ser 'Noturno'")
 
     missing_fields = required_fields - data.keys()
     if missing_fields:
