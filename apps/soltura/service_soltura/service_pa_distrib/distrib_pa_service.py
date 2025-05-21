@@ -16,7 +16,7 @@ def contar_solturas_por_garagem_hoje(request):
         for garagem in garages:
             if garagem not in resultado:
                 resultado[garagem] = 0
-        total_solturas_hoje = Soltura.objects.filter(data=data_hoje).count()
+        total_solturas_hoje = Soltura.objects.filter(data=data_hoje,tipo_sservico='Remoção').count()
         resultado['total'] = total_solturas_hoje
         return resultado  
     except Exception as e:

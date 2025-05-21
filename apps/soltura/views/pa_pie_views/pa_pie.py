@@ -12,7 +12,7 @@ def quantidade_soltura_equipes_dia(request):
         hoje = timezone.localdate() 
 
 
-        solturas_por_equipe = Soltura.objects.filter(data=hoje) \
+        solturas_por_equipe = Soltura.objects.filter(data=hoje,tipo_servico='Remoção') \
             .values('tipo_equipe') \
             .annotate(qtd=Count('id')) \
             .filter(tipo_equipe__in=['Equipe1(Matutino)', 'Equipe2(Vespertino)', 'Equipe3(Noturno)'])

@@ -13,6 +13,7 @@ def buscar_solturas(placa=None):
             .select_related('motorista', 'veiculo')
             .prefetch_related('coletores')
             .order_by('-hora_saida_frota')
+            .filter(tipo_servico='Remoção')
         )
 
         if placa:

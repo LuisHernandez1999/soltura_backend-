@@ -12,9 +12,9 @@ def contar_motoristas_e_coletores_hoje(request):
     try:
         hoje = timezone.localdate() 
         logger.debug(f"Data de hoje: {hoje}")
-        total_motoristas = Soltura.objects.filter(data=hoje).values('motorista').count()
+        total_motoristas = Soltura.objects.filter(data=hoje,tipo_servico='Remoção').values('motorista').count()
         logger.debug(f"Total de motoristas: {total_motoristas}")
-        total_coletores = Soltura.objects.prefetch_related('coletores').filter(data=hoje).values('coletores').count()
+        total_coletores = Soltura.objects.prefetch_related('coletores').filter(data=hoje,tipo_servico='Remoção').values('coletores').count()
         logger.debug(f"Total de coletores: {total_coletores}")
 
         total_geral = total_motoristas + total_coletores

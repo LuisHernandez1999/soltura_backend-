@@ -19,7 +19,7 @@ def exibir_solturas_registradas(request):
         )
 
         if placa:
-            solturas = solturas.filter(veiculo__placa_veiculo=placa)
+            solturas = solturas.filter(veiculo__placa_veiculo=placa,tipo_servico__iexact='Remoção')
 
         resultados = []
 

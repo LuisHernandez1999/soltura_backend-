@@ -1,11 +1,13 @@
-from django.db.models import Count
-from ...models.models import Soltura
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
 from django.utils.timezone import localdate
+from ...models.models import Soltura
 import logging
 
 logger = logging.getLogger(__name__)
 
-def quantidade_motorista_coletores_equipe():
+@require_GET
+def quantidade_motorista_coletores_equipe(request):
     try:
         hoje = localdate()
         logger.info("buscando quantidade de motoristas e coletores por equipe no dia: %s", hoje)
@@ -14,7 +16,7 @@ def quantidade_motorista_coletores_equipe():
         resultado = {}
 
         for equipe in equipes:
-            solturas = Soltura.objects.filter(data=hoje, tipo_equipe=equipe,)
+            solturas = Soltura.objects.filter(data=hoje, tipo_equipe=equipe,tipo_servico='Rsu')
             qtd_motoristas = solturas.values('motorista').distinct().count()
             qtd_coletores = solturas.values('coletores').distinct().count()
             resultado[equipe] = {
@@ -23,8 +25,11 @@ def quantidade_motorista_coletores_equipe():
             }
 
         logger.info("distribuicao por equipe: %s", resultado)
-        return resultado
+        return JsonResponse(resultado)  
 
     except Exception as e:
         logger.error("erro ao buscar quantidade de motoristas/coletores por equipe: %s", str(e))
-        raise Exception("erro ao buscar quantidade por equipe: " + str(e))
+        return JsonResponse(
+            {"error": "erro ao buscar quantidade por equipe", "details": str(e)},
+            status=500
+        )

@@ -11,9 +11,8 @@ def contar_coletores_motorista_por_turno(request):
         resultado = {}
 
         equipes = {
-            "Equipe1(Matutino)": "Equipe1(Matutino)",
-            "Equipe2(Vespertino)": "Equipe2(Vespertino)",
-            "Equipe3(Noturno)": "Equipe3(Noturno)"
+            "Equipe(Diurno)": "Equipe(Diurno)",
+            "Equipe(Noturno)": "Equipe(Noturno)"
         }
 
         for nome_equipe, tipo_equipe in equipes.items():

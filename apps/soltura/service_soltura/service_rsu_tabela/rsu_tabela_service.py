@@ -3,7 +3,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def buscar_solturas_rsu(tipo_servico):
+def buscar_solturas_rsu(request):
     try:
         solturas = (
             Soltura.objects
@@ -28,12 +28,9 @@ def buscar_solturas_rsu(tipo_servico):
                 'turno',
                 'rota',
                 'status_frota',
-                'tipo_veiculo',
+                'tipo_veiculo_selecionado',
             )
         )
-
-        if tipo_servico:
-            solturas = solturas.filter(tipo_servico=tipo_servico)
 
         resultados = []
         for soltura in solturas:
@@ -54,12 +51,14 @@ def buscar_solturas_rsu(tipo_servico):
                 "turno": soltura.turno,
                 "rota": soltura.rota,
                 "status_frota": soltura.status_frota,
-                "tipo_veiculo_selecionado": soltura.tipo_veiculo,
+                "tipo_veiculo_selecionado": soltura.tipo_veiculo_selecionado,
             })
 
         logger.info("encontradas %d solturas", len(resultados))
-        return resultados
+        from django.http import JsonResponse
+        return JsonResponse({"solturas": resultados}, safe=False)
 
     except Exception as e:
         logger.error(f"erro ao buscar solturas: {str(e)}")
-        raise Exception(f"erro ao buscar solturas: {str(e)}")
+        from django.http import JsonResponse
+        return JsonResponse({"error": str(e)}, status=500)

@@ -10,8 +10,6 @@ def contar_solturas_seletiva_por_garagem(request):
         data_hoje = localdate()
         garages = ['PA1', 'PA2', 'PA3', 'PA4']
         resultado = {g: 0 for g in garages}
-
-        # Filtra por data, tipo e somente as garagens PA1 a PA4
         solturas = Soltura.objects.filter(
             data=data_hoje,
             tipo_servico='Seletiva',
