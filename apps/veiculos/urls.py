@@ -11,5 +11,8 @@ urlpatterns = [
     path('total_frota_remocao/',views.contagem_total_remocao,name='total_frota_remocao'),
     path('total_seletiva/',views.contagem_total_seletiva,name='contagem_total_seletiva'),
     path('inativos_seletiva/',views.contagem_seletiva_inativos,name='contagem_seletiva_inativos'),
-    path('ativos_seletiva/',views.contagem_seletiva_ativos,view='contagem_seletiva_ativos')  
+    path('ativos_seletiva/',views.contagem_seletiva_ativos,view='contagem_seletiva_ativos'),  
+    path('total_rsu'/views.contagem_total_rsu,view='total_rsu'),
+    path('rsu_ativo/',views.contagem_rsu_ativos,view='rsu_ativo'),
+    path('rsu_inativo/',views.contagem_rsu_inativos,view='rsu_inativo')
 ]

@@ -52,6 +52,7 @@ from apps.soltura.views.tabela_seletiva_views.views_tabela_seletiva import retor
 from apps.soltura.views.resumo_pa_seletiva_views.views_pa_seletiva_resumo import contagem_geral_por_pa_seltiva
 
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/veiculos/criar/', veiculos_views.criar_veiculo, name='criar_veiculo'),
@@ -76,6 +77,9 @@ urlpatterns = [
     path('api/veiculos/total_frota_seletiva/',veiculos_views.contagem_total_seletiva,name='total_frota_seletiva/'),
     path('api/veiculos/conatagem_seletiva_inativos/',veiculos_views.contagem_seletiva_inativos, name='conatagem_seletiva_inativos'),
     path('api/veiculos/conatagem_seletiva_ativos/',veiculos_views.contagem_seletiva_ativos, name='conatagem_seletiva_ativos'),
+    path('api/veiculos/rsu_total/',veiculos_views.contagem_total_rsu,name='contagem_total_rsu'),
+    path('api/veiculos/rsu_ativos/',veiculos_views.contagem_rsu_inativos,name='contagem_rsu_inativos'),
+    path('api/veiculos/rsu_ativos/',veiculos_views.contagem_rsu_ativos,name='contagem_rsu_ativos'),
     path('api/login/', login_views.login, name='login'),
     path('api/soltura/remocao_por_mes/', media_mensal_de_solturas,name='remocao_por_mes'),
     path('api/soltura/solturas_de_semana_/',solturas_por_dia_da_semana,name='solturas_de_remocao_por_mes'),
