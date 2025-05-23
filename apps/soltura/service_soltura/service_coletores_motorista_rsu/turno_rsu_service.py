@@ -17,8 +17,8 @@ def quantidade_motorista_coletores_equipe(request):
 
         for equipe in equipes:
             solturas = Soltura.objects.filter(data=hoje, tipo_equipe=equipe,tipo_servico='Rsu')
-            qtd_motoristas = solturas.values('motorista').distinct().count()
-            qtd_coletores = solturas.values('coletores').distinct().count()
+            qtd_motoristas = solturas.values('motorista').count()
+            qtd_coletores = solturas.values('coletores').count()
             resultado[equipe] = {
                 'motoristas': qtd_motoristas,
                 'coletores': qtd_coletores
