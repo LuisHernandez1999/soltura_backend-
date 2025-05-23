@@ -3,6 +3,8 @@ from ...models.models import Soltura
 from django.views.decorators.csrf import csrf_exempt
 import logging
 
+logger = logging.getLogger(__name__)
+
 @csrf_exempt
 def exibir_solturas_registradas(request):
     if request.method != 'GET':
@@ -15,21 +17,23 @@ def exibir_solturas_registradas(request):
             Soltura.objects
             .select_related('motorista', 'veiculo')
             .prefetch_related('coletores')
-            .order_by('-hora_saida_frota')  
+            .order_by('-hora_saida_frota') 
+            .filter(tipo_servico='Remoção') 
         )
 
         if placa:
-            solturas = solturas.filter(veiculo__placa_veiculo=placa,tipo_servico__iexact='Remoção')
+            solturas = solturas.filter(veiculo__placa_veiculo=placa, tipo_servico__iexact='Remoção')
 
         resultados = []
 
         for soltura in solturas:
             resultados.append({
+                "id": soltura.id,  # adiciona o ID da soltura
                 "motorista": soltura.motorista.nome,
                 "matricula_motorista": soltura.motorista.matricula,
                 "tipo_equipe": soltura.tipo_equipe, 
                 "coletores": [coletor.nome for coletor in soltura.coletores.all()],
-                "data":soltura.data,
+                "data": soltura.data,
                 "prefixo": soltura.veiculo.prefixo,
                 "frequencia": soltura.frequencia,
                 "setores": soltura.setores,
@@ -41,13 +45,10 @@ def exibir_solturas_registradas(request):
                 "turno": soltura.turno,
                 "rota": soltura.rota,
                 "status_frota": soltura.status_frota,
-                "tipo_veiculo_selecionado":soltura.tipo_veiculo_selecionado,
-                "bairro":soltura.bairro
-
-
+                "tipo_veiculo_selecionado": soltura.tipo_veiculo_selecionado,
+                "bairro": soltura.bairro
             })
         return JsonResponse(resultados, safe=False, status=200)
     except Exception as e:
         logger.error(f"erro ao buscar solturas: {e}")
-        return JsonResponse({'error': 'deu erro  no mapeamneto das  solturas'}, status=500)
-logger = logging.getLogger(__name__)
+        return JsonResponse({'error': 'deu erro no mapeamento das solturas'}, status=500)

@@ -50,6 +50,7 @@ from apps.soltura.views.seletiva_grafic_views.views_grafic_seletiva import obter
 from apps.soltura.views.seletiva_pa_views.views_pa_seletiva import contar_solturas_seletiva_por_garagem
 from apps.soltura.views.tabela_seletiva_views.views_tabela_seletiva import retornar_infos_seletiva
 from apps.soltura.views.resumo_pa_seletiva_views.views_pa_seletiva_resumo import contagem_geral_por_pa_seltiva
+from apps.soltura.views.get_soltura_by_id_views.views_get_soltura_by_id import buscar_soltura_por_id
 
 
 
@@ -78,7 +79,7 @@ urlpatterns = [
     path('api/veiculos/conatagem_seletiva_inativos/',veiculos_views.contagem_seletiva_inativos, name='conatagem_seletiva_inativos'),
     path('api/veiculos/conatagem_seletiva_ativos/',veiculos_views.contagem_seletiva_ativos, name='conatagem_seletiva_ativos'),
     path('api/veiculos/rsu_total/',veiculos_views.contagem_total_rsu,name='contagem_total_rsu'),
-    path('api/veiculos/rsu_ativos/',veiculos_views.contagem_rsu_inativos,name='contagem_rsu_inativos'),
+    path('api/veiculos/rsu_inativos/',veiculos_views.contagem_rsu_inativos,name='contagem_rsu_inativos'),
     path('api/veiculos/rsu_ativos/',veiculos_views.contagem_rsu_ativos,name='contagem_rsu_ativos'),
     path('api/login/', login_views.login, name='login'),
     path('api/soltura/remocao_por_mes/', media_mensal_de_solturas,name='remocao_por_mes'),
@@ -106,7 +107,8 @@ urlpatterns = [
     path('api/soltura/obter_solturas_seletiva_por_dia_da_semana/',obter_solturas_seletiva_por_dia_da_semana,name='obter_solturas_seletiva_por_dia_da_semana'),
     path('api/soltura/contar_solturas_seletiva_por_garagem/',contar_solturas_seletiva_por_garagem,name='contar_solturas_seletiva_por_garagem'),
     path('api/soltura/retornar_infos_seletiva/',retornar_infos_seletiva,name='retornar_infos_seletiva'),
-    path('api/soltura/contagem_geral_por_pa_seltiva/',contagem_geral_por_pa_seltiva,name='contagem_geral_por_pa_seltiva')
+    path('api/soltura/contagem_geral_por_pa_seltiva/',contagem_geral_por_pa_seltiva,name='contagem_geral_por_pa_seltiva'),
+    path('api/soltura/<int:soltura_id>/buscar/',buscar_soltura_por_id,name='buscar_soltura_id')
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

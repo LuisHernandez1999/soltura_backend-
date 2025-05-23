@@ -146,23 +146,23 @@ def contagem_total_seletiva(request):
 
 def contagem_total_rsu(request):
     if request.method == 'GET':
-        count_seletiva_ativos = Veiculo.objects.filter(tipo_servico_veiculo='Rsu', status='Ativo').only('id').count()
-        count_seletiva_inativos = Veiculo.objects.filter(tipo_servico_veiculo='Rsu', status='Inativo').only('id').count()
-        total_seletiva = count_seletiva_ativos + count_seletiva_inativos
-        return JsonResponse({'total_seletiva': total_seletiva})
+        count_rsu_ativos = Veiculo.objects.filter(tipo_servico_veiculo='Rsu', status='Ativo').only('id').count()
+        count_rsu_inativos = Veiculo.objects.filter(tipo_servico_veiculo='Rsu', status='Inativo').only('id').count()
+        total_rsu = count_rsu_ativos + count_rsu_inativos
+        return JsonResponse({'total_rsu': total_rsu})
     return JsonResponse({'error': 'Método não permitido'}, status=405)
 
 
 def contagem_rsu_ativos(request):
     if request.method == 'GET':
-        count_seletiva_ativos = Veiculo.objects.filter(tipo_servico_veiculo='Rsu', status='Ativo').only('id').count()
-        return JsonResponse({'count_seletiva_ativos': count_seletiva_ativos})
+        count_rsu_ativos = Veiculo.objects.filter(tipo_servico_veiculo='Rsu', status='Ativo').only('id').count()
+        return JsonResponse({'count_rsu_ativos': count_rsu_ativos})
     return JsonResponse({'error': 'metodo nao permitido'}, status=405)
 
 
 def contagem_rsu_inativos(request):
     if request.method == 'GET':
-        count_seletiva_inativos = Veiculo.objects.filter(tipo_servico_veiculo='Rsu', status='Inativo').only('id').count()
+        count_rsu_inativos = Veiculo.objects.filter(tipo_servico_veiculo='Rsu', status='Inativo').only('id').count()
 
-        return JsonResponse({'count_seletiva_inativos': count_seletiva_inativos})
+        return JsonResponse({'count_seletiva_inativos': count_rsu_inativos})
     return JsonResponse({'error': 'metodo nao permitido'}, status=405)       

@@ -16,6 +16,7 @@ def retornar_infos_seletiva(request):
         resultado = []
         for s in solturas:
             resultado.append({
+                'id': s.id,
                 'motorista': s.motorista.nome if s.motorista else None,
                 'hora_saida_frota': s.hora_saida_frota,
                 "prefixo": s.veiculo.prefixo if s.veiculo else None,

@@ -1,11 +1,14 @@
 from django.utils.timezone import localdate
-from django.http import JsonResponse  # <- Aqui é o correto
+from django.http import JsonResponse
 from ...models.models import Soltura
 import logging
 
 logger = logging.getLogger(__name__)
 
 def contar_seletiva_realizadas_hoje(request):
+    if request.method != 'GET':
+        return JsonResponse({"error": "Método não permitido"}, status=405)
+
     try:
         hoje = localdate()
         total_remocoes_hoje = Soltura.objects.filter(

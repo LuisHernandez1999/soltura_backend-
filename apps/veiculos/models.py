@@ -55,7 +55,8 @@ class Veiculo(models.Model):
     TIPO_SERVICO_VEICULO = [
         ('Remoção', 'Remoção'),
         ('Seletiva', 'Seletiva'),
-        ('Testes','Teste')
+        ('Testes','Teste'),
+        ('Rsu','Rsu'),
     ]
 
    

@@ -26,6 +26,7 @@ from soltura.views.tabela_seletiva_views.views_tabela_seletiva import retornar_i
 from soltura.views.colaboradores_equipe_seletiva_views.views_colaboradores_equipe import contar_coletores_motorista_por_turno
 from soltura.views.resumo_pa_rsu_views.views_resumo_pa_rsu import contagem_geral_por_pa_rsu
 from soltura.views.resumo_pa_seletiva_views.views_pa_seletiva_resumo import contagem_geral_por_pa_seltiva
+from soltura.views.get_soltura_by_id_views.views_get_soltura_by_id import buscar_soltura_por_id
 
 urlpatterns = [
     path('criar/', cadastrar_soltura, name='cadastrar_soltura'),
@@ -51,7 +52,8 @@ urlpatterns = [
     path('soltura/retornar_infos_seletiva/',retornar_infos_seletiva,name='retornar_infos_seletiva'),
     path('soltura/colaboradores_turno_seletiva/',contar_coletores_motorista_por_turno,name='contar_coletores_motorista_por_turno'),
     path('soltura/contagem_geral_por_pa/',contagem_geral_por_pa_rsu,name='contagem_geral_por_pa'),
-    path('soltura/contagem_geral_por_pa_seltiva/',contagem_geral_por_pa_seltiva,name='contagem_geral_por_pa_seltiva')
+    path('soltura/contagem_geral_por_pa_seltiva/',contagem_geral_por_pa_seltiva,name='contagem_geral_por_pa_seltiva'),
+    path('soltura/<int:soltura_id>/b',buscar_soltura_por_id,name='buscar_soltura_id')
 
 
 

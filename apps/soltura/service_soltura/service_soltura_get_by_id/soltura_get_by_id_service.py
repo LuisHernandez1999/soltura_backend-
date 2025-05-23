@@ -1,27 +1,39 @@
-# services/soltura_service.py
 from ...models.models import Soltura
 import logging
+from django.http import JsonResponse
 
 logger = logging.getLogger(__name__)
 
-
-def buscar_soltura_por_id(soltura_id):
+def buscar_soltura_por_id(request, soltura_id):
     try:
-        logger.info(f"Buscando soltura com ID: {soltura_id}")
-
         soltura = (
             Soltura.objects
             .select_related('motorista', 'veiculo')
             .prefetch_related('coletores')
-            .filter(id=soltura_id)
-            .first()
+            .only(
+                'motorista__nome',
+                'motorista__matricula',
+                'tipo_equipe',
+                'coletores',
+                'data',
+                'veiculo__prefixo',
+                'veiculo__placa_veiculo',
+                'frequencia',
+                'setores',
+                'celular',
+                'lider',
+                'hora_entrega_chave',
+                'hora_saida_frota',
+                'tipo_servico',
+                'turno',
+                'rota',
+                'status_frota',
+                'tipo_veiculo_selecionado',
+            )
+            .get(id=soltura_id)
         )
 
-        if not soltura:
-            logger.warning(f"Soltura com ID {soltura_id} não encontrada.")
-            return None
-
-        return {
+        resultado = {
             "motorista": soltura.motorista.nome if soltura.motorista else None,
             "matricula_motorista": soltura.motorista.matricula if soltura.motorista else None,
             "tipo_equipe": soltura.tipo_equipe,
@@ -30,20 +42,23 @@ def buscar_soltura_por_id(soltura_id):
             "prefixo": soltura.veiculo.prefixo if soltura.veiculo else None,
             "frequencia": soltura.frequencia,
             "setores": soltura.setores,
-            "garagem":soltura.garagem,
             "celular": soltura.celular,
             "lider": soltura.lider,
             "hora_entrega_chave": soltura.hora_entrega_chave.strftime('%H:%M:%S') if soltura.hora_entrega_chave else None,
             "hora_saida_frota": soltura.hora_saida_frota.strftime('%H:%M:%S') if soltura.hora_saida_frota else None,
-            "hora_chegada": soltura.hora_chegada.strftime('%H:%M:%S') if soltura.hora_chegada else None,
             "tipo_servico": soltura.tipo_servico,
             "turno": soltura.turno,
             "rota": soltura.rota,
             "status_frota": soltura.status_frota,
-            "tipo_veiculo_selecionado": soltura.tipo_veiculo,
-            "bairro":soltura.bairro
+            "tipo_veiculo_selecionado": soltura.tipo_veiculo_selecionado,
         }
 
+        return JsonResponse(resultado, safe=False)
+
+    except Soltura.DoesNotExist:
+        logger.warning(f"Soltura com id {soltura_id} não encontrada.")
+        return JsonResponse({"error": "Soltura não encontrada"}, status=404)
+
     except Exception as e:
-        logger.error(f"Erro ao buscar soltura por ID: {str(e)}")
-        raise Exception(f"Erro ao buscar soltura por ID: {str(e)}")
+        logger.error(f"Erro ao buscar soltura: {str(e)}")
+        return JsonResponse({"error": str(e)}, status=500)
