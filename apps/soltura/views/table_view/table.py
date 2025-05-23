@@ -18,11 +18,10 @@ def exibir_solturas_registradas(request):
             .select_related('motorista', 'veiculo')
             .prefetch_related('coletores')
             .order_by('-hora_saida_frota') 
-            .filter(tipo_servico='Remoção') 
         )
 
         if placa:
-            solturas = solturas.filter(veiculo__placa_veiculo=placa, tipo_servico__iexact='Remoção')
+            solturas = solturas.filter(veiculo__placa_veiculo=placa)
 
         resultados = []
 
