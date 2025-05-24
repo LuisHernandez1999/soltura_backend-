@@ -14,10 +14,10 @@ def contagem_geral_por_pa_rsu(request):
             queryset = Soltura.objects.filter(garagem=nome_garagem, data=data_hoje,tipo_servico='Rsu')
             return {
                 'turnos': list(queryset.values_list('turno', flat=True)),
-                'motoristas': queryset.values('motorista').distinct().count(),
-                'veiculos': queryset.values('veiculo').distinct().count(),
+                'motoristas': queryset.values('motorista').count(),
+                'veiculos': queryset.values('veiculo').count(),
                 'coletores': queryset.filter(coletores__isnull=False)
-                                      .values('coletores').distinct().count()
+                                      .values('coletores').count()
             }
         resultado = {
             'PA1': contar_por_garagem('PA1'),
