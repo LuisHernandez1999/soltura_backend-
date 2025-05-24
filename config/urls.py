@@ -51,6 +51,7 @@ from apps.soltura.views.seletiva_pa_views.views_pa_seletiva import contar_soltur
 from apps.soltura.views.tabela_seletiva_views.views_tabela_seletiva import retornar_infos_seletiva
 from apps.soltura.views.resumo_pa_seletiva_views.views_pa_seletiva_resumo import contagem_geral_por_pa_seltiva
 from apps.soltura.views.get_soltura_by_id_views.views_get_soltura_by_id import buscar_soltura_por_id
+from apps.soltura.views.delete_views.views_delete import deletar_soltura_por_id
 
 
 
@@ -108,7 +109,8 @@ urlpatterns = [
     path('api/soltura/contar_solturas_seletiva_por_garagem/',contar_solturas_seletiva_por_garagem,name='contar_solturas_seletiva_por_garagem'),
     path('api/soltura/retornar_infos_seletiva/',retornar_infos_seletiva,name='retornar_infos_seletiva'),
     path('api/soltura/contagem_geral_por_pa_seltiva/',contagem_geral_por_pa_seltiva,name='contagem_geral_por_pa_seltiva'),
-    path('api/soltura/<int:soltura_id>/buscar/',buscar_soltura_por_id,name='buscar_soltura_id')
+    path('api/soltura/<int:soltura_id>/buscar/',buscar_soltura_por_id,name='buscar_soltura_id'),
+    path('api/soltura/<int:soltura_id>/deletar/',deletar_soltura_por_id,name='deletar_soltura')
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
