@@ -1,6 +1,6 @@
 # services/soltura_service.py
 from django.shortcuts import get_object_or_404
-from ..models.models import Soltura
+from ...models.models import Soltura
 import logging
 
 logger = logging.getLogger(__name__)

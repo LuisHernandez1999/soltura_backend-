@@ -7,7 +7,7 @@ from soltura.views.cards_views.cards import (
     media_mensal_de_solturas,
 )
 from soltura.views.table_view.table import exibir_solturas_registradas
-from soltura.views.update_view.upadate import editar_soltura
+from soltura.views.update_view.upadate import editar_soltura_id
 from soltura.views.status_pie_views.status_pie import distribuicao_por_status
 from soltura.views.pa_pie_views.views_pa_pie import contar_solturas_por_garagem_hoje
 from soltura.views.type_truck_views.views_type_truck import tipos_veiculos_soltos_no_dia
@@ -28,6 +28,7 @@ from soltura.views.resumo_pa_rsu_views.views_resumo_pa_rsu import contagem_geral
 from soltura.views.resumo_pa_seletiva_views.views_pa_seletiva_resumo import contagem_geral_por_pa_seltiva
 from soltura.views.get_soltura_by_id_views.views_get_soltura_by_id import buscar_soltura_por_id
 from soltura.views.delete_views.views_delete import deletar_soltura_por_id
+from soltura.views.editar_views.views_editar import editar_soltura
 
 urlpatterns = [
     path('criar/', cadastrar_soltura, name='cadastrar_soltura'),
@@ -54,7 +55,7 @@ urlpatterns = [
     path('soltura/colaboradores_turno_seletiva/',contar_coletores_motorista_por_turno,name='contar_coletores_motorista_por_turno'),
     path('soltura/contagem_geral_por_pa/',contagem_geral_por_pa_rsu,name='contagem_geral_por_pa'),
     path('soltura/contagem_geral_por_pa_seltiva/',contagem_geral_por_pa_seltiva,name='contagem_geral_por_pa_seltiva'),
-    path('soltura/<int:soltura_id>/b',buscar_soltura_por_id,name='buscar_soltura_id'),
+    path('soltura/<int:soltura_id>/burcar',buscar_soltura_por_id,name='buscar_soltura_id'),
     path('soltura/<int:soltura_id>/delete/',deletar_soltura_por_id,name='deletar_soltura'),
-   
+    path('soltura/<int:soltura_id>/delete/',editar_soltura,name='deletar_soltura'),
 ]

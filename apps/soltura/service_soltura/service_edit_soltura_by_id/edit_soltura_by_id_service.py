@@ -1,24 +1,22 @@
+from django.shortcuts import get_object_or_404
 from ...models.models import Soltura
 import logging
 
 logger = logging.getLogger(__name__)
 
-def buscar_soltura_por_id(request, soltura_id):
-    try:
-        soltura_editar = Soltura.objects.select_related('motorista').select_related('veiculo').prefetch_related('coletores').only( 'coletores',
-            'hora_entrega_chave',
-            'hora_saida',
-            'hora_chegada',
-            'status_frota',
-            'bairro',
-            'rota',
-            'garagem',
-            'tipo_veiculo_selecionada',
-            'tipo_servico',
-            'lider',
-            'celular',).get(id=soltura_id)
-        return soltura_editar
-    except:
-        raise ValueError('soltura {soltura_id} não encontrada')
+def editar_soltura_por_id(soltura_id: int, dados: dict) -> Soltura:
+    soltura = get_object_or_404(Soltura, pk=soltura_id)
     
-    
+    campos_permitidos = [
+        'tipo_equipe', 'turno', 'status_frota','motorista','coletores','garagem',
+        'hora_entrega_chave', 'hora_saida', 'hora_chegada', 'frequencia',
+        'setor', 'celular', 'lider', 'rota', 'tipo_veiculo_selecionada', 'veiculo'
+    ]
+
+    for campo in campos_permitidos:
+        if campo in dados:
+            setattr(soltura, campo, dados[campo])
+
+    soltura.save()
+    logger.info(f"soltura {soltura_id} atualizada com sucesso.")
+    return soltura

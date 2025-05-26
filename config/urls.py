@@ -25,13 +25,11 @@ from apps.soltura.views.create_view.create import cadastrar_soltura
 from apps.soltura.views.cards_views.cards import exibir_total_de_remocao_feitas, exibir_total_de_remocao_soltas_no_dia
 from apps.soltura.views.table_view.table import exibir_solturas_registradas
 from apps.soltura.views.grafic_views.grafic import media_mensal_de_solturas, solturas_por_dia_da_semana
-from apps.soltura.views.update_view.upadate import editar_soltura
 from apps.soltura.views.pa_pie_views.views_pa_pie import contar_solturas_por_garagem_hoje
 from apps.soltura.views.pa_pie_views.views_pa_pie import distribuicao_diaria_por_pa_view
 from apps.soltura.views.type_truck_views.views_type_truck import tipos_veiculos_soltos_no_dia_view
 from apps.soltura.views.pa_pie_views.pa_pie import quantidade_soltura_equipes_dia
 from apps.soltura.views.status_pie_views.status_pie import distribuicao_por_status
-from apps.soltura.views.update_view.upadate import editar_soltura
 from apps.soltura.views.solturabyid_views.views_solturabyid import buscar_soltura_por_id
 from apps.averiguacao.views_averiguacao.averiguacao_create_views.create_views import criar_averiguacao
 from apps.averiguacao.views_averiguacao.update_averiguacao_views.update_averiguacao_views import update_averiguacao
@@ -52,6 +50,7 @@ from apps.soltura.views.tabela_seletiva_views.views_tabela_seletiva import retor
 from apps.soltura.views.resumo_pa_seletiva_views.views_pa_seletiva_resumo import contagem_geral_por_pa_seltiva
 from apps.soltura.views.get_soltura_by_id_views.views_get_soltura_by_id import buscar_soltura_por_id
 from apps.soltura.views.delete_views.views_delete import deletar_soltura_por_id
+from apps.soltura.views.editar_views.views_editar import editar_soltura_por_id
 
 
 
@@ -85,13 +84,11 @@ urlpatterns = [
     path('api/login/', login_views.login, name='login'),
     path('api/soltura/remocao_por_mes/', media_mensal_de_solturas,name='remocao_por_mes'),
     path('api/soltura/solturas_de_semana_/',solturas_por_dia_da_semana,name='solturas_de_remocao_por_mes'),
-    path('api/solturas/<int:soltura_id>/editar/', editar_soltura, name='editar_soltura'),
     path('api/soltura/distribuicao_pa/', distribuicao_diaria_por_pa_view, name='distribuicao_pa'),
     path('api/soltura/distribuicao_diaria_por_pa/',contar_solturas_por_garagem_hoje,name='distribuicao_diaria_por_pa' ),
     path('api/soltura/tipos_veiculos_soltos_no_dia/',tipos_veiculos_soltos_no_dia_view, name='tipos_veiculos_soltos_no_dia'),
     path('api/soltura/tipos_equipes_soltas/',quantidade_soltura_equipes_dia, name='quantidade_soltura_equipes_dia'),
     path('api/soltura/ distribuicao_por_status/', distribuicao_por_status,name=' distribuicao_por_status'),
-    path('api/soltura/<int:soltura_id>/editar/',editar_soltura, name='editar_soltura'),
     path('api/averiguacao/create/', criar_averiguacao, name='create_averiguacao'),
     path('api/averiguacao/<int:averiguacao_id>/update/', update_averiguacao, name='update_averiguacao'),
     path('api/averiguacao/ver_averiguacao/get/', get_averiguacao, name='get_averiguacao'),
@@ -110,7 +107,8 @@ urlpatterns = [
     path('api/soltura/retornar_infos_seletiva/',retornar_infos_seletiva,name='retornar_infos_seletiva'),
     path('api/soltura/contagem_geral_por_pa_seltiva/',contagem_geral_por_pa_seltiva,name='contagem_geral_por_pa_seltiva'),
     path('api/soltura/<int:soltura_id>/buscar/',buscar_soltura_por_id,name='buscar_soltura_id'),
-    path('api/soltura/<int:soltura_id>/deletar/',deletar_soltura_por_id,name='deletar_soltura')
+    path('api/soltura/<int:soltura_id>/deletar/',deletar_soltura_por_id,name='deletar_soltura'),
+    path('api/soltura/<int:soltura_id>/editar/',editar_soltura_por_id,name='editar_soltura'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
