@@ -31,7 +31,7 @@ def contar_coletores_motorista_por_turno(request):
         logger.info("Contagem de coletores e motoristas por turno realizada com sucesso: %s", resultado)
         return JsonResponse(resultado)
 
-    except Exception as e:
+    except Exception as e: #### oi
         logger.exception("Erro ao contar coletores e motoristas por turno")
         return JsonResponse(
             {"erro": f"Erro ao contar coletores e motoristas por turno: {str(e)}"},
