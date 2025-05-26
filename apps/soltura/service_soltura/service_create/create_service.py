@@ -13,7 +13,7 @@ def converter_para_data_hora(valor):
     if not isinstance(valor, str):
         raise ValueError("O valor de hora deve ser uma string.")
     
-    formato = "%Y-%m-%d %H:%M:%S"  # Ajuste o formato conforme necessário
+    formato = "%Y-%m-%d %H:%M:%S"  # ajuste o formato conforme necessario
     return datetime.strptime(valor, formato)
 
 

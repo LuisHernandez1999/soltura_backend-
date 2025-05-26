@@ -151,10 +151,15 @@ class Soltura(models.Model):
                 elif self.garagem == 'PA4':
                     return ['BN07', 'BN08', 'BN09', 'BN10', 'BN11', 'DN01', 'DN02', 'DN03', 'DN04', 'DN05', 'DN06']
         return []
-    
+    class Meta:
+        indexes = [
+            models.Index(fields=['tipo_servico']),
+            models.Index(fields=['data']),
+        ]
+
 def rota_varricao(self):
     if self.tipo_servico == 'Varrição':
         self.setores = None
-        self.coletores = None  # Limpa todos os coletores associados
+        self.coletores = None  # limpa todos os coletores associados
         return []
     return []

@@ -48,9 +48,12 @@ def buscar_soltura_por_id(request, soltura_id):
             "hora_saida_frota": soltura.hora_saida_frota.strftime('%H:%M:%S') if soltura.hora_saida_frota else None,
             "tipo_servico": soltura.tipo_servico,
             "turno": soltura.turno,
+            "garagem":soltura.garagem,
+            "hora_chegada":soltura.hora_chegada,
             "rota": soltura.rota,
             "status_frota": soltura.status_frota,
             "tipo_veiculo_selecionado": soltura.tipo_veiculo_selecionado,
+            "bairro":soltura.bairro
         }
 
         return JsonResponse(resultado, safe=False)

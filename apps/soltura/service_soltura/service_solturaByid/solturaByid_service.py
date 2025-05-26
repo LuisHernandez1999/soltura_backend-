@@ -1,4 +1,3 @@
-# services/soltura_service.py
 from ...models.models import Soltura
 import logging
 
@@ -18,7 +17,7 @@ def buscar_soltura_por_id(soltura_id):
         )
 
         if not soltura:
-            logger.warning(f"Soltura com ID {soltura_id} não encontrada.")
+            logger.warning(f"soltura com ID {soltura_id} nao encontrada.")
             return None
 
         return {
@@ -37,13 +36,14 @@ def buscar_soltura_por_id(soltura_id):
             "hora_saida_frota": soltura.hora_saida_frota.strftime('%H:%M:%S') if soltura.hora_saida_frota else None,
             "hora_chegada": soltura.hora_chegada.strftime('%H:%M:%S') if soltura.hora_chegada else None,
             "tipo_servico": soltura.tipo_servico,
+            "garagem":soltura.garagem,
+            "hora_chegada":soltura.hora_chegada,
             "turno": soltura.turno,
             "rota": soltura.rota,
             "status_frota": soltura.status_frota,
             "tipo_veiculo_selecionado": soltura.tipo_veiculo,
             "bairro":soltura.bairro
         }
-
     except Exception as e:
-        logger.error(f"Erro ao buscar soltura por ID: {str(e)}")
-        raise Exception(f"Erro ao buscar soltura por ID: {str(e)}")
+        logger.error(f"erro ao buscar soltura por ID: {str(e)}")
+        raise Exception(f"erro ao buscar soltura por ID: {str(e)}")
