@@ -17,7 +17,7 @@ def contar_seletiva_realizadas_hoje(request):
         ).values('motorista', 'veiculo').count()
 
         logger.info(f"total de RSU feitas hoje ({hoje}): {total_remocoes_hoje}")
-        return JsonResponse({"total_seletiva_hoje": total_remocoes_hoje})
+        return JsonResponse({"total_remocao_hoje": total_remocoes_hoje})
     except Exception as e:
         logger.error(f"erro ao buscar remoções: {e}")
         return JsonResponse({"error": str(e)}, status=500)
