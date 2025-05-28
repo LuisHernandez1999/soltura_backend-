@@ -1,9 +1,10 @@
-import logging
+import logging 
 from datetime import datetime
 from django.utils import timezone
 from ...models.models import Soltura
 from apps.colaborador.models import Colaborador
 from apps.veiculos.models import Veiculo
+from apps.equipamentos.models import Equipamento
 
 logger = logging.getLogger(__name__)
 
@@ -18,14 +19,18 @@ def converter_para_data_hora(valor):
 
 
 def cadastrar_soltura_service(data):
+
+
+    
     tipo_servico = data.get('tipo_servico', '').lower()
 
     required_fields = {
         'motorista', 'veiculo', 'frequencia', 
-        'hora_entrega_chave', 'hora_saida_frota', 'turno', 'tipo_servico','tipo_equipe','status_frota'
+        'hora_entrega_chave', 'hora_saida_frota', 'turno', 'tipo_servico', 'tipo_equipe', 'status_frota'
     }
     if tipo_servico != 'varrição':
         required_fields.add('coletores')
+
     tipo_servico = data.get('tipo_servico', '').lower()
     tipo_equipe = data.get('tipo_equipe', '')
     turno = data.get('turno', '')
@@ -71,7 +76,9 @@ def cadastrar_soltura_service(data):
 
         if not coletores:
             logger.warning("coletores nao encontrados ou inativos.")
+
             raise ValueError('coletores nao encontrados ou inativos')
+    
 
     hora_entrega_chave = converter_para_data_hora(data['hora_entrega_chave'])
     hora_saida_frota = converter_para_data_hora(data['hora_saida_frota'])
@@ -88,6 +95,14 @@ def cadastrar_soltura_service(data):
     if soltura_duplicada:
         logger.warning(f"duplicacao de soltura detectada para motorista {motorista.nome} em {hora_saida_frota}")
         raise ValueError('ja existe um cadastro com esse motorista e essa hora de saida hoje.')
+    
+    if tipo_servico == 'remoção':
+     if 'equipamento' not in data:
+        raise ValueError("Campo 'equipamento' e obrigatorio para remocao.")
+     prefixo = data['equipamento']
+     equipamento = Equipamento.objects.filter(prefixo=prefixo)
+    if not equipamento.exists():
+        raise ValueError("equipamento para remocao nao encontrado.")
 
     soltura = Soltura.objects.create(
         motorista=motorista,
@@ -105,11 +120,12 @@ def cadastrar_soltura_service(data):
         tipo_servico=data['tipo_servico'],
         rota=data.get('rota') or None,
         status_frota=data.get('status_frota'),
-        tipo_veiculo_selecionado=data('tipo_veiculo_selecionado'),
-        bairro=data.get('bairro')
+        tipo_veiculo_selecionado=data.get('tipo_veiculo_selecionado'),
+        bairro=data.get('bairro'),
+        equipamento= equipamento,
     )
 
     if coletores:
         soltura.coletores.set(coletores)
 
-    return soltura, veiculo, coletores, motorista, hora_entrega_chave, hora_saida_frota, hora_chegada
+    return soltura, veiculo, coletores, motorista, hora_entrega_chave, hora_saida_frota, hora_chegada,equipamento

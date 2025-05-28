@@ -1,6 +1,7 @@
 from django.db import models
 from apps.colaborador.models import Colaborador
 from apps.veiculos.models import Veiculo
+from apps.equipamentos.models import Equipamento
 from django.core.exceptions import ValidationError
 from datetime import date,time
 import datetime
@@ -61,6 +62,7 @@ class Soltura(models.Model):
         limit_choices_to={'status': 'ATIVO'},  
         related_name='solturas'
     )
+    equipamento = models.ForeignKey(Equipamento, null=True, blank=False, on_delete=models.SET_NULL)
     hora_entrega_chave = models.TimeField(null=False, blank=False,default= time(8, 0))
     hora_saida_frota = models.TimeField(null=False, blank=False,  default=  time(8, 10))
     frequencia = models.CharField(

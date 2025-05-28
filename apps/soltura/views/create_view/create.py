@@ -9,7 +9,7 @@ from django.utils import timezone
 import json
 from datetime import datetime
 import traceback
-
+from ...models.models import Equipamento
 @csrf_exempt
 def cadastrar_soltura(request):
     if request.method != 'POST':
@@ -106,10 +106,18 @@ def cadastrar_soltura(request):
             return JsonResponse({
                 'error': 'ja existe um cadastro com esse motorista e essa hora de saida hoje.'
             }, status=400)
+        if tipo_servico == 'remoção':
+         if 'equipamento' not in data:
+           raise ValueError("Campo 'equipamento' e obrigatorio para remocao.")
+        prefixo_equipamento = data['equipamento']
+        equipamento = Equipamento.objects.filter(prefixo_equipamento=prefixo_equipamento).first()
+        if not equipamento:
+          raise ValueError("equipamento para remocao nao encontrado.")
 
         soltura = Soltura.objects.create(
             motorista=motorista,
             veiculo=veiculo,
+            equipamento=equipamento,
             data= data['data'],
             tipo_equipe = data['tipo_equipe'],
             frequencia=data['frequencia'],
@@ -136,6 +144,7 @@ def cadastrar_soltura(request):
             "matricula_motorista": motorista.matricula,
             "coletores": [coletor.nome for coletor in coletores],
             "data":soltura.data,
+            "equipamento": str(equipamento),
             "placa_veiculo": veiculo.prefixo,
             "frequencia": soltura.frequencia,
             "setores": soltura.setores,

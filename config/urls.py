@@ -51,6 +51,10 @@ from apps.soltura.views.resumo_pa_seletiva_views.views_pa_seletiva_resumo import
 from apps.soltura.views.get_soltura_by_id_views.views_get_soltura_by_id import buscar_soltura_por_id
 from apps.soltura.views.delete_views.views_delete import deletar_soltura_por_id
 from apps.soltura.views.editar_views.views_editar import editar_soltura_por_id
+from apps.equipamentos.views_equipamento.create_equipa_views import criar_equipamento_view
+from apps.equipamentos.views_equipamento.edit_equipa_views import editar_equipamento_view
+from apps.equipamentos.views_equipamento.delete_equipa_views import deletar_equipamento_view
+from apps.equipamentos.views_equipamento.listar_prefixos_views import listar_equipamentos_view
 
 
 
@@ -109,6 +113,12 @@ urlpatterns = [
     path('api/soltura/<int:soltura_id>/buscar/',buscar_soltura_por_id,name='buscar_soltura_id'),
     path('api/soltura/<int:soltura_id>/deletar/',deletar_soltura_por_id,name='deletar_soltura'),
     path('api/soltura/<int:soltura_id>/editar/',editar_soltura_por_id,name='editar_soltura'),
+    path('api/equipamentos/criar/', criar_equipamento_view,name='criar_equipamento'),
+    path('api/equipamentos/<int:id_equipamento>/editar/',editar_equipamento_view,name='editar_equipamento'),
+    path('api/equipamentos/<int:id_equipamento>/deletar/',deletar_equipamento_view,name='deletar_equipamento'),
+    path('api/equipamentos/listar/', listar_equipamentos_view,name='listar_equipamento'),
+
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
