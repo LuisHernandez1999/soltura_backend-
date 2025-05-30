@@ -1,12 +1,12 @@
 from django.db.models import Count, Q
 from django.http import JsonResponse
 from django.utils.timezone import localdate
-from models.models import Soltura
+from apps.soltura.models.models import Soltura
 import logging
 
 logger = logging.getLogger(__name__)
 
-def dashboard_solturas_geral(request):
+def dashboard_seletiva_dados_hoje(request):
     try:
         data_hoje = localdate()
         garages = ['PA1', 'PA2', 'PA3', 'PA4']

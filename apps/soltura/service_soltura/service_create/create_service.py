@@ -122,7 +122,7 @@ def cadastrar_soltura_service(data):
         status_frota=data.get('status_frota'),
         tipo_veiculo_selecionado=data.get('tipo_veiculo_selecionado'),
         bairro=data.get('bairro'),
-        equipamento= equipamento,
+        prefixo_equipamento = data.get('equipamento', '')
     )
 
     if coletores:

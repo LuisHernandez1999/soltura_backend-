@@ -43,11 +43,6 @@ from apps.soltura.views.pa_rsu_exit_views.views_pa_rsu_exit import contar_soltur
 from apps.soltura.views.grafic_rsu_views.views_grafic_rsu import solturas_por_dia_da_semana_rsu
 from apps.soltura.views.resumo_pa_rsu_views.views_resumo_pa_rsu import contagem_geral_por_pa_rsu
 from apps.soltura.views.colaboradores_equipe_seletiva_views.views_colaboradores_equipe import contar_coletores_motorista_por_turno
-from apps.soltura.views.seletiva_cards_views.views_seletiva_cards import contar_seletiva_realizadas_hoje
-from apps.soltura.views.seletiva_grafic_views.views_grafic_seletiva import obter_solturas_seletiva_por_dia_da_semana
-from apps.soltura.views.seletiva_pa_views.views_pa_seletiva import contar_solturas_seletiva_por_garagem
-from apps.soltura.views.tabela_seletiva_views.views_tabela_seletiva import retornar_infos_seletiva
-from apps.soltura.views.resumo_pa_seletiva_views.views_pa_seletiva_resumo import contagem_geral_por_pa_seltiva
 from apps.soltura.views.get_soltura_by_id_views.views_get_soltura_by_id import buscar_soltura_por_id
 from apps.soltura.views.delete_views.views_delete import deletar_soltura_por_id
 from apps.soltura.views.editar_views.views_editar import editar_soltura_por_id
@@ -55,6 +50,8 @@ from apps.equipamentos.views_equipamento.create_equipa_views import criar_equipa
 from apps.equipamentos.views_equipamento.edit_equipa_views import editar_equipamento_view
 from apps.equipamentos.views_equipamento.delete_equipa_views import deletar_equipamento_view
 from apps.equipamentos.views_equipamento.listar_prefixos_views import listar_equipamentos_view
+from  apps.soltura.views.views_dashboard_seletiva.dashboard_today_view import dashboard_solturas_seletiva_hoje
+from  apps.soltura.views.views_dashboard_seletiva.dash_seletiva_tabela_grafic_view import dashboard_seletiva_dados_tabela_grafic
 
 
 
@@ -104,12 +101,6 @@ urlpatterns = [
     path('api/soltura/ contar_solturas_rsu_por_garagem/', contar_solturas_rsu_por_garagem,name='contar_solturas_rsu_por_garagem'),
     path('api/soltura/saidas_rsu_dias/',solturas_por_dia_da_semana_rsu,name='solturas_por_dia_da_semana_rsu'),
     path('api/soltura/contagem_geral_por_pa_rsu/',contagem_geral_por_pa_rsu,name='contagem_geral_por_pa'),
-    path('api/soltura/seletiva_colaboradores_equipe/',contar_coletores_motorista_por_turno,name='contar_coletores_motorista_por_turno'),
-    path('api/soltura/contar_seletiva_no_dia/',contar_seletiva_realizadas_hoje,name='contar_seletiva_realizadas_hoje'),
-    path('api/soltura/obter_solturas_seletiva_por_dia_da_semana/',obter_solturas_seletiva_por_dia_da_semana,name='obter_solturas_seletiva_por_dia_da_semana'),
-    path('api/soltura/contar_solturas_seletiva_por_garagem/',contar_solturas_seletiva_por_garagem,name='contar_solturas_seletiva_por_garagem'),
-    path('api/soltura/retornar_infos_seletiva/',retornar_infos_seletiva,name='retornar_infos_seletiva'),
-    path('api/soltura/contagem_geral_por_pa_seltiva/',contagem_geral_por_pa_seltiva,name='contagem_geral_por_pa_seltiva'),
     path('api/soltura/<int:soltura_id>/buscar/',buscar_soltura_por_id,name='buscar_soltura_id'),
     path('api/soltura/<int:soltura_id>/deletar/',deletar_soltura_por_id,name='deletar_soltura'),
     path('api/soltura/<int:soltura_id>/editar/',editar_soltura_por_id,name='editar_soltura'),
@@ -117,6 +108,9 @@ urlpatterns = [
     path('api/equipamentos/<int:id_equipamento>/editar/',editar_equipamento_view,name='editar_equipamento'),
     path('api/equipamentos/<int:id_equipamento>/deletar/',deletar_equipamento_view,name='deletar_equipamento'),
     path('api/equipamentos/listar/', listar_equipamentos_view,name='listar_equipamento'),
+    path('api/soltura/seltiva_dados_hoje/',dashboard_solturas_seletiva_hoje,name='dashboard_solturas_seletiva_hoje'),
+    path('api/soltura/seletiva_tabela_grafic/',dashboard_seletiva_dados_tabela_grafic,name='dashboard_seletiva_dados_tabela_grafic'),
+
 
 
 ]

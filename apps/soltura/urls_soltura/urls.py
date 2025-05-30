@@ -29,6 +29,8 @@ from soltura.views.resumo_pa_seletiva_views.views_pa_seletiva_resumo import cont
 from soltura.views.get_soltura_by_id_views.views_get_soltura_by_id import buscar_soltura_por_id
 from soltura.views.delete_views.views_delete import deletar_soltura_por_id
 from soltura.views.editar_views.views_editar import editar_soltura
+from soltura.views.views_dashboard_seletiva.dashboard_today_view import dashboard_solturas_seletiva_hoje
+from apps.soltura.views.views_dashboard_seletiva.dash_seletiva_tabela_grafic_view import dashboard_seletiva_dados_tabela_grafic
 
 urlpatterns = [
     path('criar/', cadastrar_soltura, name='cadastrar_soltura'),
@@ -58,4 +60,6 @@ urlpatterns = [
     path('soltura/<int:soltura_id>/burcar',buscar_soltura_por_id,name='buscar_soltura_id'),
     path('soltura/<int:soltura_id>/delete/',deletar_soltura_por_id,name='deletar_soltura'),
     path('soltura/<int:soltura_id>/delete/',editar_soltura,name='deletar_soltura'),
+    path('soltura/seletiva_hoje_data/',dashboard_solturas_seletiva_hoje,name='dash_seletiva_dados_hoje'),
+    path('soltura/tabela_e_grafico/',dashboard_seletiva_dados_tabela_grafic, name='table_e_grafico_seletiva')
 ]
