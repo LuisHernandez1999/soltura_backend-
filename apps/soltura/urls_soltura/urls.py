@@ -14,19 +14,14 @@ from soltura.views.type_truck_views.views_type_truck import tipos_veiculos_solto
 from soltura.views.update_view.upadate import editar_soltura
 from soltura.views.solturabyid_views.views_solturabyid import buscar_soltura_por_id
 from soltura.views.colaborator_views.views_colaborator import contar_motoristas_e_coletores_hoje
-from soltura.views.rsu_tabela_views.views_rsu_tabela import buscar_solturas_rsu
-from soltura.views.rsu_cards_views.views_cards_rsu import contar_rsu_realizadas_hoje
-from soltura.views.coletores_motoristas_views.views_coletores_motorista import quantidade_motorista_coletores_equipe
-from soltura.views.pa_rsu_exit_views.views_pa_rsu_exit import contar_solturas_rsu_por_garagem
-from soltura.views.grafic_rsu_views.views_grafic_rsu import solturas_por_dia_da_semana_rsu
-from soltura.views.colaboradores_equipe_seletiva_views.views_colaboradores_equipe import contar_coletores_motorista_por_turno
-from soltura.views.resumo_pa_rsu_views.views_resumo_pa_rsu import contagem_geral_por_pa_rsu
-
 from soltura.views.get_soltura_by_id_views.views_get_soltura_by_id import buscar_soltura_por_id
 from soltura.views.delete_views.views_delete import deletar_soltura_por_id
 from soltura.views.editar_views.views_editar import editar_soltura
 from soltura.views.views_dashboard_seletiva.dashboard_today_view import dashboard_solturas_seletiva_hoje
 from apps.soltura.views.views_dashboard_seletiva.dash_seletiva_tabela_grafic_view import dashboard_seletiva_dados_tabela_grafic
+from apps.soltura.views.views_dashboard_rsu.dash_today_rsu_view import rsu_dados_hoje_view
+from apps.soltura.views.views_dashboard_rsu.table_grafic_rsu_view import dashboard_rsu_dados_tabela_grafic_view
+
 
 urlpatterns = [
     path('criar/', cadastrar_soltura, name='cadastrar_soltura'),
@@ -41,15 +36,12 @@ urlpatterns = [
     path('soltura/tipos_veiculos_soltos_no_dia/',tipos_veiculos_soltos_no_dia, name='tipos_veiculos_soltos_no_dia'),
     path('soltura/<int:soltura_id>/',buscar_soltura_por_id,name='buscar_soltura_por_id'),
     path('soltura/colaboradores_hoje/',contar_motoristas_e_coletores_hoje,name="contar_motoristas_e_coletores_hoje"),
-    path('soltura/buscar_solturas_rsu/', buscar_solturas_rsu, name='buscar_solturas_rsu'),
-    path('soltura/contar_rsu-realizadas_hoje/',contar_rsu_realizadas_hoje,name='contar_rsu-realizadas_hoje'),
-    path('soltura/ quantidade_motorista_coletores_equipe_rsu/',quantidade_motorista_coletores_equipe,name='quantidade_motorista_coletores_equipe_rsu'),
-    path('soltura/ contar_solturas_rsu_por_garagem/', contar_solturas_rsu_por_garagem,name=' contar_solturas_rsu_por_garagem'),
-    path('soltura/saidas_rsu_por_dias/',solturas_por_dia_da_semana_rsu,name='solturas_por_dia_da_semana_rsu'),
-    path('soltura/contagem_geral_por_pa/',contagem_geral_por_pa_rsu,name='contagem_geral_por_pa'),
     path('soltura/<int:soltura_id>/burcar',buscar_soltura_por_id,name='buscar_soltura_id'),
     path('soltura/<int:soltura_id>/delete/',deletar_soltura_por_id,name='deletar_soltura'),
     path('soltura/<int:soltura_id>/delete/',editar_soltura,name='deletar_soltura'),
     path('soltura/seletiva_hoje_data/',dashboard_solturas_seletiva_hoje,name='dash_seletiva_dados_hoje'),
-    path('soltura/tabela_e_grafico/',dashboard_seletiva_dados_tabela_grafic, name='table_e_grafico_seletiva')
+    path('soltura/tabela_e_grafico/',dashboard_seletiva_dados_tabela_grafic, name='table_e_grafico_seletiva'),
+    path('soltura/rsu_hoje_dados/',rsu_dados_hoje_view,name='dados_rsu_hoje'),
+    path('soltura/rsu_tabela_grafico/',dashboard_rsu_dados_tabela_grafic_view,name='rsu_tabela_grafico')
+
 ]

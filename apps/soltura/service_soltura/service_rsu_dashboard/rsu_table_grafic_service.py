@@ -8,7 +8,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def dashboard_seletiva_dados_tabela_grafico(request):
+def dashboard_rsu_dados_tabela_grafico(request):
     hoje = date.today()
     semana_atual = hoje.isocalendar().week
     ano_atual = hoje.year
@@ -30,7 +30,7 @@ def dashboard_seletiva_dados_tabela_grafico(request):
         dados_aggregados = (
             Soltura.objects
             .filter(
-                tipo_servico__iexact='Seletiva',
+                tipo_servico__iexact='Rsu',
                 data__week=semana_atual,
                 data__year=ano_atual
             )
@@ -57,7 +57,7 @@ def dashboard_seletiva_dados_tabela_grafico(request):
         # Consulta detalhada com filtros aplicados
         queryset = (
             Soltura.objects
-            .filter(tipo_servico__iexact='Seletiva')
+            .filter(tipo_servico__iexact='Rsu')
             .select_related('motorista', 'veiculo')
             .prefetch_related('coletores')
             .order_by('-data', '-hora_saida_frota')

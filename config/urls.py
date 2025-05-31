@@ -36,13 +36,6 @@ from apps.averiguacao.views_averiguacao.update_averiguacao_views.update_averigua
 from apps.averiguacao.views_averiguacao.get_averiguacao_views.get_averiguacao_views import get_averiguacao
 from apps.averiguacao.views_averiguacao.delete_averiguacao_views.averiguacao_delete_views import delete_averiguacao
 from apps.soltura.views.colaborator_views.views_colaborator import contar_motoristas_e_coletores_hoje
-from apps.soltura.views.rsu_tabela_views.views_rsu_tabela import buscar_solturas_rsu
-from apps.soltura.views.rsu_cards_views.views_cards_rsu import contar_rsu_realizadas_hoje
-from apps.soltura.views.coletores_motoristas_views.views_coletores_motorista import quantidade_motorista_coletores_equipe
-from apps.soltura.views.pa_rsu_exit_views.views_pa_rsu_exit import contar_solturas_rsu_por_garagem
-from apps.soltura.views.grafic_rsu_views.views_grafic_rsu import solturas_por_dia_da_semana_rsu
-from apps.soltura.views.resumo_pa_rsu_views.views_resumo_pa_rsu import contagem_geral_por_pa_rsu
-from apps.soltura.views.colaboradores_equipe_seletiva_views.views_colaboradores_equipe import contar_coletores_motorista_por_turno
 from apps.soltura.views.get_soltura_by_id_views.views_get_soltura_by_id import buscar_soltura_por_id
 from apps.soltura.views.delete_views.views_delete import deletar_soltura_por_id
 from apps.soltura.views.editar_views.views_editar import editar_soltura_por_id
@@ -52,6 +45,8 @@ from apps.equipamentos.views_equipamento.delete_equipa_views import deletar_equi
 from apps.equipamentos.views_equipamento.listar_prefixos_views import listar_equipamentos_view
 from  apps.soltura.views.views_dashboard_seletiva.dashboard_today_view import dashboard_solturas_seletiva_hoje
 from  apps.soltura.views.views_dashboard_seletiva.dash_seletiva_tabela_grafic_view import dashboard_seletiva_dados_tabela_grafic
+from apps.soltura.views.views_dashboard_rsu.dash_today_rsu_view import rsu_dados_hoje_view
+from apps.soltura.views.views_dashboard_rsu.table_grafic_rsu_view import dashboard_rsu_dados_tabela_grafic_view
 
 
 
@@ -95,12 +90,6 @@ urlpatterns = [
     path('api/averiguacao/ver_averiguacao/get/', get_averiguacao, name='get_averiguacao'),
     path('api/averiguacao/<int:averiguacao_id>/delete/', delete_averiguacao, name='delete_averiguacao'),
     path('api/soltura/colaboradores_hoje/',contar_motoristas_e_coletores_hoje,name="contar_motoristas_e_coletores_hoje"),
-    path('api/soltura/buscar_solturas_rsu/',buscar_solturas_rsu,name='buscar_solturas_rsu'),
-    path('api/soltura/conatagem_rsu_hoje/',contar_rsu_realizadas_hoje,name='contar_rsu_realizadas_hoje'),
-    path('api/soltura/ quantidade_motorista_coletores_equipe_rsu/',quantidade_motorista_coletores_equipe,name='quantidade_motorista_coletores_equipe_rsu'),
-    path('api/soltura/ contar_solturas_rsu_por_garagem/', contar_solturas_rsu_por_garagem,name='contar_solturas_rsu_por_garagem'),
-    path('api/soltura/saidas_rsu_dias/',solturas_por_dia_da_semana_rsu,name='solturas_por_dia_da_semana_rsu'),
-    path('api/soltura/contagem_geral_por_pa_rsu/',contagem_geral_por_pa_rsu,name='contagem_geral_por_pa'),
     path('api/soltura/<int:soltura_id>/buscar/',buscar_soltura_por_id,name='buscar_soltura_id'),
     path('api/soltura/<int:soltura_id>/deletar/',deletar_soltura_por_id,name='deletar_soltura'),
     path('api/soltura/<int:soltura_id>/editar/',editar_soltura_por_id,name='editar_soltura'),
@@ -110,6 +99,8 @@ urlpatterns = [
     path('api/equipamentos/listar/', listar_equipamentos_view,name='listar_equipamento'),
     path('api/soltura/seltiva_dados_hoje/',dashboard_solturas_seletiva_hoje,name='dashboard_solturas_seletiva_hoje'),
     path('api/soltura/seletiva_tabela_grafic/',dashboard_seletiva_dados_tabela_grafic,name='dashboard_seletiva_dados_tabela_grafic'),
+    path('api/soltura/dados_rsu_hoje/',rsu_dados_hoje_view,name='dados_rsu_hoje'),
+    path('api/soltura/rsu_tabela_grafico/',dashboard_rsu_dados_tabela_grafic_view,name='dashboard_rsu_dados_tabela_grafic_view')
 
 
 

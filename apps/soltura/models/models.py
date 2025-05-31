@@ -155,10 +155,11 @@ class Soltura(models.Model):
         return []
     class Meta:
         indexes = [
-            models.Index(fields=['tipo_servico']),
-            models.Index(fields=['data']),
+            models.Index(fields=['data', 'tipo_servico']),
+            models.Index(fields=['data', 'tipo_equipe']),
+            models.Index(fields=['garagem']),
+            models.Index(fields=['motorista']),
         ]
-
 def rota_varricao(self):
     if self.tipo_servico == 'Varrição':
         self.setores = None

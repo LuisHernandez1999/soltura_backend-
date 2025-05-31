@@ -1,27 +1,29 @@
 from django.db.models import Count, Q
 from django.http import JsonResponse
 from django.utils.timezone import localdate
+from django.views.decorators.cache import cache_page
 from apps.soltura.models.models import Soltura
 import logging
 
 logger = logging.getLogger(__name__)
 
+@cache_page(60 * 4)  # cache por 4 minutos
 def dashboard_seletiva_dados_hoje(request):
     try:
         data_hoje = localdate()
         garages = ['PA1', 'PA2', 'PA3', 'PA4']
+
+        # Query otimizada para seletivas com contagens
         seletivas = (
             Soltura.objects.filter(data=data_hoje, tipo_servico='Seletiva', garagem__in=garages)
-            .prefetch_related('coletores') 
             .values('garagem', 'turno')
             .annotate(
-                motoristas_count=Count('motorista', distinct=True),
-                veiculos_count=Count('veiculo', distinct=True),
-                coletores_count=Count('coletores', distinct=True)
+                motoristas_count=Count('motorista'),
+                veiculos_count=Count('veiculo'),
+                coletores_count=Count('coletores')
             )
         )
 
-        # Montar resultado seletiva_por_pa
         seletiva_por_pa = {g: {'turnos': set(), 'motoristas': 0, 'veiculos': 0, 'coletores': 0} for g in garages}
         total_seletivas = 0
 
@@ -33,11 +35,10 @@ def dashboard_seletiva_dados_hoje(request):
             seletiva_por_pa[g]['coletores'] += entry['coletores_count']
             total_seletivas += 1
 
-        # Converte set para lista em 'turnos'
         for g in garages:
             seletiva_por_pa[g]['turnos'] = list(seletiva_por_pa[g]['turnos'])
 
-        # Agora query para equipes por turno, usando filtro por tipo_equipe
+        # Equipes por turno - sem prefetch_related
         equipes = {
             "Equipe(Diurno)": "Equipe(Diurno)",
             "Equipe(Noturno)": "Equipe(Noturno)"
@@ -45,31 +46,36 @@ def dashboard_seletiva_dados_hoje(request):
 
         por_turno = {}
         for nome_equipe, tipo_equipe in equipes.items():
-            solturas = (
-                Soltura.objects.filter(tipo_equipe=tipo_equipe, data=data_hoje)
-                .prefetch_related('coletores')
-            )
-            motoristas = solturas.values_list('motorista', flat=True).exclude(motorista__isnull=True).distinct().count()
-            # soma coletores com agregação direta (evitar loop)
-            coletores = (
-                Soltura.objects.filter(tipo_equipe=tipo_equipe, data=data_hoje, coletores__isnull=False)
+            base_queryset = Soltura.objects.filter(tipo_equipe=tipo_equipe, data=data_hoje)
+
+            motoristas = (
+                base_queryset
+                .values_list('motorista', flat=True)
+                .exclude(motorista__isnull=True)
                 .distinct()
-                .aggregate(total_coletores=Count('coletores'))
-            )['total_coletores'] or 0
+                .count()
+            )
+
+            coletores = (
+                base_queryset
+                .values('coletores')
+                .distinct()
+                .count()
+            )
 
             por_turno[nome_equipe] = {
                 "motoristas": motoristas,
                 "coletores": coletores,
             }
 
-        # Quantidade seletivas por garagem simplificada (já temos seletiva_por_pa mas somar contagem direta)
-        quantidade_seletiva_por_garagem = {g: 0 for g in garages}
-        total = 0
+        # Quantidade seletiva por garagem
         seletivas_totais = (
             Soltura.objects.filter(data=data_hoje, tipo_servico='Seletiva', garagem__in=garages)
             .values('garagem')
             .annotate(count=Count('id'))
         )
+        quantidade_seletiva_por_garagem = {g: 0 for g in garages}
+        total = 0
         for s in seletivas_totais:
             g = s['garagem']
             quantidade_seletiva_por_garagem[g] = s['count']
