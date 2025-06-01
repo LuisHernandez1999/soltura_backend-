@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from apps.equipamentos.service_equipamentos.delete_equipa_service import deletar_equipamento 
+from apps.equipamentos.service_equipamentos.service_crud_equipamentos.delete_equipa_service import deletar_equipamento 
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt

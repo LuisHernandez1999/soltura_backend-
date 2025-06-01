@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from apps.equipamentos.service_equipamentos.edit_equipa_service import editar_equipamento  
+from apps.equipamentos.service_equipamentos.service_crud_equipamentos.edit_equipa_service import editar_equipamento  
 
 
 @csrf_exempt

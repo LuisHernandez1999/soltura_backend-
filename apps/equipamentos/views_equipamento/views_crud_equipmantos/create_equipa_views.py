@@ -1,6 +1,6 @@
 import json
 from django.http import JsonResponse
-from apps.equipamentos.service_equipamentos.create_equipa_service import criar_equipamento  
+from apps.equipamentos.service_equipamentos.service_crud_equipamentos.create_equipa_service import criar_equipamento  
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
