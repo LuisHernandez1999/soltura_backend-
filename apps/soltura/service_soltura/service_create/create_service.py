@@ -99,8 +99,8 @@ def cadastrar_soltura_service(data):
     if tipo_servico == 'remoção':
      if 'equipamento' not in data:
         raise ValueError("campo 'equipamento' e obrigatorio para remocao.")
-     prefixo = data['equipamento']
-     equipamento = Equipamento.objects.filter(prefixo=prefixo)
+    prefixo_equipamento = data['equipamento']
+    equipamento = Equipamento.objects.filter(prefixo_equipamento=prefixo_equipamento)
     if not equipamento.exists():
         raise ValueError("equipamento para remocao nao encontrado.")
 

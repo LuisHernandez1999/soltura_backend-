@@ -21,6 +21,7 @@ from soltura.views.views_dashboard_seletiva.dashboard_today_view import dashboar
 from apps.soltura.views.views_dashboard_seletiva.dash_seletiva_tabela_grafic_view import dashboard_seletiva_dados_tabela_grafic
 from apps.soltura.views.views_dashboard_rsu.dash_today_rsu_view import rsu_dados_hoje_view
 from apps.soltura.views.views_dashboard_rsu.table_grafic_rsu_view import dashboard_rsu_dados_tabela_grafic_view
+from apps.soltura.views.equipamentos_distribui_views.views_equi_distribi import contar_equipamentos_semana_view
 
 
 urlpatterns = [
@@ -42,6 +43,7 @@ urlpatterns = [
     path('soltura/seletiva_hoje_data/',dashboard_solturas_seletiva_hoje,name='dash_seletiva_dados_hoje'),
     path('soltura/tabela_e_grafico/',dashboard_seletiva_dados_tabela_grafic, name='table_e_grafico_seletiva'),
     path('soltura/rsu_hoje_dados/',rsu_dados_hoje_view,name='dados_rsu_hoje'),
-    path('soltura/rsu_tabela_grafico/',dashboard_rsu_dados_tabela_grafic_view,name='rsu_tabela_grafico')
+    path('soltura/rsu_tabela_grafico/',dashboard_rsu_dados_tabela_grafic_view,name='rsu_tabela_grafico'),
+    path('soltura/eqp_distrib/',contar_equipamentos_semana_view,name="equipamento_semana")
 
 ]
