@@ -1,6 +1,5 @@
-# apps/equipamentos/views_equipamentos/dash_contagem_view.py
 from django.http import JsonResponse
-from apps.soltura.service_soltura.service_equipamento_distribui.equipamento_distribui_service import contar_equipamentos_por_dia_da_semana
+from ...service_soltura.service_equipamento_distribui.equipamento_distribui_service import contar_equipamentos_por_dia_da_semana
 
 def contar_equipamentos_semana_view(request):
     if request.method == 'GET':

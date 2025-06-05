@@ -49,6 +49,8 @@ from  apps.soltura.views.views_dashboard_seletiva.dash_seletiva_tabela_grafic_vi
 from apps.soltura.views.views_dashboard_rsu.dash_today_rsu_view import rsu_dados_hoje_view
 from apps.soltura.views.views_dashboard_rsu.table_grafic_rsu_view import dashboard_rsu_dados_tabela_grafic_view
 from apps.soltura.views.equipamentos_distribui_views.views_equi_distribi import contar_equipamentos_semana_view
+from apps.soltura.views.equipamentos_distribui_views.views_ditri_eq_tipo_servico import contar_equipamentos_por_tipo_servico_view
+from apps.soltura.views.views_dash_geral.dash_geral_views import dashboard_view
 
 
 
@@ -105,7 +107,9 @@ urlpatterns = [
     path('api/soltura/seletiva_tabela_grafic/',dashboard_seletiva_dados_tabela_grafic,name='dashboard_seletiva_dados_tabela_grafic'),
     path('api/soltura/dados_rsu_hoje/',rsu_dados_hoje_view,name='dados_rsu_hoje'),
     path('api/soltura/rsu_tabela_grafico/',dashboard_rsu_dados_tabela_grafic_view,name='dashboard_rsu_dados_tabela_grafic_view'),
-    path('api/soltura/equipamento_semana_distrib/', contar_equipamentos_semana_view,name='equipmaneto_semanal')
+    path('api/soltura/equipamento_semana_distrib/', contar_equipamentos_semana_view,name='equipmaneto_semanal'),
+    path('api/soltura/contar_por_tipo_servic/',contar_equipamentos_por_tipo_servico_view,name='contar_tipo_servico'),
+    path('api/soltura/dash_geral/',dashboard_view,name='dash_geral')
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
