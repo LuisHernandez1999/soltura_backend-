@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'apps.equipamentos',
     'apps.averiguacao',
     'apps.cadastro',
+    'apps.captcha',
     'apps.colaborador',
     'apps.login',
     'apps.soltura',

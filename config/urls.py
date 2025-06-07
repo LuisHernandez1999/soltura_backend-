@@ -51,6 +51,8 @@ from apps.soltura.views.views_dashboard_rsu.table_grafic_rsu_view import dashboa
 from apps.soltura.views.equipamentos_distribui_views.views_equi_distribi import contar_equipamentos_semana_view
 from apps.soltura.views.equipamentos_distribui_views.views_ditri_eq_tipo_servico import contar_equipamentos_por_tipo_servico_view
 from apps.soltura.views.views_dash_geral.dash_geral_views import dashboard_view
+from apps.captcha.service_captcha.captcha_service import get_captcha
+from apps.captcha.service_captcha.captcha_service import verify_captcha
 
 
 
@@ -109,7 +111,9 @@ urlpatterns = [
     path('api/soltura/rsu_tabela_grafico/',dashboard_rsu_dados_tabela_grafic_view,name='dashboard_rsu_dados_tabela_grafic_view'),
     path('api/soltura/equipamento_semana_distrib/', contar_equipamentos_semana_view,name='equipmaneto_semanal'),
     path('api/soltura/contar_por_tipo_servic/',contar_equipamentos_por_tipo_servico_view,name='contar_tipo_servico'),
-    path('api/soltura/dash_geral/',dashboard_view,name='dash_geral')
+    path('api/soltura/dash_geral/',dashboard_view,name='dash_geral'),
+    path('api/captcha/get_captcha/',get_captcha,name='get_captcha'),
+    path('api/captcha/verify_captcha/',verify_captcha,name='verify_captcha')
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
