@@ -11,7 +11,7 @@ def generate_captcha_image(text):
     draw = ImageDraw.Draw(img)
     font = ImageFont.load_default()
     draw.text((10, 10), text, font=font, fill=(0, 0, 0))
-
+##
     for _ in range(8):
         draw.line([
             random.randint(0, 150), random.randint(0, 50),

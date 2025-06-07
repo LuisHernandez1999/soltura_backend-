@@ -58,3 +58,4 @@ def verify_captcha(request):
             return JsonResponse({"success": False, "error": "CAPTCHA incorreto"})
 
     return JsonResponse({"error": "metodo na permitido"}, status=405)
+##
