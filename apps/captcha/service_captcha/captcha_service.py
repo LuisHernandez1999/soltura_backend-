@@ -8,7 +8,7 @@ import queue
 
 captcha_store = {}
 
-WHATSAPP_MESSAGE = "Clique aqui para recuperar sua senha: http://192.168.0.100:3000/reset_password/reset"
+WHATSAPP_MESSAGE = "Clique aqui para recuperar sua senha: http://192.168.0.148:3000/reset_password/reset"
 
 
 send_queue = queue.Queue()

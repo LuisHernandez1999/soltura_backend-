@@ -143,3 +143,18 @@ Time: 15:2
 Phone Number: +55 62 9233-2472
 Message: Clique aqui para recuperar sua senha: http://localhost:3000/reset_password/reset
 --------------------
+Date: 10/6/2025
+Time: 15:14
+Phone Number: +55 62 992839211
+Message: Clique aqui para recuperar sua senha: http://192.168.0.148:3000/reset_password/reset
+--------------------
+Date: 10/6/2025
+Time: 15:17
+Phone Number: +55 62 992839211
+Message: Clique aqui para recuperar sua senha: http://192.168.0.148:3000/reset_password/reset
+--------------------
+Date: 10/6/2025
+Time: 15:49
+Phone Number: +55 62 992839211
+Message: Clique aqui para recuperar sua senha: http://192.168.0.148:3000/reset_password/reset
+--------------------
