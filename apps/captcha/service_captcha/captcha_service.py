@@ -1,37 +1,48 @@
-from django.http import JsonResponse 
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from ..utils_captcha.captcha_utlis import generate_captcha_text, generate_captcha_image
 import random, string, json, datetime
 import pywhatkit as kit
 import threading
-
+import queue
 
 captcha_store = {}
 
-
-
 WHATSAPP_MESSAGE = "Clique aqui para recuperar sua senha: https://seusite.com/reset LIMPAGYN"
 
-def send_whatsapp_message(phone, message):
-    print("[DEBUG] Iniciando envio WhatsApp")
-    try:
-        now = datetime.datetime.now()
-        future = now + datetime.timedelta(minutes=2)
-        hour = future.hour
-        minute = future.minute
 
-        print(f"[DEBUG] Agendando mensagem para {phone} às {hour}:{minute}")
-        kit.sendwhatmsg(phone, message, hour, minute, wait_time=20, tab_close=True)
-        print("[DEBUG] Mensagem enviada com sucesso")
-    except Exception as e:
-        print(f"[DEBUG] Erro no envio do WhatsApp: {e}")
-        raise
+send_queue = queue.Queue()
+worker_thread = None
+lock = threading.Lock()
 
-def send_whatsapp_message_async(phone, message):
-    print("[DEBUG] Criando thread para envio")
-    thread = threading.Thread(target=send_whatsapp_message, args=(phone, message), daemon=True)
-    thread.start()
-    print("[DEBUG] Thread iniciada")
+def send_whatsapp_worker():
+    while True:
+        phone, message = send_queue.get()
+        try:
+            now = datetime.datetime.now()
+            future = now + datetime.timedelta(minutes=2)
+            hour = future.hour
+            minute = future.minute
+
+            print(f"[WORKER] Enviando mensagem para {phone} às {hour}:{minute}")
+            kit.sendwhatmsg(phone, message, hour, minute, wait_time=40, tab_close=True)
+            print("[WORKER] Mensagem enviada com sucesso")
+        except Exception as e:
+            print(f"[WORKER] Erro ao enviar mensagem: {e}")
+        finally:
+            send_queue.task_done()
+
+def start_worker_thread():
+    global worker_thread
+    with lock:
+        if worker_thread is None or not worker_thread.is_alive():
+            worker_thread = threading.Thread(target=send_whatsapp_worker, daemon=True)
+            worker_thread.start()
+            print("[MAIN] Worker thread iniciada")
+
+def enqueue_whatsapp_message(phone, message):
+    send_queue.put((phone, message))
+    start_worker_thread()
 
 @csrf_exempt
 def verify_captcha(request):
@@ -53,11 +64,11 @@ def verify_captcha(request):
 
         if correct and user_input == correct:
             try:
-                print("[DEBUG] CAPTCHA correto, enviando WhatsApp")
-                send_whatsapp_message_async(phone_number, WHATSAPP_MESSAGE)
+                print("[DEBUG] CAPTCHA correto, adicionando mensagem na fila")
+                enqueue_whatsapp_message(phone_number, WHATSAPP_MESSAGE)
                 return JsonResponse({"success": True, "message": "CAPTCHA correto. Mensagem sendo enviada no WhatsApp."})
             except Exception as e:
-                print(f"[DEBUG] Exceção ao enviar WhatsApp: {e}")
+                print(f"[DEBUG] Exceção ao adicionar na fila: {e}")
                 return JsonResponse({"success": False, "error": f"Erro ao enviar WhatsApp: {str(e)}"}, status=500)
         else:
             print("[DEBUG] CAPTCHA incorreto")
