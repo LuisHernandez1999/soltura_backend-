@@ -8,15 +8,15 @@ import pywhatkit as kit
 captcha_store = {}
 
 
-WHATSAPP_NUMBER = "+5511913979207"
+
 WHATSAPP_MESSAGE = "Clique aqui para recuperar sua senha: https://seusite.com/reset LIMPAGYN"
 
 def send_whatsapp_message(phone, message):
     now = datetime.datetime.now()
-    hour = now.hour
-    minute = now.minute + 1 
+    future = now + datetime.timedelta(minutes=1)
+    hour = future.hour
+    minute = future.minute
 
-   
     kit.sendwhatmsg(phone, message, hour, minute, wait_time=10, tab_close=True)
 
 @csrf_exempt
@@ -26,14 +26,18 @@ def verify_captcha(request):
             data = json.loads(request.body)
             captcha_id = data["captcha_id"]
             user_input = data["user_input"].upper()
+            phone_number = data["phone_number"]
         except (json.JSONDecodeError, KeyError):
             return JsonResponse({"success": False, "error": "Dados incompletos ou inválidos"}, status=400)
+
+        if not phone_number.startswith('+55'):
+            return JsonResponse({"success": False, "error": "Número de telefone inválido"}, status=400)
 
         correct = captcha_store.get(captcha_id)
 
         if correct and user_input == correct:
             try:
-                send_whatsapp_message(WHATSAPP_NUMBER, WHATSAPP_MESSAGE)
+                send_whatsapp_message(phone_number, WHATSAPP_MESSAGE)
                 return JsonResponse({"success": True, "message": "CAPTCHA correto. Mensagem enviada no WhatsApp."})
             except Exception as e:
                 return JsonResponse({"success": False, "error": f"Erro ao enviar WhatsApp: {str(e)}"}, status=500)
