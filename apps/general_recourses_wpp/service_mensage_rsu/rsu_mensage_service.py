@@ -1,17 +1,8 @@
 from apps.soltura.models.models import Soltura
-import pandas as pd
-from io import BytesIO
 from django.utils import timezone
-from django.db.models import Sum
-from openpyxl.utils import get_column_letter
-from openpyxl.styles import Alignment
-import pywhatkit as kit
-from datetime import datetime, timedelta
-import tempfile
-import os
-import time
+from datetime import datetime
 import pywhatkit
-from time import sleep
+
 
 
 def mensage_rsu_wpp():
@@ -45,10 +36,14 @@ def mensage_rsu_wpp():
 def enviar_mensagem_rsu_whatsapp():
     dados_por_pa = mensage_rsu_wpp()
 
-    numero_destino = "+55 62 9991-0828"
+    nome_destinatario = "Deivid"  
+    numero_destino = "+55 1191397-9207"  # já ajustei o formato para não ter espaços e hífen
+
     agora = datetime.now()
     hora_atual = agora.hour
     minuto_atual = agora.minute
+    horario_envio_str = agora.strftime("%H:%M")
+    data_atual_str = agora.strftime("%d/%m/%Y")  # formato dia/mês/ano
 
     coletores_previstos = 45
     veiculos_previstos = 15
@@ -62,11 +57,18 @@ def enviar_mensagem_rsu_whatsapp():
             falta = previsto - atual
             return f"⚠️ Faltam {falta} para a meta ({atual}/{previsto})"
 
-    saudacao = "Bom dia" if hora_atual < 12 else "Boa tarde" if hora_atual < 18 else "Boa noite"
-    horario_envio_str = agora.strftime("%H:%M")
+    pa_mais = max(dados_por_pa.items(), key=lambda x: x[1]['coletores'])[0]
+    pa_menos = min(dados_por_pa.items(), key=lambda x: x[1]['coletores'])[0]
 
-    mensagem = f"{saudacao}! Relatório de recursos que saíram em operação até o momento na RSU.\n"
-    mensagem += f"Mensagem enviada às {horario_envio_str}.\n\n"
+    saudacao = (
+        f"Olá, {nome_destinatario}!\n"
+        f"Hoje é {data_atual_str}.\n"
+        "Espero que seu dia esteja começando muito bem! ☀️\n"
+        "Segue abaixo o relatório atualizado dos recursos em operação na RSU até o momento.\n\n"
+    )
+
+    mensagem = saudacao
+    mensagem += f"📅 Relatório gerado às {horario_envio_str}.\n\n"
 
     for pa, dados in dados_por_pa.items():
         mensagem += f"🏢 *{pa}*\n"
@@ -79,9 +81,12 @@ def enviar_mensagem_rsu_whatsapp():
         mensagem += f"⚙️ Equipamentos previstos: {equipamentos_previstos}\n"
         mensagem += f"   - {status_meta(equipamentos_previstos, dados['equipamentos'])}\n\n"
 
-    mensagem += "Tenha um ótimo dia! 🚀"
+    mensagem += (
+        f"📈 A PA com *mais saídas* foi *{pa_mais}*.\n"
+        f"📉 A PA com *menos saídas* foi *{pa_menos}*.\n\n"
+        "Tenha um excelente dia! 🚀"
+    )
 
-
-    pywhatkit.sendwhatmsg_instantly(numero_destino, mensagem, wait_time=20, tab_close=False)
+    pywhatkit.sendwhatmsg_instantly(numero_destino, mensagem, wait_time=20, tab_close=True)
 
     print(f"Mensagem enviada para {numero_destino}")

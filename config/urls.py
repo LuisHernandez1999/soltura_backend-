@@ -54,6 +54,7 @@ from apps.soltura.views.views_dash_geral.dash_geral_views import dashboard_view
 from apps.captcha.service_captcha.captcha_service import get_captcha
 from apps.captcha.service_captcha.captcha_service import verify_captcha
 from apps.general_recourses_wpp.views_mensage_rsu.rsu_mensage_views import enviar_relatorio_whatsapp_view
+from apps.general_recourses_wpp.views_mensage_seletiva.seletiva_mensage_views import enviar_relatorio_seletiva_whatsapp_view
 
 
 
@@ -115,7 +116,8 @@ urlpatterns = [
     path('api/soltura/dash_geral/',dashboard_view,name='dash_geral'),
     path('api/captcha/get_captcha/',get_captcha,name='get_captcha'),
     path('api/captcha/verify_captcha/',verify_captcha,name='verify_captcha'),
-    path('api/general_recourses_wpp/enviar_wpp/',enviar_relatorio_whatsapp_view,name='enviar mensagem')
+    path('api/general_recourses_wpp/enviar_wpp/',enviar_relatorio_whatsapp_view,name='enviar mensagem'),
+    path('api/general_recourses_wpp/enviar_wpp_seletiva/', enviar_relatorio_seletiva_whatsapp_view,name='enviar_mensagem_seletiva')
 
 ]
 if settings.DEBUG:
@@ -123,3 +125,6 @@ if settings.DEBUG:
 
 
     ####
+
+
+     

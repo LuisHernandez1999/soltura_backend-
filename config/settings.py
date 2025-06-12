@@ -11,11 +11,12 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import sys
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 from pathlib import Path
-
 BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+from celery.schedules import crontab
+
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -116,6 +117,109 @@ CORS_ALLOW_HEADERS = [
 ]
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+INSTALLED_APPS += [
+    'django_celery_results',
+    'django_celery_beat',
+]
+
+CELERY_BROKER_URL = 'sqla+sqlite:///celerydb.sqlite'
+CELERY_RESULT_BACKEND = 'django-db'
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+
+
+
+
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    'enviar-mensagem-rsu-manha': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_rsu_whatsapp_task',
+        'schedule': crontab(minute='30,45,0,15', hour='7-9'),
+    },
+    'enviar-mensagem-rsu-1030': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_rsu_whatsapp_task',
+        'schedule': crontab(hour=10, minute=30),
+    },
+    'enviar-mensagem-rsu-1130': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_rsu_whatsapp_task',
+        'schedule': crontab(hour=11, minute=50),
+    },
+    'enviar-mensagem-rsu-1250': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_rsu_whatsapp_task',
+        'schedule': crontab(hour=12, minute=50),
+    },
+    'enviar-mensagem-seletiva-1257': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_seletiva_whatsapp_task',
+        'schedule': crontab(hour=12, minute=57),
+    },
+    'enviar-mensagem-rsu-1300': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_rsu_whatsapp_task',
+        'schedule': crontab(hour=13, minute=0),
+    },
+    'enviar-mensagem-seletiva-1300': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_seletiva_whatsapp_task',
+        'schedule': crontab(hour=13, minute=7),
+    },
+    'enviar-mensagem-rsu-1314': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_rsu_whatsapp_task',
+        'schedule': crontab(hour=13, minute=14),
+    },
+     'enviar-mensagem-seletiva-1300': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_seletiva_whatsapp_task',
+        'schedule': crontab(hour=13, minute=21),
+    },
+    'enviar-mensagem-rsu-1600': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_rsu_whatsapp_task',
+        'schedule': crontab(hour=16, minute=0),
+    },
+    'enviar-mensagem-rsu-intervalo-15min': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_rsu_whatsapp_task',
+        'schedule': crontab(hour='19-21', minute= '30,45,0,15'),  # RSU roda nos minutos 0 e 30
+    },
+    'enviar-mensagem-seletiva-600': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_seletiva_whatsapp_task',
+        'schedule': crontab(hour=6, minute=45),
+    },
+    'enviar-mensagem-seletiva-700': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_seletiva_whatsapp_task',
+        'schedule': crontab(hour=7, minute=10),
+    },
+    'enviar-mensagem-seletiva-800': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_seletiva_whatsapp_task',
+        'schedule': crontab(hour=8, minute=50),
+    },
+    'enviar-mensagem-seletiva-1000': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_seletiva_whatsapp_task',
+        'schedule': crontab(hour=10, minute=50),
+    },
+    'enviar-mensagem-seletiva-1100': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_seletiva_whatsapp_task',
+        'schedule': crontab(hour=11, minute=50),
+    },
+    'enviar-mensagem-seletiva-1200': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_seletiva_whatsapp_task',
+        'schedule': crontab(hour=12, minute=50),
+    },
+    # Tarefas para seletiva - sem coincidir com RSU
+    'enviar-mensagem-seletiva-1400': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_seletiva_whatsapp_task',
+        'schedule': crontab(hour=14, minute=10),
+    },
+    'enviar-mensagem-seletiva-1600': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_seletiva_whatsapp_task',
+        'schedule': crontab(hour=16, minute=10),
+    },
+    'enviar-mensagem-seletiva-1800': {
+        'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_seletiva_whatsapp_task',
+        'schedule': crontab(hour=18, minute=10),
+    },
+    
+}
+
+
 
 DATABASES = {
     'default': {
@@ -161,7 +265,7 @@ USE_TZ = True
 
 USE_I18N = True
 
-USE_TZ = True
+
 
 
 # Static files (CSS, JavaScript, Images)
