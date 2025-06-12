@@ -24,9 +24,9 @@ def mensage_rsu_wpp():
     for pa in pas:
         recursos_pa = recursos_gerais_rsu.filter(garagem=pa)
 
-        total_motorista = recursos_pa.values('motorista').distinct().count()
-        total_veiculos = recursos_pa.values('veiculo').distinct().count()
-        total_equipamentos = recursos_pa.values('equipamento').distinct().count()
+        total_motorista = recursos_pa.values('motorista').count()
+        total_veiculos = recursos_pa.values('veiculo').count()
+        total_equipamentos = recursos_pa.values('equipamento').count()
 
         total_coletores = 0
         for soltura in recursos_pa:
