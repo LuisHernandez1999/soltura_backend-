@@ -53,6 +53,7 @@ from apps.soltura.views.equipamentos_distribui_views.views_ditri_eq_tipo_servico
 from apps.soltura.views.views_dash_geral.dash_geral_views import dashboard_view
 from apps.captcha.service_captcha.captcha_service import get_captcha
 from apps.captcha.service_captcha.captcha_service import verify_captcha
+from apps.general_recourses_wpp.views_mensage_rsu.rsu_mensage_views import enviar_relatorio_whatsapp_view
 
 
 
@@ -113,7 +114,9 @@ urlpatterns = [
     path('api/soltura/contar_por_tipo_servic/',contar_equipamentos_por_tipo_servico_view,name='contar_tipo_servico'),
     path('api/soltura/dash_geral/',dashboard_view,name='dash_geral'),
     path('api/captcha/get_captcha/',get_captcha,name='get_captcha'),
-    path('api/captcha/verify_captcha/',verify_captcha,name='verify_captcha')
+    path('api/captcha/verify_captcha/',verify_captcha,name='verify_captcha'),
+    path('api/general_recourses_wpp/enviar_wpp/',enviar_relatorio_whatsapp_view,name='enviar mensagem')
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

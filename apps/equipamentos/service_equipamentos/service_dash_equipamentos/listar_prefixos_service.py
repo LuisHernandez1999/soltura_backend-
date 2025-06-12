@@ -7,7 +7,7 @@ def listar_prefixos_e_implementos():
     ativos = []
     inativos = []
     manutencao_count = 0
-    garagem_count = 0  # Inicialização da variável
+    garagem_count = 0  
 
     for eqp in equipamentos:
         dados = {

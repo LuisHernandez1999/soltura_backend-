@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'apps.login',
     'apps.soltura',
     'apps.veiculos',
+    'apps.general_recourses_wpp',
     "corsheaders"
 ]
 
