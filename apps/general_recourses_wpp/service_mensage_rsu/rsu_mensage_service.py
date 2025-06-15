@@ -37,7 +37,8 @@ def enviar_mensagem_rsu_whatsapp():
     dados_por_pa = mensage_rsu_wpp()
 
     nome_destinatario = "Deivid"  
-    numero_destino = "+55 1191397-9207"  # já ajustei o formato para não ter espaços e hífen
+    numero_destino = "+55 6299110-4407" \
+    ""  # já ajustei o formato para não ter espaços e hífen
 
     agora = datetime.now()
     hora_atual = agora.hour

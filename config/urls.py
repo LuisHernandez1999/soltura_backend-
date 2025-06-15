@@ -118,6 +118,7 @@ urlpatterns = [
     path('api/captcha/verify_captcha/',verify_captcha,name='verify_captcha'),
     path('api/general_recourses_wpp/enviar_wpp/',enviar_relatorio_whatsapp_view,name='enviar mensagem'),
     path('api/general_recourses_wpp/enviar_wpp_seletiva/', enviar_relatorio_seletiva_whatsapp_view,name='enviar_mensagem_seletiva')
+    
 
 ]
 if settings.DEBUG:

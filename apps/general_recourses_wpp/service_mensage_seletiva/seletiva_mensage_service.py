@@ -32,12 +32,12 @@ def mensage_seletiva():
 def mensagem_wpp_seletiva():
     dados_pa_seletiva = mensage_seletiva()
 
-    numero_destino = "+55 1191397-9207"  # removi espaços e hífen
+    numero_destino = "+55 6299110-4407" 
     agora = datetime.now()
     hora_atual = agora.hour
     minuto_atual = agora.minute
     horario_envio_str = agora.strftime("%H:%M")
-    data_atual_str = agora.strftime("%d/%m/%Y")  # Data no formato dia/mês/ano
+    data_atual_str = agora.strftime("%d/%m/%Y")  
 
     coletores_previstos = 60
     veiculos_previstos = 20
