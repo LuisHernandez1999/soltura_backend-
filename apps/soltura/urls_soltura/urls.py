@@ -47,6 +47,6 @@ urlpatterns = [
     path('soltura/rsu_hoje_dados/',rsu_dados_hoje_view,name='dados_rsu_hoje'),
     path('soltura/rsu_tabela_grafico/',dashboard_rsu_dados_tabela_grafic_view,name='rsu_tabela_grafico'),
     path('soltura/eqp_distrib/',contar_equipamentos_semana_view,name="equipamento_semana"),
-    path('soltura/eqp_tipo_servic/',contar_equipamentos_por_tipo_servico_view,name='contar_eqp_por_tipo_servico'),
+    path('/soltura/eqp_tipo_servic/',contar_equipamentos_por_tipo_servico_view,name='contar_eqp_por_tipo_servico'),
     path('soltura/dash_geral/',dashboard_view,name='dashboard_view')
 ]
