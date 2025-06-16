@@ -11,9 +11,9 @@ def dash_geral():
         .filter(data=hoje, garagem__in=['PA1', 'PA2', 'PA3', 'PA4'], tipo_servico__in=['Rsu', 'Seletiva', 'Remoção'])
         .values('garagem', 'tipo_servico')
         .annotate(
-            qtd_veiculo=Count('veiculo', distinct=True),
-            qtd_motorista=Count('motorista', distinct=True),
-            qtd_coletor=Count('coletores', distinct=True),
+            qtd_veiculo=Count('veiculo'),
+            qtd_motorista=Count('motorista'),
+            qtd_coletor=Count('coletores'),
         )
     )
 
