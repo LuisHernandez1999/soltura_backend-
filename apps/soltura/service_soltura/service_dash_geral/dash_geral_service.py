@@ -10,8 +10,8 @@ def dash_geral():
     servicos = ['Seletiva', 'Rsu']
 
     metas = {
-        'Seletiva': {'equipamentos': 45, 'coletores': 36, 'motoristas': 18},
-        'Rsu': {'equipamentos': 45, 'coletores': 178, 'motoristas': 59},
+        'Seletiva': {'coletores': 36, 'motoristas': 18},
+        'Rsu': {'coletores': 178, 'motoristas': 59},
     }
 
     # Query para agrupar por garagem e tipo_servico com contagem distinta para evitar duplicatas
