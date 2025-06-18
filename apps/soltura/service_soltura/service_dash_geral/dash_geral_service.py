@@ -1,5 +1,5 @@
 from django.utils import timezone
-from django.db.models import Count, Q
+from django.db.models import Count
 from ...models.models import Soltura
 
 
@@ -15,7 +15,7 @@ def dash_geral():
         'Remoção': {'coletores': 0, 'motoristas': 10, 'equipamentos': 5},
     }
 
-    # Contagem por garagem e tipo_servico
+    # Contagem geral por garagem e serviço
     contagem_por_garagem_servico = (
         Soltura.objects
         .filter(
@@ -33,7 +33,7 @@ def dash_geral():
         )
     )
 
-    # Inicializa estrutura por garagem e serviço
+    # Inicialização da estrutura de resultados
     resultados = {}
     for pa in garagens:
         resultados[pa] = {}
@@ -44,9 +44,9 @@ def dash_geral():
                 'coletores': 0,
                 'equipamentos': 0,
                 'meta_batida': {
-                    'motoristas': False,
-                    'coletores': False,
-                    'equipamentos': False
+                    'motoristas': 0,
+                    'coletores': 0,
+                    'equipamentos': 0,
                 }
             }
 
@@ -56,53 +56,65 @@ def dash_geral():
         if tipo_servico not in metas:
             continue
 
+        motoristas = int(item.get('qtd_motorista', 0))
+        coletores = int(item.get('qtd_coletor', 0))
+        equipamentos = int(item.get('qtd_equipamento', 0))
+
         resultados[garagem][tipo_servico] = {
-            'veiculos': item['qtd_veiculo'],
-            'motoristas': item['qtd_motorista'],
-            'coletores': item['qtd_coletor'],
-            'equipamentos': item['qtd_equipamento'],
+            'veiculos': int(item.get('qtd_veiculo', 0)),
+            'motoristas': motoristas,
+            'coletores': coletores,
+            'equipamentos': equipamentos,
+            # Aqui retorna os valores reais, sem comparar com metas
             'meta_batida': {
-                'motoristas': item['qtd_motorista'] >= metas[tipo_servico]['motoristas'],
-                'coletores': item['qtd_coletor'] >= metas[tipo_servico]['coletores'],
-                'equipamentos': item['qtd_equipamento'] >= metas[tipo_servico]['equipamentos'],
+                'motoristas': motoristas,
+                'coletores': coletores,
+                'equipamentos': equipamentos,
             }
         }
 
-    # Contagem por status_frota = andamento
+    # Totais EM ANDAMENTO por garagem + serviço
     andamento_total = Soltura.objects.filter(
         data=hoje,
-        status_frota='Em andamento',
+        status_frota='Em Andamento',
         tipo_servico__in=servicos,
         turno='Diurno'
     ).count()
 
-    andamento_por_servico = (
-        Soltura.objects.filter(
+    andamento_por_garagem_servico = (
+        Soltura.objects
+        .filter(
             data=hoje,
-            status_frota='Em andamento',
+            status_frota='Em Andamento',
             tipo_servico__in=servicos,
             turno='Diurno'
         )
-        .values('tipo_servico')
+        .values('garagem', 'tipo_servico')
         .annotate(qtd=Count('id'))
     )
 
-    andamento_por_servico_dict = {
-        item['tipo_servico']: item['qtd'] for item in andamento_por_servico
-    }
+    andamento_dict = {}
+    for item in andamento_por_garagem_servico:
+        garagem = item['garagem']
+        tipo_servico = item['tipo_servico']
+        qtd = item['qtd']
+        if garagem not in andamento_dict:
+            andamento_dict[garagem] = {}
+        andamento_dict[garagem][tipo_servico] = qtd
 
-    # Contagem por status_frota in [andamento, finalizado]
+    # Totais Finalizado + Em andamento
     total_geral = Soltura.objects.filter(
         data=hoje,
-        status_frota__in=['Em andamento', 'Finalizada'],
+        status_frota__in=['Em Andamento', 'Finalizada'],
         tipo_servico__in=servicos,
         turno='Diurno'
     ).count()
 
     total_por_servico = (
-        Soltura.objects.filter(
+        Soltura.objects
+        .filter(
             data=hoje,
-            status_frota__in=['Em andamento', 'Finalizada'],
+            status_frota__in=['Em Andamento', 'Finalizada'],
             tipo_servico__in=servicos,
             turno='Diurno'
         )
@@ -119,7 +131,7 @@ def dash_geral():
         'resultado_por_pa': resultados,
         'status_frota_andamento': {
             'total': andamento_total,
-            'por_servico': andamento_por_servico_dict,
+            'por_garagem': andamento_dict
         },
         'status_frota_andamento_mais_finalizado': {
             'total': total_geral,

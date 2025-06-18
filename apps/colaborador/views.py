@@ -12,34 +12,47 @@ STATUS = ["ATIVO", "INATIVO"]
 
 @csrf_exempt
 @require_POST
+
+
 def criar_colaborador(request):
     try:
         data = json.loads(request.body)
         nome = data.get("nome", "").strip()
         matricula = str(data.get("matricula", "")).strip()
-        funcao = data.get("funcao")  
-        turno = data.get("turno")
-        status = data.get("status")
-        pa = data.get("pa")
-        if not nome or not matricula or funcao not in TIPO_FUNCAO or turno not in TURNO or status not in STATUS or pa not in TIPOS_PA:
+        funcao = data.get("funcao", "").strip()
+        turno = data.get("turno", "").strip()
+        status = data.get("status", "").strip()
+        pa = data.get("pa", "").strip()
+
+        if (
+            not nome or
+            not matricula or
+            funcao not in Colaborador.TIPOS_FUNCAO or
+            turno not in Colaborador.TIPOS_TURNO or
+            status not in Colaborador.TIPOS_STATUS or
+            pa not in Colaborador.TIPOS_PA
+        ):
             return JsonResponse({"error": "dados invalidos"}, status=400)
+
         if Colaborador.objects.filter(matricula=matricula).exists():
             return JsonResponse({"error": "matricula ja cadastrada"}, status=400)
+
         colaborador = Colaborador.objects.create(
             nome=nome,
             matricula=matricula,
-            funcao=funcao,  
+            funcao=funcao,
             turno=turno,
             status=status,
-            pa=pa  
+            pa=pa
         )
-        
+
         return JsonResponse({"message": "colaborador criado com sucesso", "id": colaborador.id}, status=201)
-    
+
     except json.JSONDecodeError:
         return JsonResponse({"error": "formato JSON invalido"}, status=400)
     except IntegrityError:
         return JsonResponse({"error": "erro ao salvar no banco de dados"}, status=500)
+
 
 
 @require_GET
