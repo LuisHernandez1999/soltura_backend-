@@ -117,10 +117,7 @@ CORS_ALLOW_HEADERS = [
 ]
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-INSTALLED_APPS += [
-    'django_celery_results',
-    'django_celery_beat',
-]
+
 
 CELERY_BROKER_URL = 'sqla+sqlite:///celerydb.sqlite'
 CELERY_RESULT_BACKEND = 'django-db'
