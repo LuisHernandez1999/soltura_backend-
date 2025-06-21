@@ -1,5 +1,4 @@
 from django.utils import timezone
-from django.db.models import Count
 from ...models.models import Soltura
 
 
@@ -15,30 +14,10 @@ def dash_geral():
         'Remoção': {'coletores': 0, 'motoristas': 10, 'equipamentos': 5},
     }
 
-    # Contagem geral por garagem e serviço
-    contagem_por_garagem_servico = (
-        Soltura.objects
-        .filter(
-            data=hoje,
-            garagem__in=garagens,
-            tipo_servico__in=servicos,
-            turno='Diurno'
-        )
-        .values('garagem', 'tipo_servico')
-        .annotate(
-            qtd_veiculo=Count('veiculo'),
-            qtd_motorista=Count('motorista'),
-            qtd_coletor=Count('coletores'),
-            qtd_equipamento=Count('equipamento'),
-        )
-    )
-
-    # Inicialização da estrutura de resultados
-    resultados = {}
-    for pa in garagens:
-        resultados[pa] = {}
-        for servico in servicos:
-            resultados[pa][servico] = {
+    # Inicializa o resultado por garagem e serviço
+    resultados = {
+        pa: {
+            servico: {
                 'veiculos': 0,
                 'motoristas': 0,
                 'coletores': 0,
@@ -48,90 +27,87 @@ def dash_geral():
                     'coletores': 0,
                     'equipamentos': 0,
                 }
-            }
+            } for servico in servicos
+        } for pa in garagens
+    }
 
-    for item in contagem_por_garagem_servico:
-        garagem = item['garagem']
-        tipo_servico = item['tipo_servico']
-        if tipo_servico not in metas:
+    # Coleta as solturas do dia para contagem manual
+    solturas = Soltura.objects.filter(
+        data=hoje,
+        garagem__in=garagens,
+        tipo_servico__in=servicos,
+        turno='Diurno'
+    )
+
+    for s in solturas:
+        garagem = s.garagem
+        tipo_servico = s.tipo_servico
+
+        if garagem not in resultados or tipo_servico not in resultados[garagem]:
             continue
 
-        motoristas = int(item.get('qtd_motorista', 0))
-        coletores = int(item.get('qtd_coletor', 0))
-        equipamentos = int(item.get('qtd_equipamento', 0))
+        resultados[garagem][tipo_servico]['veiculos'] += 1
+        resultados[garagem][tipo_servico]['motoristas'] += 1
 
-        resultados[garagem][tipo_servico] = {
-            'veiculos': int(item.get('qtd_veiculo', 0)),
-            'motoristas': motoristas,
-            'coletores': coletores,
-            'equipamentos': equipamentos,
-            # Aqui retorna os valores reais, sem comparar com metas
-            'meta_batida': {
-                'motoristas': motoristas,
-                'coletores': coletores,
-                'equipamentos': equipamentos,
+        # Correção: campo ManyToManyField
+        resultados[garagem][tipo_servico]['coletores'] += s.coletores.all().count()
+
+        if s.equipamento:
+            resultados[garagem][tipo_servico]['equipamentos'] += 1
+
+    # Copia os valores reais para meta_batida
+    for garagem in resultados:
+        for servico in resultados[garagem]:
+            r = resultados[garagem][servico]
+            r['meta_batida'] = {
+                'motoristas': r['motoristas'],
+                'coletores': r['coletores'],
+                'equipamentos': r['equipamentos'],
             }
-        }
 
-    # Totais EM ANDAMENTO por garagem + serviço
-    andamento_total = Soltura.objects.filter(
+    # Solturas em andamento
+    andamento_solturas = Soltura.objects.filter(
         data=hoje,
         status_frota='Em Andamento',
         tipo_servico__in=servicos,
         turno='Diurno'
-    ).count()
-
-    andamento_por_garagem_servico = (
-        Soltura.objects
-        .filter(
-            data=hoje,
-            status_frota='Em Andamento',
-            tipo_servico__in=servicos,
-            turno='Diurno'
-        )
-        .values('garagem', 'tipo_servico')
-        .annotate(qtd=Count('id'))
     )
 
-    andamento_dict = {}
-    for item in andamento_por_garagem_servico:
-        garagem = item['garagem']
-        tipo_servico = item['tipo_servico']
-        qtd = item['qtd']
-        if garagem not in andamento_dict:
-            andamento_dict[garagem] = {}
-        andamento_dict[garagem][tipo_servico] = qtd
+    andamento_total = andamento_solturas.count()
 
-    # Totais Finalizado + Em andamento
-    total_geral = Soltura.objects.filter(
+    andamento_por_garagem_servico = {}
+    for s in andamento_solturas:
+        garagem = s.garagem
+        tipo_servico = s.tipo_servico
+
+        if garagem not in andamento_por_garagem_servico:
+            andamento_por_garagem_servico[garagem] = {}
+        if tipo_servico not in andamento_por_garagem_servico[garagem]:
+            andamento_por_garagem_servico[garagem][tipo_servico] = 0
+
+        andamento_por_garagem_servico[garagem][tipo_servico] += 1
+
+    # Solturas finalizadas + em andamento
+    total_geral_qs = Soltura.objects.filter(
         data=hoje,
         status_frota__in=['Em Andamento', 'Finalizada'],
         tipo_servico__in=servicos,
         turno='Diurno'
-    ).count()
-
-    total_por_servico = (
-        Soltura.objects
-        .filter(
-            data=hoje,
-            status_frota__in=['Em Andamento', 'Finalizada'],
-            tipo_servico__in=servicos,
-            turno='Diurno'
-        )
-        .values('tipo_servico')
-        .annotate(qtd=Count('id'))
     )
 
-    total_por_servico_dict = {
-        item['tipo_servico']: item['qtd'] for item in total_por_servico
-    }
+    total_geral = total_geral_qs.count()
+
+    total_por_servico_dict = {}
+    for s in total_geral_qs:
+        tipo_servico = s.tipo_servico
+        total_por_servico_dict[tipo_servico] = total_por_servico_dict.get(tipo_servico, 0) + 1
 
     return {
         'data': hoje,
         'resultado_por_pa': resultados,
         'status_frota_andamento': {
             'total': andamento_total,
-            'por_garagem': andamento_dict
+            'por_garagem': andamento_por_garagem_servico
         },
         'status_frota_andamento_mais_finalizado': {
             'total': total_geral,
