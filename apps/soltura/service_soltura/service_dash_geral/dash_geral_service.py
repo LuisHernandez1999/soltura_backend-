@@ -14,7 +14,7 @@ def dash_geral():
         'Remoção': {'coletores': 0, 'motoristas': 10, 'equipamentos': 5},
     }
 
-    # Inicializa o resultado por garagem e serviço
+   
     resultados = {
         pa: {
             servico: {
@@ -31,7 +31,7 @@ def dash_geral():
         } for pa in garagens
     }
 
-    # Coleta as solturas do dia para contagem manual
+    
     solturas = Soltura.objects.filter(
         data=hoje,
         garagem__in=garagens,
@@ -49,13 +49,13 @@ def dash_geral():
         resultados[garagem][tipo_servico]['veiculos'] += 1
         resultados[garagem][tipo_servico]['motoristas'] += 1
 
-        # Correção: campo ManyToManyField
+        
         resultados[garagem][tipo_servico]['coletores'] += s.coletores.all().count()
 
         if s.equipamento:
             resultados[garagem][tipo_servico]['equipamentos'] += 1
 
-    # Copia os valores reais para meta_batida
+    
     for garagem in resultados:
         for servico in resultados[garagem]:
             r = resultados[garagem][servico]
@@ -65,7 +65,7 @@ def dash_geral():
                 'equipamentos': r['equipamentos'],
             }
 
-    # Solturas em andamento
+    
     andamento_solturas = Soltura.objects.filter(
         data=hoje,
         status_frota='Em Andamento',
@@ -87,7 +87,7 @@ def dash_geral():
 
         andamento_por_garagem_servico[garagem][tipo_servico] += 1
 
-    # Solturas finalizadas + em andamento
+
     total_geral_qs = Soltura.objects.filter(
         data=hoje,
         status_frota__in=['Em Andamento', 'Finalizada'],
