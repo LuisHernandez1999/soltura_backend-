@@ -106,7 +106,7 @@ def enviar_mensagem_rsu_whatsapp():
         f"Faltam para a meta: {mao_obra_faltante}\n\n"
     )
 
-    mensagem = f"{saudacao}\nRelatório de recursos que saíram em operação até o momento na seletiva.\n"
+    mensagem = f"{saudacao}\nRelatório de recursos que saíram em operação até o momento na Rsu.\n"
     mensagem += f"Data: {data_atual_str} | Hora do envio: {horario_envio_str}\n\n"
 
     mensagem += mensagem_mao_obra

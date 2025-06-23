@@ -174,7 +174,7 @@ CELERY_BEAT_SCHEDULE = {
     },
     'enviar-mensagem-rsu-intervalo-15min': {
         'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_rsu_whatsapp_task',
-        'schedule': crontab(hour='19-21', minute= '30,45,0,15'),  # RSU roda nos minutos 0 e 30
+        'schedule': crontab(hour='19-21', minute= '30,45,0,15'),  
     },
     'enviar-mensagem-seletiva-600': {
         'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_seletiva_whatsapp_task',
@@ -200,7 +200,6 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_seletiva_whatsapp_task',
         'schedule': crontab(hour=12, minute=50),
     },
-    # Tarefas para seletiva - sem coincidir com RSU
     'enviar-mensagem-seletiva-1400': {
         'task': 'apps.general_recourses_wpp.tasks.enviar_mensagem_seletiva_whatsapp_task',
         'schedule': crontab(hour=14, minute=10),
