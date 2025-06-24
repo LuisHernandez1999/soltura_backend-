@@ -48,43 +48,44 @@ def mensagem_wpp_seletiva():
     horario_envio_str = agora.strftime("%H:%M")
     data_atual_str = agora.strftime("%d/%m/%Y")
 
-    coletores_previstos = 36
-    veiculos_previstos = 18
-    mao_obra_prevista = coletores_previstos + veiculos_previstos
-
-    total_coletores_atual = sum(dados['coletores'] for dados in dados_pa_seletiva.values())
-    total_veiculos_atual = sum(dados['veiculos'] for dados in dados_pa_seletiva.values())
-    mao_obra_atual = total_coletores_atual + total_veiculos_atual
-
-    mao_obra_faltante = max(0, mao_obra_prevista - mao_obra_atual)
+    coletores_previstos_por_pa = {
+        'PA1': 8,
+        'PA2': 4,
+        'PA3': 8,
+        'PA4': 4,
+    }
+    veiculos_previstos_por_pa = {
+        'PA1': 4,
+        'PA2': 5,
+        'PA3': 4,
+        'PA4': 5,
+    }
 
     def status_meta(previsto, atual):
+        if previsto == 0:
+            return "*Meta atingida* (0/0)"
         if atual >= previsto:
-            return f"✅ Meta atingida! ({atual}/{previsto})"
+            return "*Meta atingida* ({}/{}{})".format(atual, previsto, "")
         else:
             falta = previsto - atual
-            return f"⚠️ Faltam {falta} para a meta ({atual}/{previsto})"
+            return "*Faltam {}* ({}/{})".format(falta, atual, previsto)
 
-    saudacoes_curta = ["Bom dia", "Boa tarde", "Olá", "Oi"]
-    saudacao = random.choice(saudacoes_curta)
-
-    mensagem = f"{saudacao},\nRelatório de recursos que saíram em operação na *SELETIVA* até o momento.\n"
-    mensagem += f"Data: {data_atual_str} | Hora do envio: {horario_envio_str}\n\n"
-
-    mensagem += (
-        f"Mão de obra prevista: {mao_obra_prevista}\n"
-        f"Mão de obra atual: {mao_obra_atual}\n"
-        f"Faltam para a meta: {mao_obra_faltante}\n\n"
+    mensagem = (
+        f"*Relatório SELETIVA - Recursos em operação*\n"
+        f"*Data:* {data_atual_str} | *Hora:* {horario_envio_str}\n\n"
     )
 
     for pa, dados in dados_pa_seletiva.items():
-        mensagem += f"🏢 *{pa}*\n"
-        mensagem += f"📊 Coletores previstos: {coletores_previstos}\n"
-        mensagem += f"   - {status_meta(coletores_previstos, dados['coletores'])}\n"
-        mensagem += f"🚛 Veículos previstos: {veiculos_previstos}\n"
-        mensagem += f"   - {status_meta(veiculos_previstos, dados['veiculos'])}\n\n"
+        coletores_previstos = coletores_previstos_por_pa.get(pa, 0)
+        veiculos_previstos = veiculos_previstos_por_pa.get(pa, 0)
 
-    mensagem += "Atenciosamente,\nEquipe de Operações"
+        mensagem += f"*{pa}*\n"
+        mensagem += f"- *Coletores previstos:* {coletores_previstos}\n"
+        mensagem += f"  • {status_meta(coletores_previstos, dados['coletores'])}\n"
+        mensagem += f"- *Veículos previstos:* {veiculos_previstos}\n"
+        mensagem += f"  • {status_meta(veiculos_previstos, dados['veiculos'])}\n\n"
+
+    mensagem += "*Atenciosamente,*\n*Equipe de Operações*"
 
     pywhatkit.sendwhatmsg_instantly(numero_destino, mensagem, wait_time=20, tab_close=True)
     print(f"Mensagem enviada para {numero_destino}")
